@@ -1,0 +1,32 @@
+{
+    "data": {
+        "torch": {
+            "==1.9.1": {
+                "_to_sparse_csr": "err"
+            },
+            "==1.7.1": {
+                "_register_comm_hook": "err"
+            },
+            "==1.11.0": {
+                "createResolutionCallbackFromFrame": "err"
+            },
+            "==2.2.0": {
+                "new_dynamic_size": "err",
+                "createResolutionCallbackFromFrame": "err"
+            },
+
+            "==2.0.0": {
+                "createResolutionCallbackFromFrame": "err"
+            },
+            "==1.10.0": {
+                "to_sparse_csr": "err"
+            },
+            "==1.8.0": {
+                "register_comm_hook": "err"
+            },
+            "==2.1.2": {
+                "create_unbacked_symint": "err"
+            }
+        }
+    }
+}

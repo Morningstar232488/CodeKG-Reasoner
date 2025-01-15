@@ -1,0 +1,104 @@
+{
+    "count": 3,
+    "data": [
+        {
+            "_id": "imageio.plugins._tifffile.unpack_rgb",
+            "doc": "Return array from byte string containing packed samples.\n\nUse to unpack RGB565 or RGB555 to RGB888 format.\n\nParameters\n----------\ndata : byte str\n    The data to be decoded. Samples in each pixel are stored consecutively.\n    Pixels are aligned to 8, 16, or 32 bit boundaries.\ndtype : numpy.dtype\n    The sample data type. The byteorder applies also to the data stream.\nbitspersample : tuple\n    Number of bits for each sample in a pixel.\nrescale : bool\n    Upscale samples to the number of bits in dtype.\n\nReturns\n-------\nresult : ndarray\n    Flattened array of unpacked samples of native dtype.\n\nExamples\n--------\n>>> data = struct.pack('BBBB', 0x21, 0x08, 0xff, 0xff)\n>>> print(unpack_rgb(data, '<B', (5, 6, 5), False))\n[ 1  1  1 31 63 31]\n>>> print(unpack_rgb(data, '<B', (5, 6, 5)))\n[  8   4   8 255 255 255]\n>>> print(unpack_rgb(data, '<B', (5, 5, 5)))\n[ 16   8   8 255 255 255]",
+            "is_deprecated": false,
+            "source_code": "def unpack_rgb(data, dtype='<B', bitspersample=(5, 6, 5), rescale=True):\n    \"\"\"Return array from byte string containing packed samples.\n\n    Use to unpack RGB565 or RGB555 to RGB888 format.\n\n    Parameters\n    ----------\n    data : byte str\n        The data to be decoded. Samples in each pixel are stored consecutively.\n        Pixels are aligned to 8, 16, or 32 bit boundaries.\n    dtype : numpy.dtype\n        The sample data type. The byteorder applies also to the data stream.\n    bitspersample : tuple\n        Number of bits for each sample in a pixel.\n    rescale : bool\n        Upscale samples to the number of bits in dtype.\n\n    Returns\n    -------\n    result : ndarray\n        Flattened array of unpacked samples of native dtype.\n\n    Examples\n    --------\n    >>> data = struct.pack('BBBB', 0x21, 0x08, 0xff, 0xff)\n    >>> print(unpack_rgb(data, '<B', (5, 6, 5), False))\n    [ 1  1  1 31 63 31]\n    >>> print(unpack_rgb(data, '<B', (5, 6, 5)))\n    [  8   4   8 255 255 255]\n    >>> print(unpack_rgb(data, '<B', (5, 5, 5)))\n    [ 16   8   8 255 255 255]\n\n    \"\"\"\n    dtype = numpy.dtype(dtype)\n    bits = int(numpy.sum(bitspersample))\n    if not (bits <= 32 and all(i <= dtype.itemsize*8 for i in bitspersample)):\n        raise ValueError(\"sample size not supported %s\" % str(bitspersample))\n    dt = next(i for i in 'BHI' if numpy.dtype(i).itemsize*8 >= bits)\n    data = numpy.fromstring(data, dtype.byteorder+dt)\n    result = numpy.empty((data.size, len(bitspersample)), dtype.char)\n    for i, bps in enumerate(bitspersample):\n        t = data >> int(numpy.sum(bitspersample[i+1:]))\n        t &= int('0b'+'1'*bps, 2)\n        if rescale:\n            o = ((dtype.itemsize * 8) // bps + 1) * bps\n            if o > data.dtype.itemsize * 8:\n                t = t.astype('I')\n            t *= (2**o - 1) // (2**bps - 1)\n            t //= 2**(o - (dtype.itemsize * 8))\n        result[:, i] = t\n    return result.reshape(-1)\n",
+            "signature": "(data, dtype='<B', bitspersample=(5, 6, 5), rescale=True)",
+            "parameters": {
+                "data": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "dtype": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "bitspersample": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "rescale": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": "Flattened array of unpacked samples of native dtype.",
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "imageio.plugins._tifffile.imagej_description_dict",
+            "doc": "Return dictionary from ImageJ image description byte string.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = b'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_dict(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+            "is_deprecated": false,
+            "source_code": "def imagej_description_dict(description):\n    \"\"\"Return dictionary from ImageJ image description byte string.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = b'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_dict(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n    def _bool(val):\n        return {b'true': True, b'false': False}[val.lower()]\n\n    _str = str if sys.version_info[0] < 3 else lambda x: str(x, 'cp1252')\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(b'=')\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool, _str):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[_str(key)] = val\n    if 'ImageJ' not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+            "signature": "(description)",
+            "parameters": {
+                "description": {
+                    "description": null,
+                    "is_optional": false
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "imageio.plugins._tifffile.unpackrgb",
+            "name": "unpackrgb",
+            "module": "imageio.plugins._tifffile",
+            "doc": "Return array from byte string containing packed samples.\n\nUse to unpack RGB565 or RGB555 to RGB888 format.\n\nParameters\n----------\ndata : byte str\n    The data to be decoded. Samples in each pixel are stored consecutively.\n    Pixels are aligned to 8, 16, or 32 bit boundaries.\ndtype : numpy.dtype\n    The sample data type. The byteorder applies also to the data stream.\nbitspersample : tuple\n    Number of bits for each sample in a pixel.\nrescale : bool\n    Upscale samples to the number of bits in dtype.\n\nReturns\n-------\nresult : ndarray\n    Flattened array of unpacked samples of native dtype.\n\nExamples\n--------\n>>> data = struct.pack('BBBB', 0x21, 0x08, 0xff, 0xff)\n>>> print(unpackrgb(data, '<B', (5, 6, 5), False))\n[ 1  1  1 31 63 31]\n>>> print(unpackrgb(data, '<B', (5, 6, 5)))\n[  8   4   8 255 255 255]\n>>> print(unpackrgb(data, '<B', (5, 5, 5)))\n[ 16   8   8 255 255 255]",
+            "is_deprecated": false,
+            "source_code": "def unpackrgb(data, dtype='<B', bitspersample=(5, 6, 5), rescale=True):\n    \"\"\"Return array from byte string containing packed samples.\n\n    Use to unpack RGB565 or RGB555 to RGB888 format.\n\n    Parameters\n    ----------\n    data : byte str\n        The data to be decoded. Samples in each pixel are stored consecutively.\n        Pixels are aligned to 8, 16, or 32 bit boundaries.\n    dtype : numpy.dtype\n        The sample data type. The byteorder applies also to the data stream.\n    bitspersample : tuple\n        Number of bits for each sample in a pixel.\n    rescale : bool\n        Upscale samples to the number of bits in dtype.\n\n    Returns\n    -------\n    result : ndarray\n        Flattened array of unpacked samples of native dtype.\n\n    Examples\n    --------\n    >>> data = struct.pack('BBBB', 0x21, 0x08, 0xff, 0xff)\n    >>> print(unpackrgb(data, '<B', (5, 6, 5), False))\n    [ 1  1  1 31 63 31]\n    >>> print(unpackrgb(data, '<B', (5, 6, 5)))\n    [  8   4   8 255 255 255]\n    >>> print(unpackrgb(data, '<B', (5, 5, 5)))\n    [ 16   8   8 255 255 255]\n\n    \"\"\"\n    dtype = numpy.dtype(dtype)\n    bits = int(numpy.sum(bitspersample))\n    if not (bits <= 32 and all(i <= dtype.itemsize*8 for i in bitspersample)):\n        raise ValueError(\"sample size not supported %s\" % str(bitspersample))\n    dt = next(i for i in 'BHI' if numpy.dtype(i).itemsize*8 >= bits)\n    data = numpy.fromstring(data, dtype.byteorder+dt)\n    result = numpy.empty((data.size, len(bitspersample)), dtype.char)\n    for i, bps in enumerate(bitspersample):\n        t = data >> int(numpy.sum(bitspersample[i+1:]))\n        t &= int('0b'+'1'*bps, 2)\n        if rescale:\n            o = ((dtype.itemsize * 8) // bps + 1) * bps\n            if o > data.dtype.itemsize * 8:\n                t = t.astype('I')\n            t *= (2**o - 1) // (2**bps - 1)\n            t //= 2**(o - (dtype.itemsize * 8))\n        result[:, i] = t\n    return result.reshape(-1)\n",
+            "signature": "(data, dtype='<B', bitspersample=(5, 6, 5), rescale=True)",
+            "parameters": {
+                "data": {
+                    "name": "data",
+                    "description": "The data to be decoded. Samples in each pixel are stored consecutively.\nPixels are aligned to 8, 16, or 32 bit boundaries.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "dtype": {
+                    "name": "dtype",
+                    "description": "The sample data type. The byteorder applies also to the data stream.",
+                    "is_optional": true,
+                    "default": "<B",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "bitspersample": {
+                    "name": "bitspersample",
+                    "description": "Number of bits for each sample in a pixel.",
+                    "is_optional": true,
+                    "default": "(5, 6, 5)",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "rescale": {
+                    "name": "rescale",
+                    "description": "Upscale samples to the number of bits in dtype.",
+                    "is_optional": true,
+                    "default": "True",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Flattened array of unpacked samples of native dtype.",
+                "type": "ndarray"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

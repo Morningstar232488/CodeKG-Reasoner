@@ -1,0 +1,137 @@
+{
+    "count": 5,
+    "data": [
+        {
+            "_id": "pandas.core.dtypes.inference.iterable_not_string",
+            "name": "iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> iterable_not_string([1, 2, 3])\nTrue\n>>> iterable_not_string(\"foo\")\nFalse\n>>> iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> iterable_not_string([1, 2, 3])\n    True\n    >>> iterable_not_string(\"foo\")\n    False\n    >>> iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj) -> bool",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.aggregation.normalize_keyword_aggregation",
+            "name": "normalize_keyword_aggregation",
+            "module": "pandas.core.aggregation",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n(defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))",
+            "is_deprecated": false,
+            "source_code": "def is_multi_agg_with_relabel(**kwargs) -> bool:\n    \"\"\"\n    Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\n    Parameters\n    ----------\n    **kwargs : dict\n\n    Returns\n    -------\n    bool\n\n    Examples\n    --------\n    >>> is_multi_agg_with_relabel(a=\"max\")\n    False\n    >>> is_multi_agg_with_relabel(a_max=(\"a\", \"max\"), a_min=(\"a\", \"min\"))\n    True\n    >>> is_multi_agg_with_relabel()\n    False\n    \"\"\"\n    return all(isinstance(v, tuple) and len(v) == 2 for v in kwargs.values()) and (\n        len(kwargs) > 0\n    )\n",
+            "signature": "(kwargs: 'dict') -> 'tuple[dict, list[str], list[int]]'",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "dict",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.aggregation.maybe_mangle_lambdas",
+            "name": "maybe_mangle_lambdas",
+            "module": "pandas.core.aggregation",
+            "doc": "Make new lambdas with unique names.\n\nParameters\n----------\nagg_spec : Any\n    An argument to GroupBy.agg.\n    Non-dict-like `agg_spec` are pass through as is.\n    For dict-like `agg_spec` a new spec is returned\n    with name-mangled lambdas.\n\nReturns\n-------\nmangled : Any\n    Same type as the input.\n\nExamples\n--------\n>>> maybe_mangle_lambdas('sum')\n'sum'\n>>> maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n[<function __main__.<lambda_0>,\n <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]",
+            "is_deprecated": false,
+            "source_code": "def maybe_mangle_lambdas(agg_spec: Any) -> Any:\n    \"\"\"\n    Make new lambdas with unique names.\n\n    Parameters\n    ----------\n    agg_spec : Any\n        An argument to GroupBy.agg.\n        Non-dict-like `agg_spec` are pass through as is.\n        For dict-like `agg_spec` a new spec is returned\n        with name-mangled lambdas.\n\n    Returns\n    -------\n    mangled : Any\n        Same type as the input.\n\n    Examples\n    --------\n    >>> maybe_mangle_lambdas('sum')\n    'sum'\n    >>> maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n    [<function __main__.<lambda_0>,\n     <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]\n    \"\"\"\n    is_dict = is_dict_like(agg_spec)\n    if not (is_dict or is_list_like(agg_spec)):\n        return agg_spec\n    mangled_aggspec = type(agg_spec)()  # dict or OrderedDict\n\n    if is_dict:\n        for key, aggfuncs in agg_spec.items():\n            if is_list_like(aggfuncs) and not is_dict_like(aggfuncs):\n                mangled_aggfuncs = _managle_lambda_list(aggfuncs)\n            else:\n                mangled_aggfuncs = aggfuncs\n\n            mangled_aggspec[key] = mangled_aggfuncs\n    else:\n        mangled_aggspec = _managle_lambda_list(agg_spec)\n\n    return mangled_aggspec\n",
+            "signature": "(agg_spec: 'Any') -> 'Any'",
+            "parameters": {
+                "agg_spec": {
+                    "name": "agg_spec",
+                    "description": "An argument to GroupBy.agg.\nNon-dict-like `agg_spec` are pass through as is.\nFor dict-like `agg_spec` a new spec is returned\nwith name-mangled lambdas.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Any",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Same type as the input.",
+                "type": "Any"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        },
+        {
+            "_id": "pandas.core.dtypes.inference._iterable_not_string",
+            "name": "_iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> _iterable_not_string([1, 2, 3])\nTrue\n>>> _iterable_not_string(\"foo\")\nFalse\n>>> _iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def _iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> _iterable_not_string([1, 2, 3])\n    True\n    >>> _iterable_not_string(\"foo\")\n    False\n    >>> _iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj)",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        },
+        {
+            "_id": "pandas.core.aggregation._make_unique_kwarg_list",
+            "name": "_make_unique_kwarg_list",
+            "module": "pandas.core.aggregation",
+            "doc": "Uniquify aggfunc name of the pairs in the order list\n\nExamples:\n--------\n>>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n>>> _make_unique_kwarg_list(kwarg_list)\n[('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]",
+            "is_deprecated": false,
+            "source_code": "def _make_unique_kwarg_list(\n    seq: Sequence[Tuple[Any, Any]]\n) -> Sequence[Tuple[Any, Any]]:\n    \"\"\"\n    Uniquify aggfunc name of the pairs in the order list\n\n    Examples:\n    --------\n    >>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n    >>> _make_unique_kwarg_list(kwarg_list)\n    [('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]\n    \"\"\"\n    return [\n        (pair[0], \"_\".join([pair[1], str(seq[:i].count(pair))]))\n        if seq.count(pair) > 1\n        else pair\n        for i, pair in enumerate(seq)\n    ]\n",
+            "signature": "(seq: 'Sequence[tuple[Any, Any]]') -> 'Sequence[tuple[Any, Any]]'",
+            "parameters": {
+                "seq": {
+                    "name": "seq",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Sequence[tuple[Any, Any]]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

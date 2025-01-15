@@ -1,0 +1,53 @@
+{
+    "data": {
+        "_maybe_infer_dtype_type": {
+            "_id": "pandas.core.dtypes.cast._maybe_infer_dtype_type",
+            "name": "_maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops.\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\ndtype('int64')",
+            "is_deprecated": false,
+            "source_code": "def _maybe_infer_dtype_type(element):\n    \"\"\"\n    Try to infer an object's dtype, for use in arithmetic ops.\n\n    Uses `element.dtype` if that's available.\n    Objects implementing the iterator protocol are cast to a NumPy array,\n    and from there the array's type is used.\n\n    Parameters\n    ----------\n    element : object\n        Possibly has a `.dtype` attribute, and possibly the iterator\n        protocol.\n\n    Returns\n    -------\n    tipo : type\n\n    Examples\n    --------\n    >>> from collections import namedtuple\n    >>> Foo = namedtuple(\"Foo\", \"dtype\")\n    >>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\n    dtype('int64')\n    \"\"\"\n    tipo = None\n    if hasattr(element, \"dtype\"):\n        tipo = element.dtype\n    elif is_list_like(element):\n        element = np.asarray(element)\n        tipo = element.dtype\n    return tipo\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_make_unique_kwarg_list": {
+            "_id": "pandas.core.apply._make_unique_kwarg_list",
+            "name": "_make_unique_kwarg_list",
+            "module": "pandas.core.apply",
+            "doc": "Uniquify aggfunc name of the pairs in the order list\n\nExamples:\n--------\n>>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n>>> _make_unique_kwarg_list(kwarg_list)\n[('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]",
+            "is_deprecated": false,
+            "source_code": "def validate_func_kwargs(\n    kwargs: dict,\n) -> tuple[list[str], list[str | Callable[..., Any]]]:\n    \"\"\"\n    Validates types of user-provided \"named aggregation\" kwargs.\n    `TypeError` is raised if aggfunc is not `str` or callable.\n\n    Parameters\n    ----------\n    kwargs : dict\n\n    Returns\n    -------\n    columns : List[str]\n        List of user-provided keys.\n    func : List[Union[str, callable[...,Any]]]\n        List of user-provided aggfuncs\n\n    Examples\n    --------\n    >>> validate_func_kwargs({'one': 'min', 'two': 'max'})\n    (['one', 'two'], ['min', 'max'])\n    \"\"\"\n    tuple_given_message = \"func is expected but received {} in **kwargs.\"\n    columns = list(kwargs)\n    func = []\n    for col_func in kwargs.values():\n        if not (isinstance(col_func, str) or callable(col_func)):\n            raise TypeError(tuple_given_message.format(type(col_func).__name__))\n        func.append(col_func)\n    if not columns:\n        no_arg_message = \"Must provide 'func' or named aggregation **kwargs.\"\n        raise TypeError(no_arg_message)\n    return columns, func\n",
+            "signature": "(seq: 'Sequence[tuple[Any, Any]]') -> 'Sequence[tuple[Any, Any]]'",
+            "parameters": {
+                "seq": {
+                    "name": "seq",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Sequence[tuple[Any, Any]]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

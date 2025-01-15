@@ -1,0 +1,36 @@
+{
+    "data": {
+        "click": {
+            "==7.1.1": {
+                "resultcallback": "cannot unpack non-iterable NoneType object"
+            },
+            "==8.1.5": {
+                "result_callback": "cannot unpack non-iterable NoneType object"
+            },
+            "==8.1.0": {
+                "result_callback": "cannot unpack non-iterable NoneType object"
+            },
+            "==5.1": {
+                "resultcallback": "cannot unpack non-iterable NoneType object"
+            },
+            "==8.1.7": {
+                "result_callback": "cannot unpack non-iterable NoneType object"
+            },
+            "==6.5": {
+                "resultcallback": "cannot unpack non-iterable NoneType object"
+            },
+            "==8.0.2": {
+                "result_callback": "cannot unpack non-iterable NoneType object"
+            },
+            "==6.2": {
+                "resultcallback": "cannot unpack non-iterable NoneType object"
+            },
+            "==3.1": {
+                "resultcallback": "cannot unpack non-iterable NoneType object"
+            },
+            "==8.1.2": {
+                "result_callback": "cannot unpack non-iterable NoneType object"
+            }
+        }
+    }
+}

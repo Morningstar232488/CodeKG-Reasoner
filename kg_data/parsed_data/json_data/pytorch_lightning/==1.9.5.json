@@ -1,0 +1,82 @@
+{
+    "data": {
+        "register_ddp_comm_hook": {
+            "_id": "pytorch_lightning.utilities.distributed.register_ddp_comm_hook",
+            "name": "register_ddp_comm_hook",
+            "module": "pytorch_lightning.utilities.distributed",
+            "doc": "Function to register communication hook for DDP model https://pytorch.org/docs/master/ddp_comm_hooks.html.\n\nArgs:\n    model:\n        DDP model\n    ddp_comm_state:\n        state is passed to the hook and can be used to maintain\n        and update any state information that users would like to\n        maintain as part of the training process. Examples: error\n        feedback in gradient compression, peers to communicate with\n        next in GossipGrad etc.\n    ddp_comm_hook:\n        hook(state: object, bucket: dist._GradBucket) -> torch.futures.Future\n\n        This callable function is called once the bucket is ready. The\n        hook can perform whatever processing is needed and return\n        a Future indicating completion of any async work (ex: allreduce).\n        If the hook doesn't perform any communication, it can also\n        just return a completed Future. The Future should hold the\n        new value of grad bucket's tensors. Once a bucket is ready,\n        c10d reducer would call this hook and use the tensors returned\n        by the Future and copy grads to individual parameters.\n    ddp_comm_wrapper:\n        communication hook wraper to support a communication hook such\n        as FP16 compression as wrapper, which could be combined with\n        ddp_comm_hook\n\n.. warning ::\n    DDP communication hook needs pytorch version at least 1.8.0\n\n.. warning ::\n    DDP communication wrapper needs pytorch version at least 1.9.0\n    Post-localSGD hook needs pytorch version at least 1.9.0\n\nExample:\n\n    from torch.distributed.algorithms.ddp_comm_hooks import (\n        default_hooks as default,\n        powerSGD_hook as powerSGD,\n        post_localSGD_hook as post_localSGD,\n    )\n\n    # fp16_compress_hook for compress gradients\n    register_ddp_comm_hook(\n        model=ddp_model,\n        ddp_comm_hook=default.fp16_compress_hook,\n    )\n\n    # powerSGD_hook\n    register_ddp_comm_hook(\n        model=ddp_model,\n        ddp_comm_state=powerSGD.PowerSGDState(\n            process_group=None,\n            matrix_approximation_rank=1,\n            start_powerSGD_iter=5000,\n        ),\n        ddp_comm_hook=powerSGD.powerSGD_hook,\n    )\n\n    # post_localSGD_hook\n    subgroup, _ = torch.distributed.new_subgroups()\n    register_comm_hook(\n        model=ddp_model,\n        state=post_localSGD.PostLocalSGDState(\n            process_group=None,\n            subgroup=subgroup,\n            start_localSGD_iter=1_000,\n        ),\n        ddp_comm_hook=post_localSGD.post_localSGD_hook,\n    )\n\n    # fp16_compress_wrapper combined with other communication hook\n    register_ddp_comm_hook(\n        model=ddp_model,\n        ddp_comm_state=powerSGD.PowerSGDState(\n            process_group=None,\n            matrix_approximation_rank=1,\n            start_powerSGD_iter=5000,\n        ),\n        ddp_comm_hook=powerSGD.powerSGD_hook,\n        ddp_comm_wrapper=default.fp16_compress_wrapper,\n    )",
+            "is_deprecated": false,
+            "source_code": "def tpu_distributed() -> bool:\n    rank_zero_deprecation(\n        \"`pytorch_lightning.utilities.distributed.tpu_distributed` has been deprecated in v1.8.0 and will\"\n        \" be removed in v2.0.0. This function is internal but you can copy over its implementation.\"\n    )\n    from lightning_fabric.accelerators.tpu import _tpu_distributed\n\n    return _tpu_distributed()\n",
+            "signature": "(model: torch.nn.parallel.distributed.DistributedDataParallel, ddp_comm_state: Union[object, NoneType] = None, ddp_comm_hook: Union[Callable, NoneType] = None, ddp_comm_wrapper: Union[Callable, NoneType] = None) -> None",
+            "parameters": {
+                "model": {
+                    "name": "model",
+                    "description": "DDP model",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.nn.parallel.distributed.DistributedDataParallel'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "ddp_comm_state": {
+                    "name": "ddp_comm_state",
+                    "description": "state is passed to the hook and can be used to maintain\nand update any state information that users would like to\nmaintain as part of the training process. Examples: error\nfeedback in gradient compression, peers to communicate with\nnext in GossipGrad etc.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[object, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "ddp_comm_hook": {
+                    "name": "ddp_comm_hook",
+                    "description": "hook(state: object, bucket: dist._GradBucket) -> torch.futures.Future\n\nThis callable function is called once the bucket is ready. The\nhook can perform whatever processing is needed and return\na Future indicating completion of any async work (ex: allreduce).\nIf the hook doesn't perform any communication, it can also\njust return a completed Future. The Future should hold the\nnew value of grad bucket's tensors. Once a bucket is ready,\nc10d reducer would call this hook and use the tensors returned\nby the Future and copy grads to individual parameters.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[typing.Callable, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "ddp_comm_wrapper": {
+                    "name": "ddp_comm_wrapper",
+                    "description": "communication hook wraper to support a communication hook such\nas FP16 compression as wrapper, which could be combined with\nddp_comm_hook",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[typing.Callable, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "parse_env_variables": {
+            "_id": "pytorch_lightning.utilities.argparse.parse_env_variables",
+            "name": "parse_env_variables",
+            "module": "pytorch_lightning.utilities.argparse",
+            "doc": "Parse environment arguments if they are defined.\n\nExample:\n    >>> from pytorch_lightning import Trainer\n    >>> parse_env_variables(Trainer)\n    Namespace()\n    >>> import os\n    >>> os.environ[\"PL_TRAINER_GPUS\"] = '42'\n    >>> os.environ[\"PL_TRAINER_BLABLABLA\"] = '1.23'\n    >>> parse_env_variables(Trainer)\n    Namespace(gpus=42)\n    >>> del os.environ[\"PL_TRAINER_GPUS\"]",
+            "is_deprecated": false,
+            "source_code": "def parse_argparser(cls: _ARGPARSE_CLS, arg_parser: Union[ArgumentParser, Namespace]) -> Namespace:\n    \"\"\"Parse CLI arguments, required for custom bool types.\"\"\"\n    args = arg_parser.parse_args() if isinstance(arg_parser, ArgumentParser) else arg_parser\n\n    types_default = {arg: (arg_types, arg_default) for arg, arg_types, arg_default in get_init_arguments_and_types(cls)}\n\n    modified_args = {}\n    for k, v in vars(args).items():\n        if k in types_default and v is None:\n            # We need to figure out if the None is due to using nargs=\"?\" or if it comes from the default value\n            arg_types, arg_default = types_default[k]\n            if bool in arg_types and isinstance(arg_default, bool):\n                # Value has been passed as a flag => It is currently None, so we need to set it to True\n                # We always set to True, regardless of the default value.\n                # Users must pass False directly, but when passing nothing True is assumed.\n                # i.e. the only way to disable something that defaults to True is to use the long form:\n                # \"--a_default_true_arg False\" becomes False, while \"--a_default_false_arg\" becomes None,\n                # which then becomes True here.\n\n                v = True\n\n        modified_args[k] = v\n    return Namespace(**modified_args)\n",
+            "signature": "(cls: Type[ForwardRef('pl.Trainer')], template: str = 'PL_%(cls_name)s_%(cls_argument)s') -> argparse.Namespace",
+            "parameters": {
+                "cls": {
+                    "name": "cls",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Type[ForwardRef('pl.Trainer')]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "template": {
+                    "name": "template",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "PL_%(cls_name)s_%(cls_argument)s",
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

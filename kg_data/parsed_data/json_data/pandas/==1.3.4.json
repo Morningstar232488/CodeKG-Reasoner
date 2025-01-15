@@ -1,0 +1,53 @@
+{
+    "data": {
+        "iterable_not_string": {
+            "_id": "pandas.core.dtypes.inference.iterable_not_string",
+            "name": "iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> iterable_not_string([1, 2, 3])\nTrue\n>>> iterable_not_string(\"foo\")\nFalse\n>>> iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def is_number(obj) -> bool:\n    \"\"\"\n    Check if the object is a number.\n\n    Returns True when the object is a number, and False if is not.\n\n    Parameters\n    ----------\n    obj : any type\n        The object to check if is a number.\n\n    Returns\n    -------\n    is_number : bool\n        Whether `obj` is a number or not.\n\n    See Also\n    --------\n    api.types.is_integer: Checks a subgroup of numbers.\n\n    Examples\n    --------\n    >>> from pandas.api.types import is_number\n    >>> is_number(1)\n    True\n    >>> is_number(7.15)\n    True\n\n    Booleans are valid because they are int subclass.\n\n    >>> is_number(False)\n    True\n\n    >>> is_number(\"foo\")\n    False\n    >>> is_number(\"5\")\n    False\n    \"\"\"\n    return isinstance(obj, (Number, np.number))\n",
+            "signature": "(obj) -> bool",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_make_unique_kwarg_list": {
+            "_id": "pandas.core.aggregation._make_unique_kwarg_list",
+            "name": "_make_unique_kwarg_list",
+            "module": "pandas.core.aggregation",
+            "doc": "Uniquify aggfunc name of the pairs in the order list\n\nExamples:\n--------\n>>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n>>> _make_unique_kwarg_list(kwarg_list)\n[('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]",
+            "is_deprecated": false,
+            "source_code": "def _make_unique_kwarg_list(\n    seq: Sequence[tuple[Any, Any]]\n) -> Sequence[tuple[Any, Any]]:\n    \"\"\"\n    Uniquify aggfunc name of the pairs in the order list\n\n    Examples:\n    --------\n    >>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n    >>> _make_unique_kwarg_list(kwarg_list)\n    [('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]\n    \"\"\"\n    return [\n        (pair[0], \"_\".join([pair[1], str(seq[:i].count(pair))]))\n        if seq.count(pair) > 1\n        else pair\n        for i, pair in enumerate(seq)\n    ]\n",
+            "signature": "(seq: 'Sequence[tuple[Any, Any]]') -> 'Sequence[tuple[Any, Any]]'",
+            "parameters": {
+                "seq": {
+                    "name": "seq",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Sequence[tuple[Any, Any]]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

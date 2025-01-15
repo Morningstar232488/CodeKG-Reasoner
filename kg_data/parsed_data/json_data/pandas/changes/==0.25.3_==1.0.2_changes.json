@@ -1,0 +1,32 @@
+{
+    "count": 1,
+    "data": [
+        {
+            "_id": "pandas.core.groupby.generic._is_multi_agg_with_relabel",
+            "name": "_is_multi_agg_with_relabel",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\nParameters\n----------\n**kwargs : dict\n\nReturns\n-------\nbool\n\nExamples\n--------\n>>> _is_multi_agg_with_relabel(a='max')\nFalse\n>>> _is_multi_agg_with_relabel(a_max=('a', 'max'),\n...                            a_min=('a', 'min'))\nTrue\n>>> _is_multi_agg_with_relabel()\nFalse",
+            "is_deprecated": false,
+            "source_code": "        def groupby_series(obj, col=None):\n            return SeriesGroupBy(obj, selection=col, grouper=self.grouper).nunique(\n                dropna=dropna\n            )\n",
+            "signature": "(**kwargs) -> bool",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "VAR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

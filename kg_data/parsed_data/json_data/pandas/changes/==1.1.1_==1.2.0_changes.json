@@ -1,0 +1,86 @@
+{
+    "count": 3,
+    "data": [
+        {
+            "_id": "pandas.core.dtypes.inference._iterable_not_string",
+            "name": "_iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> _iterable_not_string([1, 2, 3])\nTrue\n>>> _iterable_not_string(\"foo\")\nFalse\n>>> _iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def _iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> _iterable_not_string([1, 2, 3])\n    True\n    >>> _iterable_not_string(\"foo\")\n    False\n    >>> _iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj)",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.dtypes.inference.iterable_not_string",
+            "name": "iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> iterable_not_string([1, 2, 3])\nTrue\n>>> iterable_not_string(\"foo\")\nFalse\n>>> iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> iterable_not_string([1, 2, 3])\n    True\n    >>> iterable_not_string(\"foo\")\n    False\n    >>> iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj) -> bool",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        },
+        {
+            "_id": "pandas.core.aggregation.normalize_keyword_aggregation",
+            "name": "normalize_keyword_aggregation",
+            "module": "pandas.core.aggregation",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n(defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))",
+            "is_deprecated": false,
+            "source_code": "def is_multi_agg_with_relabel(**kwargs) -> bool:\n    \"\"\"\n    Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\n    Parameters\n    ----------\n    **kwargs : dict\n\n    Returns\n    -------\n    bool\n\n    Examples\n    --------\n    >>> is_multi_agg_with_relabel(a=\"max\")\n    False\n    >>> is_multi_agg_with_relabel(a_max=(\"a\", \"max\"), a_min=(\"a\", \"min\"))\n    True\n    >>> is_multi_agg_with_relabel()\n    False\n    \"\"\"\n    return all(isinstance(v, tuple) and len(v) == 2 for v in kwargs.values()) and (\n        len(kwargs) > 0\n    )\n",
+            "signature": "(kwargs: 'dict') -> 'tuple[dict, list[str], list[int]]'",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "dict",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

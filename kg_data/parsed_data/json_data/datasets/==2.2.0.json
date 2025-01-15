@@ -1,0 +1,29 @@
+{
+    "data": {
+        "resolve_patterns_locally_or_by_urls": {
+            "_id": "datasets.data_files.resolve_patterns_locally_or_by_urls",
+            "doc": "Resolve the paths and URLs of the data files from the patterns passed by the user.\nURLs are just returned as is.\n\nYou can use patterns to resolve multiple local files. Here are a few examples:\n- *.csv to match all the CSV files at the first level\n- **.csv to match all the CSV files at any level\n- data/* to match all the files inside \"data\"\n- data/** to match all the files inside \"data\" and its subdirectories\n\nThe patterns are resolved using the fsspec glob.\nHere are some behaviors specific to fsspec glob that are different from glob.glob, Path.glob, Path.match or fnmatch:\n- '*' matches only first level items\n- '**' matches all items\n- '**/*' matches all at least second level items\n\nMore generally:\n- '*' matches any character except a forward-slash (to match just the file or directory name)\n- '**' matches any character including a forward-slash /\n\nExample::\n\n    >>> import huggingface_hub\n    >>> from datasets.data_files import resolve_patterns_locally_or_by_urls\n    >>> base_path = \".\"\n    >>> resolve_patterns_locally_or_by_urls(base_path, [\"src/**/*.yaml\"])\n    [PosixPath('/Users/quentinlhoest/Desktop/hf/datasets/src/datasets/utils/resources/readme_structure.yaml')]\n\nArgs:\n    base_path (str): Base path to use when resolving relative paths.\n    patterns (List[str]): Unix patterns or paths or URLs of the data files to resolve.\n        The paths can be absolute or relative to base_path.\n    allowed_extensions (Optional[list], optional): White-list of file extensions to use. Defaults to None (all extensions).\n        For example: allowed_extensions=[\"csv\", \"json\", \"txt\", \"parquet\"]\n\nReturns:\n    List[Union[Path, Url]]: List of paths or URLs to the local or remote files that match the patterns.",
+            "is_deprecated": false,
+            "source_code": "def resolve_patterns_locally_or_by_urls(\n    base_path: str, patterns: List[str], allowed_extensions: Optional[List[str]] = None\n) -> List[Union[Path, Url]]:\n    \"\"\"\n    Resolve the paths and URLs of the data files from the patterns passed by the user.\n    URLs are just returned as is.\n\n    You can use patterns to resolve multiple local files. Here are a few examples:\n    - *.csv to match all the CSV files at the first level\n    - **.csv to match all the CSV files at any level\n    - data/* to match all the files inside \"data\"\n    - data/** to match all the files inside \"data\" and its subdirectories\n\n    The patterns are resolved using the fsspec glob.\n    Here are some behaviors specific to fsspec glob that are different from glob.glob, Path.glob, Path.match or fnmatch:\n    - '*' matches only first level items\n    - '**' matches all items\n    - '**/*' matches all at least second level items\n\n    More generally:\n    - '*' matches any character except a forward-slash (to match just the file or directory name)\n    - '**' matches any character including a forward-slash /\n\n    Example::\n\n        >>> import huggingface_hub\n        >>> from datasets.data_files import resolve_patterns_locally_or_by_urls\n        >>> base_path = \".\"\n        >>> resolve_patterns_locally_or_by_urls(base_path, [\"src/**/*.yaml\"])\n        [PosixPath('/Users/quentinlhoest/Desktop/hf/datasets/src/datasets/utils/resources/readme_structure.yaml')]\n\n    Args:\n        base_path (str): Base path to use when resolving relative paths.\n        patterns (List[str]): Unix patterns or paths or URLs of the data files to resolve.\n            The paths can be absolute or relative to base_path.\n        allowed_extensions (Optional[list], optional): White-list of file extensions to use. Defaults to None (all extensions).\n            For example: allowed_extensions=[\"csv\", \"json\", \"txt\", \"parquet\"]\n\n    Returns:\n        List[Union[Path, Url]]: List of paths or URLs to the local or remote files that match the patterns.\n    \"\"\"\n    data_files = []\n    for pattern in patterns:\n        if is_remote_url(pattern):\n            data_files.append(Url(pattern))\n        else:\n            for path in _resolve_single_pattern_locally(base_path, pattern, allowed_extensions):\n                data_files.append(path)\n\n    if not data_files:\n        error_msg = f\"Unable to resolve any data file that matches '{patterns}' at {Path(base_path).resolve()}\"\n        if allowed_extensions is not None:\n            error_msg += f\" with any supported extension {list(allowed_extensions)}\"\n        raise FileNotFoundError(error_msg)\n    return data_files\n",
+            "signature": "(base_path: str, patterns: List[str], allowed_extensions: Optional[List[str]] = None) -> List[Union[pathlib.Path, datasets.data_files.Url]]",
+            "parameters": {
+                "base_path": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "patterns": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "allowed_extensions": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": "List of paths or URLs to the local or remote files that match the patterns.",
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "data": {
+        "mean_squared_error": {
+            "_id": "pytorch_lightning.metrics.functional.mean_squared_error.mean_squared_error",
+            "name": "mean_squared_error",
+            "module": "pytorch_lightning.metrics.functional.mean_squared_error",
+            "doc": "Computes mean squared error\n\nArgs:\n    preds: estimated labels\n    target: ground truth labels\n\nReturn:\n    Tensor with MSE\n\nExample:\n\n    >>> x = torch.tensor([0., 1, 2, 3])\n    >>> y = torch.tensor([0., 1, 2, 2])\n    >>> mean_squared_error(x, y)\n    tensor(0.2500)",
+            "is_deprecated": false,
+            "source_code": "def mean_squared_error(preds: torch.Tensor, target: torch.Tensor) -> torch.Tensor:\n    \"\"\"\n    Computes mean squared error\n\n    Args:\n        pred: estimated labels\n        target: ground truth labels\n\n    Return:\n        Tensor with MSE\n\n    Example:\n\n        >>> x = torch.tensor([0., 1, 2, 3])\n        >>> y = torch.tensor([0., 1, 2, 2])\n        >>> mean_squared_error(x, y)\n        tensor(0.2500)\n\n    \"\"\"\n    sum_squared_error, n_obs = _mean_squared_error_update(preds, target)\n    return _mean_squared_error_compute(sum_squared_error, n_obs)\n",
+            "signature": "(preds: torch.Tensor, target: torch.Tensor) -> torch.Tensor",
+            "parameters": {
+                "preds": {
+                    "name": "preds",
+                    "description": "estimated labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "target": {
+                    "name": "target",
+                    "description": "ground truth labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

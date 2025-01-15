@@ -1,0 +1,84 @@
+{
+    "data": {
+        "datasets": {
+            "==2.2.1": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.14.6": {
+                "names": [
+                    "resolve_pattern"
+                ],
+                "count": 1
+            },
+            "==2.6.1": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.14.7": {
+                "names": [
+                    "resolve_pattern"
+                ],
+                "count": 1
+            },
+            "==2.12.0": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.15.0": {
+                "names": [
+                    "resolve_pattern"
+                ],
+                "count": 1
+            },
+            "==2.6.2": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.17.0": {
+                "names": [
+                    "resolve_pattern"
+                ],
+                "count": 1
+            },
+            "==2.13.2": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.2.0": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.10.0": {
+                "names": [
+                    "resolve_patterns_locally_or_by_urls"
+                ],
+                "count": 1
+            },
+            "==2.14.3": {
+                "names": [
+                    "resolve_pattern"
+                ],
+                "count": 1
+            },
+            "==2.14.0": {
+                "names": [
+                    "resolve_pattern"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

@@ -1,0 +1,4 @@
+<http://purl.org/codekg_reasoner/pandas==0.23.0/maybe_infer_dtype_type> <http://purl.org/codekg_reasoner/pandas/has_removed_to> <http://purl.org/codekg_reasoner/pandas==1.4.1/blank_node> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.0/_ensure_index> <http://purl.org/codekg_reasoner/pandas/has_removed_to> <http://purl.org/codekg_reasoner/pandas==1.4.1/blank_node> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.0/blank_node> <http://purl.org/codekg_reasoner/pandas/has_added_to> <http://purl.org/codekg_reasoner/pandas==1.4.1/maybe_mangle_lambdas> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.0/blank_node> <http://purl.org/codekg_reasoner/pandas/has_added_to> <http://purl.org/codekg_reasoner/pandas==1.4.1/ensure_index> <http://purl.org/codekg_reasoner/pandas> .

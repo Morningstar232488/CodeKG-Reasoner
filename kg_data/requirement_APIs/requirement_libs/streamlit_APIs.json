@@ -1,0 +1,640 @@
+{
+    "data": {
+        "streamlit": {
+            "==1.31.1": {
+                "names": [
+                    "table",
+                    "expander"
+                ],
+                "count": 2
+            },
+            "==0.69.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.73.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.85.1": {
+                "names": [
+                    "beta_expander"
+                ],
+                "count": 1
+            },
+            "==0.57.3": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.15.1": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.65.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.84.1": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.57.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.68.1": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.84.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.14.1": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==1.3.1": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.69.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.50.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.27.2": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.40.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.47.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.47.3": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.28.2": {
+                "names": [
+                    "expander",
+                    "altair_chart"
+                ],
+                "count": 2
+            },
+            "==0.49.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.58.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.34.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.65.0": {
+                "names": [
+                    "add_rows",
+                    "beta_color_picker"
+                ],
+                "count": 2
+            },
+            "==0.74.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander",
+                    "color_picker"
+                ],
+                "count": 3
+            },
+            "==0.67.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.30.0": {
+                "names": [
+                    "table",
+                    "expander"
+                ],
+                "count": 2
+            },
+            "==0.72.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.46.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.37.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.87.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.73.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.44.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.24.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==1.21.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.32.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.47.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.81.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==1.29.0": {
+                "names": [
+                    "table",
+                    "vega_lite_chart",
+                    "expander"
+                ],
+                "count": 3
+            },
+            "==0.69.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.36.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.22.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==1.14.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.31.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.31.0": {
+                "names": [
+                    "expander",
+                    "altair_chart"
+                ],
+                "count": 2
+            },
+            "==0.62.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.3.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.83.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.61.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.68.0": {
+                "names": [
+                    "add_rows",
+                    "beta_color_picker",
+                    "beta_expander"
+                ],
+                "count": 3
+            },
+            "==0.40.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.76.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.71.0": {
+                "names": [
+                    "add_rows",
+                    "color_picker"
+                ],
+                "count": 2
+            },
+            "==0.82.0": {
+                "names": [
+                    "beta_expander"
+                ],
+                "count": 1
+            },
+            "==0.78.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.77.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander",
+                    "color_picker"
+                ],
+                "count": 3
+            },
+            "==0.41.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.42.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.79.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.88.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.54.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.30.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.57.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.28.0": {
+                "names": [
+                    "dataframe",
+                    "table",
+                    "scatter_chart"
+                ],
+                "count": 3
+            },
+            "==1.7.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.56.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.33.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.80.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.52.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.53.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.50.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.2.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.43.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.16.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.60.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.64.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.70.0": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.66.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.4.0": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.63.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.84.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.48.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.65.2": {
+                "names": [
+                    "add_rows",
+                    "beta_color_picker"
+                ],
+                "count": 2
+            },
+            "==0.55.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.74.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.81.1": {
+                "names": [
+                    "add_rows",
+                    "beta_expander"
+                ],
+                "count": 2
+            },
+            "==0.43.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.63.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.62.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.57.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.43.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.50.1": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.52.2": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.12.2": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==1.12.1": {
+                "names": [
+                    "expander"
+                ],
+                "count": 1
+            },
+            "==0.59.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==1.28.1": {
+                "names": [
+                    "altair_chart"
+                ],
+                "count": 1
+            },
+            "==0.45.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.51.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.35.0": {
+                "names": [
+                    "add_rows"
+                ],
+                "count": 1
+            },
+            "==0.75.0": {
+                "names": [
+                    "beta_expander"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

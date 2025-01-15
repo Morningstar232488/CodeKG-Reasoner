@@ -1,0 +1,12 @@
+{
+    "data": {
+        "markupsafe": {
+            "==0.14": {
+                "names": [
+                    "soft_unicode"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

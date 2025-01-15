@@ -1,0 +1,121 @@
+{
+    "count": 4,
+    "data": [
+        {
+            "_id": "pandas.core.dtypes.inference.iterable_not_string",
+            "name": "iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> iterable_not_string([1, 2, 3])\nTrue\n>>> iterable_not_string(\"foo\")\nFalse\n>>> iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> iterable_not_string([1, 2, 3])\n    True\n    >>> iterable_not_string(\"foo\")\n    False\n    >>> iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj) -> bool",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.dtypes.cast.maybe_infer_dtype_type",
+            "name": "maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops.\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\ndtype('int64')",
+            "is_deprecated": false,
+            "source_code": "def maybe_infer_dtype_type(element):\n    \"\"\"\n    Try to infer an object's dtype, for use in arithmetic ops.\n\n    Uses `element.dtype` if that's available.\n    Objects implementing the iterator protocol are cast to a NumPy array,\n    and from there the array's type is used.\n\n    Parameters\n    ----------\n    element : object\n        Possibly has a `.dtype` attribute, and possibly the iterator\n        protocol.\n\n    Returns\n    -------\n    tipo : type\n\n    Examples\n    --------\n    >>> from collections import namedtuple\n    >>> Foo = namedtuple(\"Foo\", \"dtype\")\n    >>> maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\n    dtype('int64')\n    \"\"\"\n    tipo = None\n    if hasattr(element, \"dtype\"):\n        tipo = element.dtype\n    elif is_list_like(element):\n        element = np.asarray(element)\n        tipo = element.dtype\n    return tipo\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.indexes.base.ensure_index",
+            "name": "ensure_index",
+            "module": "pandas.core.indexes.base",
+            "doc": "Ensure that we have an index from some index-like object.\n\nParameters\n----------\nindex_like : sequence\n    An Index or other sequence\ncopy : bool, default False\n\nReturns\n-------\nindex : Index or MultiIndex\n\nSee Also\n--------\nensure_index_from_sequences\n\nExamples\n--------\n>>> ensure_index(['a', 'b'])\nIndex(['a', 'b'], dtype='object')\n\n>>> ensure_index([('a', 'a'),  ('b', 'c')])\nIndex([('a', 'a'), ('b', 'c')], dtype='object')\n\n>>> ensure_index([['a', 'a'], ['b', 'c']])\nMultiIndex([('a', 'b'),\n        ('a', 'c')],\n       )",
+            "is_deprecated": false,
+            "source_code": "def ensure_index(index_like: Axes, copy: bool = False) -> Index:\n    \"\"\"\n    Ensure that we have an index from some index-like object.\n\n    Parameters\n    ----------\n    index_like : sequence\n        An Index or other sequence\n    copy : bool, default False\n\n    Returns\n    -------\n    index : Index or MultiIndex\n\n    See Also\n    --------\n    ensure_index_from_sequences\n\n    Examples\n    --------\n    >>> ensure_index(['a', 'b'])\n    Index(['a', 'b'], dtype='object')\n\n    >>> ensure_index([('a', 'a'),  ('b', 'c')])\n    Index([('a', 'a'), ('b', 'c')], dtype='object')\n\n    >>> ensure_index([['a', 'a'], ['b', 'c']])\n    MultiIndex([('a', 'b'),\n            ('a', 'c')],\n           )\n    \"\"\"\n    if isinstance(index_like, Index):\n        if copy:\n            index_like = index_like.copy()\n        return index_like\n\n    if isinstance(index_like, ABCSeries):\n        name = index_like.name\n        return Index(index_like, name=name, copy=copy)\n\n    if is_iterator(index_like):\n        index_like = list(index_like)\n\n    if isinstance(index_like, list):\n        if type(index_like) is not list:\n            # must check for exactly list here because of strict type\n            # check in clean_index_list\n            index_like = list(index_like)\n\n        if len(index_like) and lib.is_all_arraylike(index_like):\n            from pandas.core.indexes.multi import MultiIndex\n\n            return MultiIndex.from_arrays(index_like)\n        else:\n            return Index(index_like, copy=copy, tupleize_cols=False)\n    else:\n        return Index(index_like, copy=copy)\n",
+            "signature": "(index_like: 'Axes', copy: 'bool' = False) -> 'Index'",
+            "parameters": {
+                "index_like": {
+                    "name": "index_like",
+                    "description": "An Index or other sequence",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Axes",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "copy": {
+                    "name": "copy",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "False",
+                    "annotation": "bool",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "Index or MultiIndex"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        },
+        {
+            "_id": "pandas.core.dtypes.cast._maybe_infer_dtype_type",
+            "name": "_maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops.\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\ndtype('int64')",
+            "is_deprecated": false,
+            "source_code": "def _maybe_infer_dtype_type(element):\n    \"\"\"\n    Try to infer an object's dtype, for use in arithmetic ops.\n\n    Uses `element.dtype` if that's available.\n    Objects implementing the iterator protocol are cast to a NumPy array,\n    and from there the array's type is used.\n\n    Parameters\n    ----------\n    element : object\n        Possibly has a `.dtype` attribute, and possibly the iterator\n        protocol.\n\n    Returns\n    -------\n    tipo : type\n\n    Examples\n    --------\n    >>> from collections import namedtuple\n    >>> Foo = namedtuple(\"Foo\", \"dtype\")\n    >>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\n    dtype('int64')\n    \"\"\"\n    tipo = None\n    if hasattr(element, \"dtype\"):\n        tipo = element.dtype\n    elif is_list_like(element):\n        element = np.asarray(element)\n        tipo = element.dtype\n    return tipo\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

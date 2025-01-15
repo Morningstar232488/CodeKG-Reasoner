@@ -1,0 +1,53 @@
+{
+    "count": 2,
+    "data": [
+        {
+            "_id": "torch._jit_internal.createResolutionCallback",
+            "name": "createResolutionCallback",
+            "module": "torch._jit_internal",
+            "doc": "Creates a function which, given a string variable name,\nreturns the value of the variable in the scope of the caller of\nthe function which called createResolutionCallback (by default).\n\nThis is used to enable access in-scope Python variables inside\nTorchScript fragments.\n\nframes_up is number of additional frames to go up on the stack.\nThe default value is 0, which correspond to the frame of the caller\nof createResolutionCallback. Also for example, if frames_up is set\nto 1, then the frame of the caller's caller of createResolutionCallback\nwill be taken.\n\nFor example, the following program prints 2::\n\n    def bar():\n        cb = createResolutionCallback(1)\n        print(cb(\"foo\"))\n\n    def baz():\n        foo = 2\n        bar()\n\n    baz()",
+            "is_deprecated": false,
+            "source_code": "\"\"\"\nThe weak_script annotation needs to be here instead of inside torch/jit/ so it\ncan be used in other places in torch/ (namely torch.nn) without running into\ncircular dependency problems\n\"\"\"\n\nimport inspect\nimport weakref\nimport warnings\nimport torch._C\nfrom torch._six import builtins\nfrom torch._utils_internal import get_source_lines_and_file\n\n# Wrapper functions that can call either of 2 functions depending on a boolean\n# argument\nboolean_dispatched = weakref.WeakKeyDictionary()  # noqa: T484\n\n\ndef createResolutionCallback(frames_up=0):\n    \"\"\"\n    Creates a function which, given a string variable name,\n    returns the value of the variable in the scope of the caller of\n    the function which called createResolutionCallback (by default).\n\n    This is used to enable access in-scope Python variables inside\n    TorchScript fragments.\n\n    frames_up is number of additional frames to go up on the stack.\n    The default value is 0, which correspond to the frame of the caller\n    of createResolutionCallback. Also for example, if frames_up is set\n    to 1, then the frame of the caller's caller of createResolutionCallback\n    will be taken.\n\n    For example, the following program prints 2::\n\n        def bar():\n            cb = createResolutionCallback(1)\n            print(cb(\"foo\"))\n\n        def baz():\n            foo = 2\n            bar()\n\n        baz()\n    \"\"\"\n    frame = inspect.currentframe()\n    i = 0\n    while i < frames_up + 1:\n        frame = frame.f_back\n        i += 1\n\n    f_locals = frame.f_locals\n    f_globals = frame.f_globals\n\n    def env(key):\n        if key in f_locals:\n            return f_locals[key]\n        elif key in f_globals:\n            return f_globals[key]\n        elif hasattr(builtins, key):\n            return getattr(builtins, key)\n\n    return env\n",
+            "signature": "(frames_up=0)",
+            "parameters": {
+                "frames_up": {
+                    "name": "frames_up",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "0",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "torch._jit_internal.createResolutionCallbackFromFrame",
+            "name": "createResolutionCallbackFromFrame",
+            "module": "torch._jit_internal",
+            "doc": "Creates a function which, given a string variable name,\nreturns the value of the variable in the scope of the caller of\nthe function which called createResolutionCallbackFromFrame (by default).\n\nThis is used to enable access in-scope Python variables inside\nTorchScript fragments.\n\nframes_up is number of additional frames to go up on the stack.\nThe default value is 0, which correspond to the frame of the caller\nof createResolutionCallbackFromFrame. Also for example, if frames_up is set\nto 1, then the frame of the caller's caller of createResolutionCallbackFromFrame\nwill be taken.\n\nFor example, the following program prints 2::\n\n    def bar():\n        cb = createResolutionCallbackFromFrame(1)\n        print(cb(\"foo\"))\n\n    def baz():\n        foo = 2\n        bar()\n\n    baz()",
+            "is_deprecated": false,
+            "source_code": "    return lambda expr: parseExpr(expr, lookup_base)\n",
+            "signature": "(frames_up=0)",
+            "parameters": {
+                "frames_up": {
+                    "name": "frames_up",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "0",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

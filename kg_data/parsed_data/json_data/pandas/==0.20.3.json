@@ -1,0 +1,30 @@
+{
+    "data": {
+        "_iterable_not_string": {
+            "_id": "pandas.core.dtypes.inference._iterable_not_string",
+            "name": "_iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> _iterable_not_string([1, 2, 3])\nTrue\n>>> _iterable_not_string(\"foo\")\nFalse\n>>> _iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def _iterable_not_string(obj):\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> _iterable_not_string([1, 2, 3])\n    True\n    >>> _iterable_not_string(\"foo\")\n    False\n    >>> _iterable_not_string(1)\n    False\n    \"\"\"\n\n    return (isinstance(obj, collections.Iterable) and\n            not isinstance(obj, string_types))\n",
+            "signature": "(obj)",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

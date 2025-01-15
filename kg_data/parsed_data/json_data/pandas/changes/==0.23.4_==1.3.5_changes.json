@@ -1,0 +1,102 @@
+{
+    "count": 3,
+    "data": [
+        {
+            "_id": "pandas.core.dtypes.inference._iterable_not_string",
+            "name": "_iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> _iterable_not_string([1, 2, 3])\nTrue\n>>> _iterable_not_string(\"foo\")\nFalse\n>>> _iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def _iterable_not_string(obj):\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> _iterable_not_string([1, 2, 3])\n    True\n    >>> _iterable_not_string(\"foo\")\n    False\n    >>> _iterable_not_string(1)\n    False\n    \"\"\"\n\n    return (isinstance(obj, collections.Iterable) and\n            not isinstance(obj, string_types))\n",
+            "signature": "(obj)",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.indexes.base._ensure_index",
+            "name": "_ensure_index",
+            "module": "pandas.core.indexes.base",
+            "doc": "Ensure that we have an index from some index-like object\n\nParameters\n----------\nindex : sequence\n    An Index or other sequence\ncopy : bool\n\nReturns\n-------\nindex : Index or MultiIndex\n\nExamples\n--------\n>>> _ensure_index(['a', 'b'])\nIndex(['a', 'b'], dtype='object')\n\n>>> _ensure_index([('a', 'a'),  ('b', 'c')])\nIndex([('a', 'a'), ('b', 'c')], dtype='object')\n\n>>> _ensure_index([['a', 'a'], ['b', 'c']])\nMultiIndex(levels=[['a'], ['b', 'c']],\n           labels=[[0, 0], [0, 1]])\n\nSee Also\n--------\n_ensure_index_from_sequences",
+            "is_deprecated": false,
+            "source_code": "def _ensure_index(index_like, copy=False):\n    \"\"\"\n    Ensure that we have an index from some index-like object\n\n    Parameters\n    ----------\n    index : sequence\n        An Index or other sequence\n    copy : bool\n\n    Returns\n    -------\n    index : Index or MultiIndex\n\n    Examples\n    --------\n    >>> _ensure_index(['a', 'b'])\n    Index(['a', 'b'], dtype='object')\n\n    >>> _ensure_index([('a', 'a'),  ('b', 'c')])\n    Index([('a', 'a'), ('b', 'c')], dtype='object')\n\n    >>> _ensure_index([['a', 'a'], ['b', 'c']])\n    MultiIndex(levels=[['a'], ['b', 'c']],\n               labels=[[0, 0], [0, 1]])\n\n    See Also\n    --------\n    _ensure_index_from_sequences\n    \"\"\"\n    if isinstance(index_like, Index):\n        if copy:\n            index_like = index_like.copy()\n        return index_like\n    if hasattr(index_like, 'name'):\n        return Index(index_like, name=index_like.name, copy=copy)\n\n    if is_iterator(index_like):\n        index_like = list(index_like)\n\n    # must check for exactly list here because of strict type\n    # check in clean_index_list\n    if isinstance(index_like, list):\n        if type(index_like) != list:\n            index_like = list(index_like)\n\n        converted, all_arrays = lib.clean_index_list(index_like)\n\n        if len(converted) > 0 and all_arrays:\n            from .multi import MultiIndex\n            return MultiIndex.from_arrays(converted)\n        else:\n            index_like = converted\n    else:\n        # clean_index_list does the equivalent of copying\n        # so only need to do this if not list instance\n        if copy:\n            from copy import copy\n            index_like = copy(index_like)\n\n    return Index(index_like)\n",
+            "signature": "(index_like, copy=False)",
+            "parameters": {
+                "index_like": {
+                    "name": "index_like",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "copy": {
+                    "name": "copy",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "False",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "Index or MultiIndex"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.indexes.base.ensure_index",
+            "name": "ensure_index",
+            "module": "pandas.core.indexes.base",
+            "doc": "Ensure that we have an index from some index-like object.\n\nParameters\n----------\nindex_like : sequence\n    An Index or other sequence\ncopy : bool, default False\n\nReturns\n-------\nindex : Index or MultiIndex\n\nSee Also\n--------\nensure_index_from_sequences\n\nExamples\n--------\n>>> ensure_index(['a', 'b'])\nIndex(['a', 'b'], dtype='object')\n\n>>> ensure_index([('a', 'a'),  ('b', 'c')])\nIndex([('a', 'a'), ('b', 'c')], dtype='object')\n\n>>> ensure_index([['a', 'a'], ['b', 'c']])\nMultiIndex([('a', 'b'),\n        ('a', 'c')],\n       )",
+            "is_deprecated": false,
+            "source_code": "def ensure_index(index_like: AnyArrayLike | Sequence, copy: bool = False) -> Index:\n    \"\"\"\n    Ensure that we have an index from some index-like object.\n\n    Parameters\n    ----------\n    index_like : sequence\n        An Index or other sequence\n    copy : bool, default False\n\n    Returns\n    -------\n    index : Index or MultiIndex\n\n    See Also\n    --------\n    ensure_index_from_sequences\n\n    Examples\n    --------\n    >>> ensure_index(['a', 'b'])\n    Index(['a', 'b'], dtype='object')\n\n    >>> ensure_index([('a', 'a'),  ('b', 'c')])\n    Index([('a', 'a'), ('b', 'c')], dtype='object')\n\n    >>> ensure_index([['a', 'a'], ['b', 'c']])\n    MultiIndex([('a', 'b'),\n            ('a', 'c')],\n           )\n    \"\"\"\n    if isinstance(index_like, Index):\n        if copy:\n            index_like = index_like.copy()\n        return index_like\n\n    if isinstance(index_like, ABCSeries):\n        name = index_like.name\n        return Index(index_like, name=name, copy=copy)\n\n    if is_iterator(index_like):\n        index_like = list(index_like)\n\n    if isinstance(index_like, list):\n        if type(index_like) is not list:\n            # must check for exactly list here because of strict type\n            # check in clean_index_list\n            index_like = list(index_like)\n\n        if len(index_like) and lib.is_all_arraylike(index_like):\n            from pandas.core.indexes.multi import MultiIndex\n\n            return MultiIndex.from_arrays(index_like)\n        else:\n            return Index(index_like, copy=copy, tupleize_cols=False)\n    else:\n\n        return Index(index_like, copy=copy)\n",
+            "signature": "(index_like: 'AnyArrayLike | Sequence', copy: 'bool' = False) -> 'Index'",
+            "parameters": {
+                "index_like": {
+                    "name": "index_like",
+                    "description": "An Index or other sequence",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "AnyArrayLike | Sequence",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "copy": {
+                    "name": "copy",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "False",
+                    "annotation": "bool",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "Index or MultiIndex"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

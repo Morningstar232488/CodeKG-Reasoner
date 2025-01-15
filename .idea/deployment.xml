@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="3090-2" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="3090">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/CodeKG-Reasoner" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="3090-2">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/autodl-tmp/CodeKG-Reasoner" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@connect.yza1.seetacloud.com:39881 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/autodl-tmp/CodeKG-Reasoner" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

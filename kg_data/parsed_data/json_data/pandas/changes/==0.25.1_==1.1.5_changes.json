@@ -1,0 +1,83 @@
+{
+    "count": 3,
+    "data": [
+        {
+            "_id": "pandas.core.groupby.generic._maybe_mangle_lambdas",
+            "name": "_maybe_mangle_lambdas",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Make new lambdas with unique names.\n\nParameters\n----------\nagg_spec : Any\n    An argument to NDFrameGroupBy.agg.\n    Non-dict-like `agg_spec` are pass through as is.\n    For dict-like `agg_spec` a new spec is returned\n    with name-mangled lambdas.\n\nReturns\n-------\nmangled : Any\n    Same type as the input.\n\nExamples\n--------\n>>> _maybe_mangle_lambdas('sum')\n'sum'\n\n>>> _maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n[<function __main__.<lambda_0>,\n <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]",
+            "is_deprecated": false,
+            "source_code": "def _maybe_mangle_lambdas(agg_spec: Any) -> Any:\n    \"\"\"\n    Make new lambdas with unique names.\n\n    Parameters\n    ----------\n    agg_spec : Any\n        An argument to NDFrameGroupBy.agg.\n        Non-dict-like `agg_spec` are pass through as is.\n        For dict-like `agg_spec` a new spec is returned\n        with name-mangled lambdas.\n\n    Returns\n    -------\n    mangled : Any\n        Same type as the input.\n\n    Examples\n    --------\n    >>> _maybe_mangle_lambdas('sum')\n    'sum'\n\n    >>> _maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n    [<function __main__.<lambda_0>,\n     <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]\n    \"\"\"\n    is_dict = is_dict_like(agg_spec)\n    if not (is_dict or is_list_like(agg_spec)):\n        return agg_spec\n    mangled_aggspec = type(agg_spec)()  # dict or OrderdDict\n\n    if is_dict:\n        for key, aggfuncs in agg_spec.items():\n            if is_list_like(aggfuncs) and not is_dict_like(aggfuncs):\n                mangled_aggfuncs = _managle_lambda_list(aggfuncs)\n            else:\n                mangled_aggfuncs = aggfuncs\n\n            mangled_aggspec[key] = mangled_aggfuncs\n    else:\n        mangled_aggspec = _managle_lambda_list(agg_spec)\n\n    return mangled_aggspec\n",
+            "signature": "(agg_spec:Any) -> Any",
+            "parameters": {
+                "agg_spec": {
+                    "name": "agg_spec",
+                    "description": "An argument to NDFrameGroupBy.agg.\nNon-dict-like `agg_spec` are pass through as is.\nFor dict-like `agg_spec` a new spec is returned\nwith name-mangled lambdas.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Any",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Same type as the input.",
+                "type": "Any"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.aggregation.maybe_mangle_lambdas",
+            "name": "maybe_mangle_lambdas",
+            "module": "pandas.core.aggregation",
+            "doc": "Make new lambdas with unique names.\n\nParameters\n----------\nagg_spec : Any\n    An argument to GroupBy.agg.\n    Non-dict-like `agg_spec` are pass through as is.\n    For dict-like `agg_spec` a new spec is returned\n    with name-mangled lambdas.\n\nReturns\n-------\nmangled : Any\n    Same type as the input.\n\nExamples\n--------\n>>> maybe_mangle_lambdas('sum')\n'sum'\n>>> maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n[<function __main__.<lambda_0>,\n <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]",
+            "is_deprecated": false,
+            "source_code": "def maybe_mangle_lambdas(agg_spec: Any) -> Any:\n    \"\"\"\n    Make new lambdas with unique names.\n\n    Parameters\n    ----------\n    agg_spec : Any\n        An argument to GroupBy.agg.\n        Non-dict-like `agg_spec` are pass through as is.\n        For dict-like `agg_spec` a new spec is returned\n        with name-mangled lambdas.\n\n    Returns\n    -------\n    mangled : Any\n        Same type as the input.\n\n    Examples\n    --------\n    >>> maybe_mangle_lambdas('sum')\n    'sum'\n    >>> maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n    [<function __main__.<lambda_0>,\n     <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]\n    \"\"\"\n    is_dict = is_dict_like(agg_spec)\n    if not (is_dict or is_list_like(agg_spec)):\n        return agg_spec\n    mangled_aggspec = type(agg_spec)()  # dict or OrderedDict\n\n    if is_dict:\n        for key, aggfuncs in agg_spec.items():\n            if is_list_like(aggfuncs) and not is_dict_like(aggfuncs):\n                mangled_aggfuncs = _managle_lambda_list(aggfuncs)\n            else:\n                mangled_aggfuncs = aggfuncs\n\n            mangled_aggspec[key] = mangled_aggfuncs\n    else:\n        mangled_aggspec = _managle_lambda_list(agg_spec)\n\n    return mangled_aggspec\n",
+            "signature": "(agg_spec: 'Any') -> 'Any'",
+            "parameters": {
+                "agg_spec": {
+                    "name": "agg_spec",
+                    "description": "An argument to GroupBy.agg.\nNon-dict-like `agg_spec` are pass through as is.\nFor dict-like `agg_spec` a new spec is returned\nwith name-mangled lambdas.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Any",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Same type as the input.",
+                "type": "Any"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        },
+        {
+            "_id": "pandas.core.aggregation._make_unique_kwarg_list",
+            "name": "_make_unique_kwarg_list",
+            "module": "pandas.core.aggregation",
+            "doc": "Uniquify aggfunc name of the pairs in the order list\n\nExamples:\n--------\n>>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n>>> _make_unique_kwarg_list(kwarg_list)\n[('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]",
+            "is_deprecated": false,
+            "source_code": "def _make_unique_kwarg_list(\n    seq: Sequence[Tuple[Any, Any]]\n) -> Sequence[Tuple[Any, Any]]:\n    \"\"\"\n    Uniquify aggfunc name of the pairs in the order list\n\n    Examples:\n    --------\n    >>> kwarg_list = [('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')]\n    >>> _make_unique_kwarg_list(kwarg_list)\n    [('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]\n    \"\"\"\n    return [\n        (pair[0], \"_\".join([pair[1], str(seq[:i].count(pair))]))\n        if seq.count(pair) > 1\n        else pair\n        for i, pair in enumerate(seq)\n    ]\n",
+            "signature": "(seq: 'Sequence[tuple[Any, Any]]') -> 'Sequence[tuple[Any, Any]]'",
+            "parameters": {
+                "seq": {
+                    "name": "seq",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Sequence[tuple[Any, Any]]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

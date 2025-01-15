@@ -1,0 +1,59 @@
+{
+    "count": 2,
+    "data": [
+        {
+            "_id": "pandas.core.dtypes.inference._iterable_not_string",
+            "name": "_iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> _iterable_not_string([1, 2, 3])\nTrue\n>>> _iterable_not_string(\"foo\")\nFalse\n>>> _iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def _iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> _iterable_not_string([1, 2, 3])\n    True\n    >>> _iterable_not_string(\"foo\")\n    False\n    >>> _iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj)",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.dtypes.cast._maybe_infer_dtype_type",
+            "name": "_maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops.\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\ndtype('int64')",
+            "is_deprecated": false,
+            "source_code": "def _maybe_infer_dtype_type(element):\n    \"\"\"\n    Try to infer an object's dtype, for use in arithmetic ops.\n\n    Uses `element.dtype` if that's available.\n    Objects implementing the iterator protocol are cast to a NumPy array,\n    and from there the array's type is used.\n\n    Parameters\n    ----------\n    element : object\n        Possibly has a `.dtype` attribute, and possibly the iterator\n        protocol.\n\n    Returns\n    -------\n    tipo : type\n\n    Examples\n    --------\n    >>> from collections import namedtuple\n    >>> Foo = namedtuple(\"Foo\", \"dtype\")\n    >>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\n    dtype('int64')\n    \"\"\"\n    tipo = None\n    if hasattr(element, \"dtype\"):\n        tipo = element.dtype\n    elif is_list_like(element):\n        element = np.asarray(element)\n        tipo = element.dtype\n    return tipo\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

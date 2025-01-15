@@ -1,0 +1,164 @@
+{
+    "count": 6,
+    "data": [
+        {
+            "_id": "pandas.core.dtypes.cast.maybe_infer_dtype_type",
+            "name": "maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\nnumpy.int64",
+            "is_deprecated": false,
+            "source_code": "def maybe_promote(dtype, fill_value=np.nan):\n    \"\"\"\n    Find the minimal dtype that can hold both the given dtype and fill_value.\n\n    Parameters\n    ----------\n    dtype : np.dtype or ExtensionDtype\n    fill_value : scalar, default np.nan\n\n    Returns\n    -------\n    dtype\n        Upcasted from dtype argument if necessary.\n    fill_value\n        Upcasted from fill_value argument if necessary.\n    \"\"\"\n    if not is_scalar(fill_value) and not is_object_dtype(dtype):\n        # with object dtype there is nothing to promote, and the user can\n        #  pass pretty much any weird fill_value they like\n        raise ValueError(\"fill_value must be a scalar\")\n\n    # if we passed an array here, determine the fill value by dtype\n    if isinstance(fill_value, np.ndarray):\n        if issubclass(fill_value.dtype.type, (np.datetime64, np.timedelta64)):\n            fill_value = fill_value.dtype.type(\"NaT\", \"ns\")\n        else:\n\n            # we need to change to object type as our\n            # fill_value is of object type\n            if fill_value.dtype == np.object_:\n                dtype = np.dtype(np.object_)\n            fill_value = np.nan\n\n        if dtype == np.object_ or dtype.kind in [\"U\", \"S\"]:\n            # We treat string-like dtypes as object, and _always_ fill\n            #  with np.nan\n            fill_value = np.nan\n            dtype = np.dtype(np.object_)\n\n    # returns tuple of (dtype, fill_value)\n    if issubclass(dtype.type, np.datetime64):\n        if isinstance(fill_value, datetime) and fill_value.tzinfo is not None:\n            # Trying to insert tzaware into tznaive, have to cast to object\n            dtype = np.dtype(np.object_)\n        elif is_integer(fill_value) or (is_float(fill_value) and not isna(fill_value)):\n            dtype = np.dtype(np.object_)\n        else:\n            try:\n                fill_value = tslibs.Timestamp(fill_value).to_datetime64()\n            except (TypeError, ValueError):\n                dtype = np.dtype(np.object_)\n    elif issubclass(dtype.type, np.timedelta64):\n        if (\n            is_integer(fill_value)\n            or (is_float(fill_value) and not np.isnan(fill_value))\n            or isinstance(fill_value, str)\n        ):\n            # TODO: What about str that can be a timedelta?\n            dtype = np.dtype(np.object_)\n        else:\n            try:\n                fv = tslibs.Timedelta(fill_value)\n            except ValueError:\n                dtype = np.dtype(np.object_)\n            else:\n                if fv is NaT:\n                    # NaT has no `to_timedelta64` method\n                    fill_value = np.timedelta64(\"NaT\", \"ns\")\n                else:\n                    fill_value = fv.to_timedelta64()\n    elif is_datetime64tz_dtype(dtype):\n        if isna(fill_value):\n            fill_value = NaT\n        elif not isinstance(fill_value, datetime):\n            dtype = np.dtype(np.object_)\n        elif fill_value.tzinfo is None:\n            dtype = np.dtype(np.object_)\n        elif not tz_compare(fill_value.tzinfo, dtype.tz):\n            # TODO: sure we want to cast here?\n            dtype = np.dtype(np.object_)\n\n    elif is_extension_array_dtype(dtype) and isna(fill_value):\n        fill_value = dtype.na_value\n\n    elif is_float(fill_value):\n        if issubclass(dtype.type, np.bool_):\n            dtype = np.dtype(np.object_)\n\n        elif issubclass(dtype.type, np.integer):\n            dtype = np.dtype(np.float64)\n\n        elif dtype.kind == \"f\":\n            mst = np.min_scalar_type(fill_value)\n            if mst > dtype:\n                # e.g. mst is np.float64 and dtype is np.float32\n                dtype = mst\n\n        elif dtype.kind == \"c\":\n            mst = np.min_scalar_type(fill_value)\n            dtype = np.promote_types(dtype, mst)\n\n    elif is_bool(fill_value):\n        if not issubclass(dtype.type, np.bool_):\n            dtype = np.dtype(np.object_)\n\n    elif is_integer(fill_value):\n        if issubclass(dtype.type, np.bool_):\n            dtype = np.dtype(np.object_)\n\n        elif issubclass(dtype.type, np.integer):\n            if not np.can_cast(fill_value, dtype):\n                # upcast to prevent overflow\n                mst = np.min_scalar_type(fill_value)\n                dtype = np.promote_types(dtype, mst)\n                if dtype.kind == \"f\":\n                    # Case where we disagree with numpy\n                    dtype = np.dtype(np.object_)\n\n    elif is_complex(fill_value):\n        if issubclass(dtype.type, np.bool_):\n            dtype = np.dtype(np.object_)\n\n        elif issubclass(dtype.type, (np.integer, np.floating)):\n            mst = np.min_scalar_type(fill_value)\n            dtype = np.promote_types(dtype, mst)\n\n        elif dtype.kind == \"c\":\n            mst = np.min_scalar_type(fill_value)\n            if mst > dtype:\n                # e.g. mst is np.complex128 and dtype is np.complex64\n                dtype = mst\n\n    elif fill_value is None:\n        if is_float_dtype(dtype) or is_complex_dtype(dtype):\n            fill_value = np.nan\n        elif is_integer_dtype(dtype):\n            dtype = np.float64\n            fill_value = np.nan\n        elif is_datetime_or_timedelta_dtype(dtype):\n            fill_value = dtype.type(\"NaT\", \"ns\")\n        else:\n            dtype = np.dtype(np.object_)\n            fill_value = np.nan\n    else:\n        dtype = np.dtype(np.object_)\n\n    # in case we have a string that looked like a number\n    if is_extension_array_dtype(dtype):\n        pass\n    elif issubclass(np.dtype(dtype).type, (bytes, str)):\n        dtype = np.dtype(np.object_)\n\n    fill_value = _ensure_dtype_type(fill_value, dtype)\n    return dtype, fill_value\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.groupby.generic._make_unique",
+            "name": "_make_unique",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Uniquify aggfunc name of the pairs in the order list\n\nExamples:\n--------\n>>> _make_unique([('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')])\n[('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]",
+            "is_deprecated": false,
+            "source_code": "def _normalize_keyword_aggregation(kwargs):\n    \"\"\"\n    Normalize user-provided \"named aggregation\" kwargs.\n\n    Transforms from the new ``Mapping[str, NamedAgg]`` style kwargs\n    to the old Dict[str, List[scalar]]].\n\n    Parameters\n    ----------\n    kwargs : dict\n\n    Returns\n    -------\n    aggspec : dict\n        The transformed kwargs.\n    columns : List[str]\n        The user-provided keys.\n    col_idx_order : List[int]\n        List of columns indices.\n\n    Examples\n    --------\n    >>> _normalize_keyword_aggregation({'output': ('input', 'sum')})\n    ({'input': ['sum']}, ('output',), [('input', 'sum')])\n    \"\"\"\n    # Normalize the aggregation functions as Mapping[column, List[func]],\n    # process normally, then fixup the names.\n    # TODO: aggspec type: typing.Dict[str, List[AggScalar]]\n    # May be hitting https://github.com/python/mypy/issues/5958\n    # saying it doesn't have an attribute __name__\n    aggspec = defaultdict(list)\n    order = []\n    columns, pairs = list(zip(*kwargs.items()))\n\n    for name, (column, aggfunc) in zip(columns, pairs):\n        aggspec[column].append(aggfunc)\n        order.append((column, com.get_callable_name(aggfunc) or aggfunc))\n\n    # uniquify aggfunc name if duplicated in order list\n    uniquified_order = _make_unique(order)\n\n    # GH 25719, due to aggspec will change the order of assigned columns in aggregation\n    # uniquified_aggspec will store uniquified order list and will compare it with order\n    # based on index\n    aggspec_order = [\n        (column, com.get_callable_name(aggfunc) or aggfunc)\n        for column, aggfuncs in aggspec.items()\n        for aggfunc in aggfuncs\n    ]\n    uniquified_aggspec = _make_unique(aggspec_order)\n\n    # get the new indice of columns by comparison\n    col_idx_order = Index(uniquified_aggspec).get_indexer(uniquified_order)\n    return aggspec, columns, col_idx_order\n",
+            "signature": "(seq)",
+            "parameters": {
+                "seq": {
+                    "name": "seq",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.groupby.generic._maybe_mangle_lambdas",
+            "name": "_maybe_mangle_lambdas",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Make new lambdas with unique names.\n\nParameters\n----------\nagg_spec : Any\n    An argument to GroupBy.agg.\n    Non-dict-like `agg_spec` are pass through as is.\n    For dict-like `agg_spec` a new spec is returned\n    with name-mangled lambdas.\n\nReturns\n-------\nmangled : Any\n    Same type as the input.\n\nExamples\n--------\n>>> _maybe_mangle_lambdas('sum')\n'sum'\n\n>>> _maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n[<function __main__.<lambda_0>,\n <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]",
+            "is_deprecated": false,
+            "source_code": "def _managle_lambda_list(aggfuncs: Sequence[Any]) -> Sequence[Any]:\n    \"\"\"\n    Possibly mangle a list of aggfuncs.\n\n    Parameters\n    ----------\n    aggfuncs : Sequence\n\n    Returns\n    -------\n    mangled: list-like\n        A new AggSpec sequence, where lambdas have been converted\n        to have unique names.\n\n    Notes\n    -----\n    If just one aggfunc is passed, the name will not be mangled.\n    \"\"\"\n    if len(aggfuncs) <= 1:\n        # don't mangle for .agg([lambda x: .])\n        return aggfuncs\n    i = 0\n    mangled_aggfuncs = []\n    for aggfunc in aggfuncs:\n        if com.get_callable_name(aggfunc) == \"<lambda>\":\n            aggfunc = partial(aggfunc)\n            aggfunc.__name__ = f\"<lambda_{i}>\"\n            i += 1\n        mangled_aggfuncs.append(aggfunc)\n\n    return mangled_aggfuncs\n",
+            "signature": "(agg_spec: Any) -> Any",
+            "parameters": {
+                "agg_spec": {
+                    "name": "agg_spec",
+                    "description": "An argument to GroupBy.agg.\nNon-dict-like `agg_spec` are pass through as is.\nFor dict-like `agg_spec` a new spec is returned\nwith name-mangled lambdas.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Any",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Same type as the input.",
+                "type": "Any"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.groupby.generic._normalize_keyword_aggregation",
+            "name": "_normalize_keyword_aggregation",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\n\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> _normalize_keyword_aggregation({'output': ('input', 'sum')})\n({'input': ['sum']}, ('output',), [('input', 'sum')])",
+            "is_deprecated": false,
+            "source_code": "def _is_multi_agg_with_relabel(**kwargs) -> bool:\n    \"\"\"\n    Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\n    Parameters\n    ----------\n    **kwargs : dict\n\n    Returns\n    -------\n    bool\n\n    Examples\n    --------\n    >>> _is_multi_agg_with_relabel(a='max')\n    False\n    >>> _is_multi_agg_with_relabel(a_max=('a', 'max'),\n    ...                            a_min=('a', 'min'))\n    True\n    >>> _is_multi_agg_with_relabel()\n    False\n    \"\"\"\n    return all(isinstance(v, tuple) and len(v) == 2 for v in kwargs.values()) and (\n        len(kwargs) > 0\n    )\n",
+            "signature": "(kwargs)",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.dtypes.inference.iterable_not_string",
+            "name": "iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> iterable_not_string([1, 2, 3])\nTrue\n>>> iterable_not_string(\"foo\")\nFalse\n>>> iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def iterable_not_string(obj) -> bool:\n    \"\"\"\n    Check if the object is an iterable but not a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Returns\n    -------\n    is_iter_not_string : bool\n        Whether `obj` is a non-string iterable.\n\n    Examples\n    --------\n    >>> iterable_not_string([1, 2, 3])\n    True\n    >>> iterable_not_string(\"foo\")\n    False\n    >>> iterable_not_string(1)\n    False\n    \"\"\"\n    return isinstance(obj, abc.Iterable) and not isinstance(obj, str)\n",
+            "signature": "(obj) -> bool",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        },
+        {
+            "_id": "pandas.core.aggregation.normalize_keyword_aggregation",
+            "name": "normalize_keyword_aggregation",
+            "module": "pandas.core.aggregation",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n(defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))",
+            "is_deprecated": false,
+            "source_code": "def is_multi_agg_with_relabel(**kwargs) -> bool:\n    \"\"\"\n    Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\n    Parameters\n    ----------\n    **kwargs : dict\n\n    Returns\n    -------\n    bool\n\n    Examples\n    --------\n    >>> is_multi_agg_with_relabel(a=\"max\")\n    False\n    >>> is_multi_agg_with_relabel(a_max=(\"a\", \"max\"), a_min=(\"a\", \"min\"))\n    True\n    >>> is_multi_agg_with_relabel()\n    False\n    \"\"\"\n    return all(isinstance(v, tuple) and len(v) == 2 for v in kwargs.values()) and (\n        len(kwargs) > 0\n    )\n",
+            "signature": "(kwargs: 'dict') -> 'tuple[dict, list[str], list[int]]'",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "dict",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

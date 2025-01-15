@@ -1,0 +1,27 @@
+{
+    "data": {
+        "_strip_rest_role": {
+            "_id": "jedi.docstrings._strip_rest_role",
+            "name": "_strip_rest_role",
+            "module": "jedi.docstrings",
+            "doc": "Strip off the part looks like a ReST role in `type_str`.\n\n>>> _strip_rest_role(':class:`ClassName`')  # strip off :class:\n'ClassName'\n>>> _strip_rest_role(':py:obj:`module.Object`')  # works with domain\n'module.Object'\n>>> _strip_rest_role('ClassName')  # do nothing when not ReST role\n'ClassName'\n\nSee also:\nhttp://sphinx-doc.org/domains.html#cross-referencing-python-objects",
+            "is_deprecated": false,
+            "source_code": "def _strip_rest_role(type_str):\n    \"\"\"\n    Strip off the part looks like a ReST role in `type_str`.\n\n    >>> _strip_rest_role(':class:`ClassName`')  # strip off :class:\n    'ClassName'\n    >>> _strip_rest_role(':py:obj:`module.Object`')  # works with domain\n    'module.Object'\n    >>> _strip_rest_role('ClassName')  # do nothing when not ReST role\n    'ClassName'\n\n    See also:\n    http://sphinx-doc.org/domains.html#cross-referencing-python-objects\n\n    \"\"\"\n    match = REST_ROLE_PATTERN.match(type_str)\n    if match:\n        return match.group(1)\n    else:\n        return type_str\n",
+            "signature": "(type_str)",
+            "parameters": {
+                "type_str": {
+                    "name": "type_str",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

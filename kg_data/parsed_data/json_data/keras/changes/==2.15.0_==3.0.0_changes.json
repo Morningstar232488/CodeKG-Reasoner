@@ -1,0 +1,91 @@
+{
+    "count": 2,
+    "data": [
+        {
+            "_id": "keras.src.utils.data_utils._hash_file",
+            "name": "_hash_file",
+            "module": "keras.src.utils.data_utils",
+            "doc": "Calculates a file sha256 or md5 hash.\n\nExample:\n\n```python\n_hash_file('/path/to/file.zip')\n'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'\n```\n\nArgs:\n    fpath: Path to the file being validated.\n    algorithm: Hash algorithm, one of `'auto'`, `'sha256'`, or `'md5'`.\n        The default `'auto'` detects the hash algorithm in use.\n    chunk_size: Bytes to read at a time, important for large files.\n\nReturns:\n    The file hash.",
+            "is_deprecated": false,
+            "source_code": "def _hash_file(fpath, algorithm=\"sha256\", chunk_size=65535):\n    \"\"\"Calculates a file sha256 or md5 hash.\n\n    Example:\n\n    ```python\n    _hash_file('/path/to/file.zip')\n    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'\n    ```\n\n    Args:\n        fpath: Path to the file being validated.\n        algorithm: Hash algorithm, one of `'auto'`, `'sha256'`, or `'md5'`.\n            The default `'auto'` detects the hash algorithm in use.\n        chunk_size: Bytes to read at a time, important for large files.\n\n    Returns:\n        The file hash.\n    \"\"\"\n    if isinstance(algorithm, str):\n        hasher = _resolve_hasher(algorithm)\n    else:\n        hasher = algorithm\n\n    with open(fpath, \"rb\") as fpath_file:\n        for chunk in iter(lambda: fpath_file.read(chunk_size), b\"\"):\n            hasher.update(chunk)\n\n    return hasher.hexdigest()\n",
+            "signature": "(fpath, algorithm='sha256', chunk_size=65535)",
+            "parameters": {
+                "fpath": {
+                    "name": "fpath",
+                    "description": "Path to the file being validated.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "algorithm": {
+                    "name": "algorithm",
+                    "description": "Hash algorithm, one of `'auto'`, `'sha256'`, or `'md5'`.\nThe default `'auto'` detects the hash algorithm in use.",
+                    "is_optional": true,
+                    "default": "sha256",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "chunk_size": {
+                    "name": "chunk_size",
+                    "description": "Bytes to read at a time, important for large files.",
+                    "is_optional": true,
+                    "default": "65535",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The file hash.",
+                "type": null
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "keras.src.utils.file_utils.hash_file",
+            "name": "hash_file",
+            "module": "keras.src.utils.file_utils",
+            "doc": "Calculates a file sha256 or md5 hash.\n\nExample:\n\n>>> hash_file('/path/to/file.zip')\n'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'\n\nArgs:\n    fpath: Path to the file being validated.\n    algorithm: Hash algorithm, one of `\"auto\"`, `\"sha256\"`, or `\"md5\"`.\n        The default `\"auto\"` detects the hash algorithm in use.\n    chunk_size: Bytes to read at a time, important for large files.\n\nReturns:\n    The file hash.",
+            "is_deprecated": false,
+            "source_code": "def hash_file(fpath, algorithm=\"sha256\", chunk_size=65535):\n    \"\"\"Calculates a file sha256 or md5 hash.\n\n    Example:\n\n    >>> hash_file('/path/to/file.zip')\n    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'\n\n    Args:\n        fpath: Path to the file being validated.\n        algorithm: Hash algorithm, one of `\"auto\"`, `\"sha256\"`, or `\"md5\"`.\n            The default `\"auto\"` detects the hash algorithm in use.\n        chunk_size: Bytes to read at a time, important for large files.\n\n    Returns:\n        The file hash.\n    \"\"\"\n    if isinstance(algorithm, str):\n        hasher = resolve_hasher(algorithm)\n    else:\n        hasher = algorithm\n\n    with open(fpath, \"rb\") as fpath_file:\n        for chunk in iter(lambda: fpath_file.read(chunk_size), b\"\"):\n            hasher.update(chunk)\n\n    return hasher.hexdigest()\n",
+            "signature": "(fpath, algorithm='sha256', chunk_size=65535)",
+            "parameters": {
+                "fpath": {
+                    "name": "fpath",
+                    "description": "Path to the file being validated.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "algorithm": {
+                    "name": "algorithm",
+                    "description": "Hash algorithm, one of `\"auto\"`, `\"sha256\"`, or `\"md5\"`.\nThe default `\"auto\"` detects the hash algorithm in use.",
+                    "is_optional": true,
+                    "default": "sha256",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "chunk_size": {
+                    "name": "chunk_size",
+                    "description": "Bytes to read at a time, important for large files.",
+                    "is_optional": true,
+                    "default": "65535",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The file hash.",
+                "type": null
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

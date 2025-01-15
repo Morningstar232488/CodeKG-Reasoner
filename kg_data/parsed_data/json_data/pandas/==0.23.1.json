@@ -1,0 +1,35 @@
+{
+    "data": {
+        "_ensure_index": {
+            "_id": "pandas.core.indexes.base._ensure_index",
+            "name": "_ensure_index",
+            "module": "pandas.core.indexes.base",
+            "doc": null,
+            "is_deprecated": false,
+            "source_code": "        def _get_leaf_sorter(labels):\n            \"\"\"\n            returns sorter for the inner most level while preserving the\n            order of higher levels\n            \"\"\"\n            if labels[0].size == 0:\n                return np.empty(0, dtype='int64')\n\n            if len(labels) == 1:\n                lab = _ensure_int64(labels[0])\n                sorter, _ = libalgos.groupsort_indexer(lab, 1 + lab.max())\n                return sorter\n\n            # find indexers of beginning of each set of\n            # same-key labels w.r.t all but last level\n            tic = labels[0][:-1] != labels[0][1:]\n            for lab in labels[1:-1]:\n                tic |= lab[:-1] != lab[1:]\n\n            starts = np.hstack(([True], tic, [True])).nonzero()[0]\n            lab = _ensure_int64(labels[-1])\n            return lib.get_level_sorter(lab, _ensure_int64(starts))\n",
+            "signature": "(index_like, copy=False)",
+            "parameters": {
+                "index_like": {
+                    "name": "index_like",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "copy": {
+                    "name": "copy",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "False",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

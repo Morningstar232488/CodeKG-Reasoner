@@ -1,0 +1,27 @@
+{
+    "data": {
+        "ensure_nanosecond_dtype": {
+            "_id": "pandas.core.dtypes.cast.ensure_nanosecond_dtype",
+            "name": "ensure_nanosecond_dtype",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Convert dtypes with granularity less than nanosecond to nanosecond\n\n>>> ensure_nanosecond_dtype(np.dtype(\"M8[s]\"))\ndtype('<M8[ns]')\n\n>>> ensure_nanosecond_dtype(np.dtype(\"m8[ps]\"))\nTraceback (most recent call last):\n    ...\nTypeError: cannot convert timedeltalike to dtype [timedelta64[ps]]",
+            "is_deprecated": false,
+            "source_code": "def ensure_nanosecond_dtype(dtype: DtypeObj) -> DtypeObj:\n    \"\"\"\n    Convert dtypes with granularity less than nanosecond to nanosecond\n\n    >>> ensure_nanosecond_dtype(np.dtype(\"M8[s]\"))\n    dtype('<M8[ns]')\n\n    >>> ensure_nanosecond_dtype(np.dtype(\"m8[ps]\"))\n    Traceback (most recent call last):\n        ...\n    TypeError: cannot convert timedeltalike to dtype [timedelta64[ps]]\n    \"\"\"\n    msg = (\n        f\"The '{dtype.name}' dtype has no unit. \"\n        f\"Please pass in '{dtype.name}[ns]' instead.\"\n    )\n\n    # unpack e.g. SparseDtype\n    dtype = getattr(dtype, \"subtype\", dtype)\n\n    if not isinstance(dtype, np.dtype):\n        # i.e. datetime64tz\n        pass\n\n    elif dtype.kind == \"M\" and dtype != DT64NS_DTYPE:\n        # pandas supports dtype whose granularity is less than [ns]\n        # e.g., [ps], [fs], [as]\n        if dtype <= np.dtype(\"M8[ns]\"):\n            if dtype.name == \"datetime64\":\n                raise ValueError(msg)\n            dtype = DT64NS_DTYPE\n        else:\n            raise TypeError(f\"cannot convert datetimelike to dtype [{dtype}]\")\n\n    elif dtype.kind == \"m\" and dtype != TD64NS_DTYPE:\n        # pandas supports dtype whose granularity is less than [ns]\n        # e.g., [ps], [fs], [as]\n        if dtype <= np.dtype(\"m8[ns]\"):\n            if dtype.name == \"timedelta64\":\n                raise ValueError(msg)\n            dtype = TD64NS_DTYPE\n        else:\n            raise TypeError(f\"cannot convert timedeltalike to dtype [{dtype}]\")\n    return dtype\n",
+            "signature": "(dtype: 'DtypeObj') -> 'DtypeObj'",
+            "parameters": {
+                "dtype": {
+                    "name": "dtype",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "DtypeObj",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

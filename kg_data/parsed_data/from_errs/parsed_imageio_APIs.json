@@ -1,0 +1,196 @@
+{
+    "data": {
+        "imageio": {
+            "==2.33.1": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.12.0": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.9.0": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "    def decorate(func, module_function=module_function, warn=warn):\n        module, function = module_function.split('.')\n        try:\n            if package:\n                module = import_module('.' + module, package=package)\n            else:\n                module = import_module(module)\n        except Exception as e:\n            _warn(e, warn)\n            return func\n        try:\n            func, oldfunc = getattr(module, function), func\n        except Exception as e:\n            _warn(e, warn)\n            return func\n        globals()[prefix + func.__name__] = oldfunc\n        return func\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.25.0": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.14.0": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.33.0": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.13.2": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.10.2": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.21.3": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def imagej_description_metadata(description):\n    \"\"\"Return metatata from ImageJ image description as dict.\n\n    Raise ValueError if not a valid ImageJ description.\n\n    >>> description = 'ImageJ=1.11a\\\\nimages=510\\\\nhyperstack=true\\\\n'\n    >>> imagej_description_metadata(description)  # doctest: +SKIP\n    {'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}\n\n    \"\"\"\n\n    def _bool(val):\n        return {\"true\": True, \"false\": False}[val.lower()]\n\n    result = {}\n    for line in description.splitlines():\n        try:\n            key, val = line.split(\"=\")\n        except Exception:\n            continue\n        key = key.strip()\n        val = val.strip()\n        for dtype in (int, float, _bool):\n            try:\n                val = dtype(val)\n                break\n            except Exception:\n                pass\n        result[key] = val\n\n    if \"ImageJ\" not in result:\n        raise ValueError(\"not a ImageJ image description\")\n    return result\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.3.0": {
+                "imagej_description_metadata": {
+                    "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+                    "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+                    "is_deprecated": false,
+                    "source_code": "def sequence(value):\n    \"\"\"Return tuple containing value if value is not a sequence.\n\n    >>> sequence(1)\n    (1,)\n    >>> sequence([1])\n    [1]\n\n    \"\"\"\n    try:\n        len(value)\n        return value\n    except TypeError:\n        return (value,)\n",
+                    "signature": "(description)",
+                    "parameters": {
+                        "description": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            }
+        }
+    }
+}

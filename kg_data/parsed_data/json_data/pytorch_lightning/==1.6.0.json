@@ -1,0 +1,35 @@
+{
+    "data": {
+        "parse_env_variables": {
+            "_id": "pytorch_lightning.utilities.argparse.parse_env_variables",
+            "name": "parse_env_variables",
+            "module": "pytorch_lightning.utilities.argparse",
+            "doc": "Parse environment arguments if they are defined.\n\nExample:\n    >>> from pytorch_lightning import Trainer\n    >>> parse_env_variables(Trainer)\n    Namespace()\n    >>> import os\n    >>> os.environ[\"PL_TRAINER_GPUS\"] = '42'\n    >>> os.environ[\"PL_TRAINER_BLABLABLA\"] = '1.23'\n    >>> parse_env_variables(Trainer)\n    Namespace(gpus=42)\n    >>> del os.environ[\"PL_TRAINER_GPUS\"]",
+            "is_deprecated": false,
+            "source_code": "def parse_argparser(cls: Type[\"pl.Trainer\"], arg_parser: Union[ArgumentParser, Namespace]) -> Namespace:\n    \"\"\"Parse CLI arguments, required for custom bool types.\"\"\"\n    args = arg_parser.parse_args() if isinstance(arg_parser, ArgumentParser) else arg_parser\n\n    types_default = {arg: (arg_types, arg_default) for arg, arg_types, arg_default in get_init_arguments_and_types(cls)}\n\n    modified_args = {}\n    for k, v in vars(args).items():\n        if k in types_default and v is None:\n            # We need to figure out if the None is due to using nargs=\"?\" or if it comes from the default value\n            arg_types, arg_default = types_default[k]\n            if bool in arg_types and isinstance(arg_default, bool):\n                # Value has been passed as a flag => It is currently None, so we need to set it to True\n                # We always set to True, regardless of the default value.\n                # Users must pass False directly, but when passing nothing True is assumed.\n                # i.e. the only way to disable something that defaults to True is to use the long form:\n                # \"--a_default_true_arg False\" becomes False, while \"--a_default_false_arg\" becomes None,\n                # which then becomes True here.\n\n                v = True\n\n        modified_args[k] = v\n    return Namespace(**modified_args)\n",
+            "signature": "(cls: Type[ForwardRef('pl.Trainer')], template: str = 'PL_%(cls_name)s_%(cls_argument)s') -> argparse.Namespace",
+            "parameters": {
+                "cls": {
+                    "name": "cls",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Type[ForwardRef('pl.Trainer')]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "template": {
+                    "name": "template",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "PL_%(cls_name)s_%(cls_argument)s",
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

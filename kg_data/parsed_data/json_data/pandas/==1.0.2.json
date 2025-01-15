@@ -1,0 +1,56 @@
+{
+    "data": {
+        "_is_multi_agg_with_relabel": {
+            "_id": "pandas.core.groupby.generic._is_multi_agg_with_relabel",
+            "name": "_is_multi_agg_with_relabel",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\nParameters\n----------\n**kwargs : dict\n\nReturns\n-------\nbool\n\nExamples\n--------\n>>> _is_multi_agg_with_relabel(a='max')\nFalse\n>>> _is_multi_agg_with_relabel(a_max=('a', 'max'),\n...                            a_min=('a', 'min'))\nTrue\n>>> _is_multi_agg_with_relabel()\nFalse",
+            "is_deprecated": false,
+            "source_code": "        def groupby_series(obj, col=None):\n            return SeriesGroupBy(obj, selection=col, grouper=self.grouper).nunique(\n                dropna=dropna\n            )\n",
+            "signature": "(**kwargs) -> bool",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "VAR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_normalize_keyword_aggregation": {
+            "_id": "pandas.core.groupby.generic._normalize_keyword_aggregation",
+            "name": "_normalize_keyword_aggregation",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\n\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> _normalize_keyword_aggregation({'output': ('input', 'sum')})\n({'input': ['sum']}, ('output',), [('input', 'sum')])",
+            "is_deprecated": false,
+            "source_code": "def _is_multi_agg_with_relabel(**kwargs) -> bool:\n    \"\"\"\n    Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\n    Parameters\n    ----------\n    **kwargs : dict\n\n    Returns\n    -------\n    bool\n\n    Examples\n    --------\n    >>> _is_multi_agg_with_relabel(a='max')\n    False\n    >>> _is_multi_agg_with_relabel(a_max=('a', 'max'),\n    ...                            a_min=('a', 'min'))\n    True\n    >>> _is_multi_agg_with_relabel()\n    False\n    \"\"\"\n    return all(isinstance(v, tuple) and len(v) == 2 for v in kwargs.values()) and (\n        len(kwargs) > 0\n    )\n",
+            "signature": "(kwargs)",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

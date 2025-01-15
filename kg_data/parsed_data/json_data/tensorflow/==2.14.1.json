@@ -1,0 +1,23 @@
+{
+    "data": {
+        "no_gradient": {
+            "_id": "tensorflow.python.framework.ops.no_gradient",
+            "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+            "is_deprecated": false,
+            "source_code": "  def _add_new_tf_operations(self, compute_devices=True):\n    \"\"\"Creates `Operations` in this graph for any new TF_Operations.\n\n    This is useful for when TF_Operations are indirectly created by the C API\n    outside of the Operation constructor (e.g. by TF_ImportGraphDef,\n    TF_FinishWhile). This ensures there are corresponding Operations for all\n    TF_Operations in the underlying TF_Graph.\n\n    Args:\n      compute_devices: (Optional.) If True, device functions will be executed to\n        compute the device properties of each new Operation.\n\n    Returns:\n      A list of the new `Operation` objects.\n    \"\"\"\n    self._check_not_finalized()\n\n    # Create all Operation objects before accessing their inputs since an op may\n    # be created before its inputs.\n    new_ops = [\n        self._create_op_from_tf_operation(c_op, compute_device=compute_devices)\n        for c_op in self.new_operations()\n    ]\n\n    # pylint: disable=protected-access\n    for op in new_ops:\n      new_control_inputs = self._control_dependencies_for_inputs(op.inputs)\n      op._add_control_inputs(new_control_inputs)\n      op._control_flow_post_processing()\n    # pylint: enable=protected-access\n\n    return new_ops\n",
+            "signature": "(op_type)",
+            "parameters": {
+                "op_type": {
+                    "description": null,
+                    "is_optional": false
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": [
+                "If `op_type` is not a string."
+            ],
+            "type": "function",
+            "class": null
+        }
+    }
+}

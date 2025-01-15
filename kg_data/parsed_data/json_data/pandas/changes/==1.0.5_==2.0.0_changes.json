@@ -1,0 +1,180 @@
+{
+    "count": 6,
+    "data": [
+        {
+            "_id": "pandas.core.groupby.generic._make_unique",
+            "name": "_make_unique",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Uniquify aggfunc name of the pairs in the order list\n\nExamples:\n--------\n>>> _make_unique([('a', '<lambda>'), ('a', '<lambda>'), ('b', '<lambda>')])\n[('a', '<lambda>_0'), ('a', '<lambda>_1'), ('b', '<lambda>')]",
+            "is_deprecated": false,
+            "source_code": "def _normalize_keyword_aggregation(kwargs):\n    \"\"\"\n    Normalize user-provided \"named aggregation\" kwargs.\n\n    Transforms from the new ``Mapping[str, NamedAgg]`` style kwargs\n    to the old Dict[str, List[scalar]]].\n\n    Parameters\n    ----------\n    kwargs : dict\n\n    Returns\n    -------\n    aggspec : dict\n        The transformed kwargs.\n    columns : List[str]\n        The user-provided keys.\n    col_idx_order : List[int]\n        List of columns indices.\n\n    Examples\n    --------\n    >>> _normalize_keyword_aggregation({'output': ('input', 'sum')})\n    ({'input': ['sum']}, ('output',), [('input', 'sum')])\n    \"\"\"\n    # Normalize the aggregation functions as Mapping[column, List[func]],\n    # process normally, then fixup the names.\n    # TODO: aggspec type: typing.Dict[str, List[AggScalar]]\n    # May be hitting https://github.com/python/mypy/issues/5958\n    # saying it doesn't have an attribute __name__\n    aggspec = defaultdict(list)\n    order = []\n    columns, pairs = list(zip(*kwargs.items()))\n\n    for name, (column, aggfunc) in zip(columns, pairs):\n        aggspec[column].append(aggfunc)\n        order.append((column, com.get_callable_name(aggfunc) or aggfunc))\n\n    # uniquify aggfunc name if duplicated in order list\n    uniquified_order = _make_unique(order)\n\n    # GH 25719, due to aggspec will change the order of assigned columns in aggregation\n    # uniquified_aggspec will store uniquified order list and will compare it with order\n    # based on index\n    aggspec_order = [\n        (column, com.get_callable_name(aggfunc) or aggfunc)\n        for column, aggfuncs in aggspec.items()\n        for aggfunc in aggfuncs\n    ]\n    uniquified_aggspec = _make_unique(aggspec_order)\n\n    # get the new indice of columns by comparison\n    col_idx_order = Index(uniquified_aggspec).get_indexer(uniquified_order)\n    return aggspec, columns, col_idx_order\n",
+            "signature": "(seq)",
+            "parameters": {
+                "seq": {
+                    "name": "seq",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.groupby.generic._maybe_mangle_lambdas",
+            "name": "_maybe_mangle_lambdas",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Make new lambdas with unique names.\n\nParameters\n----------\nagg_spec : Any\n    An argument to GroupBy.agg.\n    Non-dict-like `agg_spec` are pass through as is.\n    For dict-like `agg_spec` a new spec is returned\n    with name-mangled lambdas.\n\nReturns\n-------\nmangled : Any\n    Same type as the input.\n\nExamples\n--------\n>>> _maybe_mangle_lambdas('sum')\n'sum'\n\n>>> _maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n[<function __main__.<lambda_0>,\n <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]",
+            "is_deprecated": false,
+            "source_code": "        # don't mangle for .agg([lambda x: .])\n",
+            "signature": "(agg_spec: Any) -> Any",
+            "parameters": {
+                "agg_spec": {
+                    "name": "agg_spec",
+                    "description": "An argument to GroupBy.agg.\nNon-dict-like `agg_spec` are pass through as is.\nFor dict-like `agg_spec` a new spec is returned\nwith name-mangled lambdas.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Any",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Same type as the input.",
+                "type": "Any"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.groupby.generic._normalize_keyword_aggregation",
+            "name": "_normalize_keyword_aggregation",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\n\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> _normalize_keyword_aggregation({'output': ('input', 'sum')})\n({'input': ['sum']}, ('output',), [('input', 'sum')])",
+            "is_deprecated": false,
+            "source_code": "def _is_multi_agg_with_relabel(**kwargs) -> bool:\n    \"\"\"\n    Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\n    Parameters\n    ----------\n    **kwargs : dict\n\n    Returns\n    -------\n    bool\n\n    Examples\n    --------\n    >>> _is_multi_agg_with_relabel(a='max')\n    False\n    >>> _is_multi_agg_with_relabel(a_max=('a', 'max'),\n    ...                            a_min=('a', 'min'))\n    True\n    >>> _is_multi_agg_with_relabel()\n    False\n    \"\"\"\n    return all(isinstance(v, tuple) and len(v) == 2 for v in kwargs.values()) and (\n        len(kwargs) > 0\n    )\n",
+            "signature": "(kwargs)",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.groupby.generic._is_multi_agg_with_relabel",
+            "name": "_is_multi_agg_with_relabel",
+            "module": "pandas.core.groupby.generic",
+            "doc": "Check whether kwargs passed to .agg look like multi-agg with relabeling.\n\nParameters\n----------\n**kwargs : dict\n\nReturns\n-------\nbool\n\nExamples\n--------\n>>> _is_multi_agg_with_relabel(a='max')\nFalse\n>>> _is_multi_agg_with_relabel(a_max=('a', 'max'),\n...                            a_min=('a', 'min'))\nTrue\n>>> _is_multi_agg_with_relabel()\nFalse",
+            "is_deprecated": false,
+            "source_code": "        def groupby_series(obj, col=None):\n            return SeriesGroupBy(obj, selection=col, grouper=self.grouper).nunique(\n                dropna=dropna\n            )\n",
+            "signature": "(**kwargs) -> bool",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "VAR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.arrays.categorical._recode_for_categories",
+            "name": "_recode_for_categories",
+            "module": "pandas.core.arrays.categorical",
+            "doc": "Convert a set of codes for to a new set of categories\n\nParameters\n----------\ncodes : array\nold_categories, new_categories : Index\n\nReturns\n-------\nnew_codes : array\n\nExamples\n--------\n>>> old_cat = pd.Index(['b', 'a', 'c'])\n>>> new_cat = pd.Index(['a', 'b'])\n>>> codes = np.array([0, 1, 1, 2])\n>>> _recode_for_categories(codes, old_cat, new_cat)\narray([ 1,  0,  0, -1])",
+            "is_deprecated": false,
+            "source_code": "    def replace(self, to_replace, value, inplace: bool = False):\n        \"\"\"\n        Replaces all instances of one value with another\n\n        Parameters\n        ----------\n        to_replace: object\n            The value to be replaced\n\n        value: object\n            The value to replace it with\n\n        inplace: bool\n            Whether the operation is done in-place\n\n        Returns\n        -------\n        None if inplace is True, otherwise the new Categorical after replacement\n\n\n        Examples\n        --------\n        >>> s = pd.Categorical([1, 2, 1, 3])\n        >>> s.replace(1, 3)\n        [3, 3, 2, 3]\n        Categories (2, int64): [2, 3]\n        \"\"\"\n        inplace = validate_bool_kwarg(inplace, \"inplace\")\n        cat = self if inplace else self.copy()\n\n        # build a dict of (to replace -> value) pairs\n        if is_list_like(to_replace):\n            # if to_replace is list-like and value is scalar\n            replace_dict = {replace_value: value for replace_value in to_replace}\n        else:\n            # if both to_replace and value are scalar\n            replace_dict = {to_replace: value}\n\n        # other cases, like if both to_replace and value are list-like or if\n        # to_replace is a dict, are handled separately in NDFrame\n        for replace_value, new_value in replace_dict.items():\n            if new_value == replace_value:\n                continue\n            if replace_value in cat.categories:\n                if isna(new_value):\n                    cat.remove_categories(replace_value, inplace=True)\n                    continue\n                categories = cat.categories.tolist()\n                index = categories.index(replace_value)\n                if new_value in cat.categories:\n                    value_index = categories.index(new_value)\n                    cat._codes[cat._codes == index] = value_index\n                    cat.remove_categories(replace_value, inplace=True)\n                else:\n                    categories[index] = new_value\n                    cat.rename_categories(categories, inplace=True)\n        if not inplace:\n            return cat\n",
+            "signature": "(codes, old_categories, new_categories)",
+            "parameters": {
+                "codes": {
+                    "name": "codes",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "old_categories": {
+                    "name": "old_categories",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "new_categories": {
+                    "name": "new_categories",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "array"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "pandas.core.apply.normalize_keyword_aggregation",
+            "name": "normalize_keyword_aggregation",
+            "module": "pandas.core.apply",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n(defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))",
+            "is_deprecated": false,
+            "source_code": "def normalize_keyword_aggregation(\n    kwargs: dict,\n) -> tuple[dict, list[str], npt.NDArray[np.intp]]:\n    \"\"\"\n    Normalize user-provided \"named aggregation\" kwargs.\n    Transforms from the new ``Mapping[str, NamedAgg]`` style kwargs\n    to the old Dict[str, List[scalar]]].\n\n    Parameters\n    ----------\n    kwargs : dict\n\n    Returns\n    -------\n    aggspec : dict\n        The transformed kwargs.\n    columns : List[str]\n        The user-provided keys.\n    col_idx_order : List[int]\n        List of columns indices.\n\n    Examples\n    --------\n    >>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n    (defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))\n    \"\"\"\n    from pandas.core.indexes.base import Index\n\n    # Normalize the aggregation functions as Mapping[column, List[func]],\n    # process normally, then fixup the names.\n    # TODO: aggspec type: typing.Dict[str, List[AggScalar]]\n    # May be hitting https://github.com/python/mypy/issues/5958\n    # saying it doesn't have an attribute __name__\n    aggspec: DefaultDict = defaultdict(list)\n    order = []\n    columns, pairs = list(zip(*kwargs.items()))\n\n    for column, aggfunc in pairs:\n        aggspec[column].append(aggfunc)\n        order.append((column, com.get_callable_name(aggfunc) or aggfunc))\n\n    # uniquify aggfunc name if duplicated in order list\n    uniquified_order = _make_unique_kwarg_list(order)\n\n    # GH 25719, due to aggspec will change the order of assigned columns in aggregation\n    # uniquified_aggspec will store uniquified order list and will compare it with order\n    # based on index\n    aggspec_order = [\n        (column, com.get_callable_name(aggfunc) or aggfunc)\n        for column, aggfuncs in aggspec.items()\n        for aggfunc in aggfuncs\n    ]\n    uniquified_aggspec = _make_unique_kwarg_list(aggspec_order)\n\n    # get the new index of columns by comparison\n    col_idx_order = Index(uniquified_aggspec).get_indexer(uniquified_order)\n    return aggspec, columns, col_idx_order\n",
+            "signature": "(kwargs: 'dict') -> 'tuple[dict, list[str], npt.NDArray[np.intp]]'",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "dict",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_addition"
+        }
+    ]
+}

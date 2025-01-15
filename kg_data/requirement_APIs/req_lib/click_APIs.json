@@ -1,0 +1,66 @@
+{
+    "data": {
+        "click": {
+            "==7.1.1": {
+                "names": [
+                    "resultcallback"
+                ],
+                "count": 1
+            },
+            "==8.1.5": {
+                "names": [
+                    "result_callback"
+                ],
+                "count": 1
+            },
+            "==8.1.0": {
+                "names": [
+                    "result_callback"
+                ],
+                "count": 1
+            },
+            "==5.1": {
+                "names": [
+                    "resultcallback"
+                ],
+                "count": 1
+            },
+            "==8.1.7": {
+                "names": [
+                    "result_callback"
+                ],
+                "count": 1
+            },
+            "==6.5": {
+                "names": [
+                    "resultcallback"
+                ],
+                "count": 1
+            },
+            "==8.0.2": {
+                "names": [
+                    "result_callback"
+                ],
+                "count": 1
+            },
+            "==6.2": {
+                "names": [
+                    "resultcallback"
+                ],
+                "count": 1
+            },
+            "==3.1": {
+                "names": [
+                    "resultcallback"
+                ],
+                "count": 1
+            },
+            "==8.1.2": {
+                "names": [
+                    "result_callback"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

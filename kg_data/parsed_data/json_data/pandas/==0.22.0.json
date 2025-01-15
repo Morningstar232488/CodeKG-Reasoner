@@ -1,0 +1,87 @@
+{
+    "data": {
+        "maybe_infer_dtype_type": {
+            "_id": "pandas.core.dtypes.cast.maybe_infer_dtype_type",
+            "name": "maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\nnumpy.int64",
+            "is_deprecated": false,
+            "source_code": "def maybe_infer_dtype_type(element):\n    \"\"\"Try to infer an object's dtype, for use in arithmetic ops\n\n    Uses `element.dtype` if that's available.\n    Objects implementing the iterator protocol are cast to a NumPy array,\n    and from there the array's type is used.\n\n    Parameters\n    ----------\n    element : object\n        Possibly has a `.dtype` attribute, and possibly the iterator\n        protocol.\n\n    Returns\n    -------\n    tipo : type\n\n    Examples\n    --------\n    >>> from collections import namedtuple\n    >>> Foo = namedtuple(\"Foo\", \"dtype\")\n    >>> maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\n    numpy.int64\n    \"\"\"\n    tipo = None\n    if hasattr(element, 'dtype'):\n        tipo = element.dtype\n    elif is_list_like(element):\n        element = np.asarray(element)\n        tipo = element.dtype\n    return tipo\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_iterable_not_string": {
+            "_id": "pandas.core.dtypes.inference._iterable_not_string",
+            "name": "_iterable_not_string",
+            "module": "pandas.core.dtypes.inference",
+            "doc": "Check if the object is an iterable but not a string.\n\nParameters\n----------\nobj : The object to check.\n\nReturns\n-------\nis_iter_not_string : bool\n    Whether `obj` is a non-string iterable.\n\nExamples\n--------\n>>> _iterable_not_string([1, 2, 3])\nTrue\n>>> _iterable_not_string(\"foo\")\nFalse\n>>> _iterable_not_string(1)\nFalse",
+            "is_deprecated": false,
+            "source_code": "def is_string_like(obj):\n    \"\"\"\n    Check if the object is a string.\n\n    Parameters\n    ----------\n    obj : The object to check.\n\n    Examples\n    --------\n    >>> is_string_like(\"foo\")\n    True\n    >>> is_string_like(1)\n    False\n\n    Returns\n    -------\n    is_str_like : bool\n        Whether `obj` is a string or not.\n    \"\"\"\n\n    return isinstance(obj, (text_type, string_types))\n",
+            "signature": "(obj)",
+            "parameters": {
+                "obj": {
+                    "name": "obj",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Whether `obj` is a non-string iterable.",
+                "type": "bool"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_ensure_index": {
+            "_id": "pandas.core.indexes.base._ensure_index",
+            "name": "_ensure_index",
+            "module": "pandas.core.indexes.base",
+            "doc": null,
+            "is_deprecated": false,
+            "source_code": "    def _validate_for_numeric_binop(self, other, op, opstr):\n        \"\"\"\n        return valid other, evaluate or raise TypeError\n        if we are not of the appropriate type\n\n        internal method called by ops\n        \"\"\"\n        # if we are an inheritor of numeric,\n        # but not actually numeric (e.g. DatetimeIndex/PeriodInde)\n        if not self._is_numeric_dtype:\n            raise TypeError(\"cannot evaluate a numeric op {opstr} \"\n                            \"for type: {typ}\".format(\n                                opstr=opstr,\n                                typ=type(self))\n                            )\n\n        if isinstance(other, Index):\n            if not other._is_numeric_dtype:\n                raise TypeError(\"cannot evaluate a numeric op \"\n                                \"{opstr} with type: {typ}\".format(\n                                    opstr=type(self),\n                                    typ=type(other))\n                                )\n        elif isinstance(other, np.ndarray) and not other.ndim:\n            other = other.item()\n\n        if isinstance(other, (Index, ABCSeries, np.ndarray)):\n            if len(self) != len(other):\n                raise ValueError(\"cannot evaluate a numeric op with \"\n                                 \"unequal lengths\")\n            other = _values_from_object(other)\n            if other.dtype.kind not in ['f', 'i', 'u']:\n                raise TypeError(\"cannot evaluate a numeric op \"\n                                \"with a non-numeric dtype\")\n        elif isinstance(other, (ABCDateOffset, np.timedelta64,\n                                Timedelta, datetime.timedelta)):\n            # higher up to handle\n            pass\n        elif isinstance(other, (Timestamp, np.datetime64)):\n            # higher up to handle\n            pass\n        else:\n            if not (is_float(other) or is_integer(other)):\n                raise TypeError(\"can only perform ops with scalar values\")\n\n        return other\n",
+            "signature": "(index_like, copy=False)",
+            "parameters": {
+                "index_like": {
+                    "name": "index_like",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "copy": {
+                    "name": "copy",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "False",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

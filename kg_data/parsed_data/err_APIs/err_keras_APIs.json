@@ -1,0 +1,15 @@
+{
+    "data": {
+        "keras": {
+            "==3.0.4": {
+                "hash_file": "cannot unpack non-iterable NoneType object"
+            },
+            "==3.0.2": {
+                "hash_file": "cannot unpack non-iterable NoneType object"
+            },
+            "==3.0.0": {
+                "hash_file": "cannot unpack non-iterable NoneType object"
+            }
+        }
+    }
+}

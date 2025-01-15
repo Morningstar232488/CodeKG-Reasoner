@@ -1,0 +1,90 @@
+{
+    "data": {
+        "mae": {
+            "_id": "pytorch_lightning.metrics.functional.regression.mae",
+            "name": "mae",
+            "module": "pytorch_lightning.metrics.functional.regression",
+            "doc": "Computes mean absolute error\n\nArgs:\n    pred: estimated labels\n    target: ground truth labels\n    reduction: a method to reduce metric score over labels.\n\n        - ``'elementwise_mean'``: takes the mean (default)\n        - ``'sum'``: takes the sum\n        - ``'none'``: no reduction will be applied\n    return_state: returns a internal state that can be ddp reduced\n        before doing the final calculation\n\nReturn:\n    Tensor with MAE\n\nExample:\n\n    >>> x = torch.tensor([0., 1, 2, 3])\n    >>> y = torch.tensor([0., 1, 2, 2])\n    >>> mae(x, y)\n    tensor(0.2500)",
+            "is_deprecated": false,
+            "source_code": "def mae(\n        pred: torch.Tensor,\n        target: torch.Tensor,\n        reduction: str = 'elementwise_mean',\n        return_state: bool = False\n) -> torch.Tensor:\n    \"\"\"\n    Computes mean absolute error\n\n    Args:\n        pred: estimated labels\n        target: ground truth labels\n        reduction: a method to reduce metric score over labels.\n\n            - ``'elementwise_mean'``: takes the mean (default)\n            - ``'sum'``: takes the sum\n            - ``'none'``: no reduction will be applied\n        return_state: returns a internal state that can be ddp reduced\n            before doing the final calculation\n\n    Return:\n        Tensor with MAE\n\n    Example:\n\n        >>> x = torch.tensor([0., 1, 2, 3])\n        >>> y = torch.tensor([0., 1, 2, 2])\n        >>> mae(x, y)\n        tensor(0.2500)\n\n    \"\"\"\n    mae = F.l1_loss(pred, target, reduction='none')\n    if return_state:\n        return {'absolute_error': mae.sum(), 'n_observations': torch.tensor(mae.numel())}\n    mae = reduce(mae, reduction=reduction)\n    return mae\n",
+            "signature": "(pred: torch.Tensor, target: torch.Tensor, reduction: str = 'elementwise_mean', return_state: bool = False) -> torch.Tensor",
+            "parameters": {
+                "pred": {
+                    "name": "pred",
+                    "description": "estimated labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "target": {
+                    "name": "target",
+                    "description": "ground truth labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "reduction": {
+                    "name": "reduction",
+                    "description": "a method to reduce metric score over labels.\n- ``'elementwise_mean'``: takes the mean (default)\n- ``'sum'``: takes the sum\n- ``'none'``: no reduction will be applied",
+                    "is_optional": true,
+                    "default": "elementwise_mean",
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "return_state": {
+                    "name": "return_state",
+                    "description": "returns a internal state that can be ddp reduced\nbefore doing the final calculation",
+                    "is_optional": true,
+                    "default": "False",
+                    "annotation": "<class 'bool'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "rmsle": {
+            "_id": "pytorch_lightning.metrics.functional.regression.rmsle",
+            "name": "rmsle",
+            "module": "pytorch_lightning.metrics.functional.regression",
+            "doc": "Computes root mean squared log error\n\nArgs:\n    pred: estimated labels\n    target: ground truth labels\n    reduction: a method to reduce metric score over labels.\n\n        - ``'elementwise_mean'``: takes the mean (default)\n        - ``'sum'``: takes the sum\n        - ``'none'``: no reduction will be applied\n\nReturn:\n    Tensor with RMSLE\n\nExample:\n\n    >>> x = torch.tensor([0., 1, 2, 3])\n    >>> y = torch.tensor([0., 1, 2, 2])\n    >>> rmsle(x, y)\n    tensor(0.1438)",
+            "is_deprecated": false,
+            "source_code": "def rmsle(\n        pred: torch.Tensor,\n        target: torch.Tensor,\n        reduction: str = 'elementwise_mean'\n) -> torch.Tensor:\n    \"\"\"\n    Computes root mean squared log error\n\n    Args:\n        pred: estimated labels\n        target: ground truth labels\n        reduction: a method to reduce metric score over labels.\n\n            - ``'elementwise_mean'``: takes the mean (default)\n            - ``'sum'``: takes the sum\n            - ``'none'``: no reduction will be applied\n\n    Return:\n        Tensor with RMSLE\n\n    Example:\n\n        >>> x = torch.tensor([0., 1, 2, 3])\n        >>> y = torch.tensor([0., 1, 2, 2])\n        >>> rmsle(x, y)\n        tensor(0.1438)\n\n    \"\"\"\n    rmsle = rmse(torch.log(pred + 1), torch.log(target + 1), reduction=reduction)\n    return rmsle\n",
+            "signature": "(pred: torch.Tensor, target: torch.Tensor, reduction: str = 'elementwise_mean') -> torch.Tensor",
+            "parameters": {
+                "pred": {
+                    "name": "pred",
+                    "description": "estimated labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "target": {
+                    "name": "target",
+                    "description": "ground truth labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "reduction": {
+                    "name": "reduction",
+                    "description": "a method to reduce metric score over labels.\n- ``'elementwise_mean'``: takes the mean (default)\n- ``'sum'``: takes the sum\n- ``'none'``: no reduction will be applied",
+                    "is_optional": true,
+                    "default": "elementwise_mean",
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

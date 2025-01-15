@@ -1,0 +1,1 @@
+'class_removal'， 'class_addition'，'method_removal'， 'method_addition'，'required_parameter_removal'，'required_parameter_addition'，'parameter_reordering'，'optional_parameter_removal'，'optional_parameter_addition'，'parameter_default_value_removal'，'parameter_default_value_addition'，'parameter_default_value_change' 

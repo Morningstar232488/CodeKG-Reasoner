@@ -1,0 +1,12 @@
+{
+    "data": {
+        "librosa": {
+            "==0.6.2": {
+                "rmse": "module 'librosa' has no attribute 'rmse'"
+            },
+            "==0.6.3": {
+                "rms": "module 'librosa' has no attribute 'rms'"
+            }
+        }
+    }
+}

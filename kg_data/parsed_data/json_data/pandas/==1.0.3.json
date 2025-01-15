@@ -1,0 +1,46 @@
+{
+    "data": {
+        "_recode_for_categories": {
+            "_id": "pandas.core.arrays.categorical._recode_for_categories",
+            "name": "_recode_for_categories",
+            "module": "pandas.core.arrays.categorical",
+            "doc": "Convert a set of codes for to a new set of categories\n\nParameters\n----------\ncodes : array\nold_categories, new_categories : Index\n\nReturns\n-------\nnew_codes : array\n\nExamples\n--------\n>>> old_cat = pd.Index(['b', 'a', 'c'])\n>>> new_cat = pd.Index(['a', 'b'])\n>>> codes = np.array([0, 1, 1, 2])\n>>> _recode_for_categories(codes, old_cat, new_cat)\narray([ 1,  0,  0, -1])",
+            "is_deprecated": false,
+            "source_code": "    def replace(self, to_replace, value, inplace: bool = False):\n        \"\"\"\n        Replaces all instances of one value with another\n\n        Parameters\n        ----------\n        to_replace: object\n            The value to be replaced\n\n        value: object\n            The value to replace it with\n\n        inplace: bool\n            Whether the operation is done in-place\n\n        Returns\n        -------\n        None if inplace is True, otherwise the new Categorical after replacement\n\n\n        Examples\n        --------\n        >>> s = pd.Categorical([1, 2, 1, 3])\n        >>> s.replace(1, 3)\n        [3, 3, 2, 3]\n        Categories (2, int64): [2, 3]\n        \"\"\"\n        inplace = validate_bool_kwarg(inplace, \"inplace\")\n        cat = self if inplace else self.copy()\n\n        # build a dict of (to replace -> value) pairs\n        if is_list_like(to_replace):\n            # if to_replace is list-like and value is scalar\n            replace_dict = {replace_value: value for replace_value in to_replace}\n        else:\n            # if both to_replace and value are scalar\n            replace_dict = {to_replace: value}\n\n        # other cases, like if both to_replace and value are list-like or if\n        # to_replace is a dict, are handled separately in NDFrame\n        for replace_value, new_value in replace_dict.items():\n            if replace_value in cat.categories:\n                if isna(new_value):\n                    cat.remove_categories(replace_value, inplace=True)\n                    continue\n                categories = cat.categories.tolist()\n                index = categories.index(replace_value)\n                if new_value in cat.categories:\n                    value_index = categories.index(new_value)\n                    cat._codes[cat._codes == index] = value_index\n                    cat.remove_categories(replace_value, inplace=True)\n                else:\n                    categories[index] = new_value\n                    cat.rename_categories(categories, inplace=True)\n        if not inplace:\n            return cat\n",
+            "signature": "(codes, old_categories, new_categories)",
+            "parameters": {
+                "codes": {
+                    "name": "codes",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "old_categories": {
+                    "name": "old_categories",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "new_categories": {
+                    "name": "new_categories",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "array"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

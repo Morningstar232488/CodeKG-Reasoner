@@ -1,0 +1,21 @@
+{
+    "data": {
+        "imagej_description_metadata": {
+            "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+            "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+            "is_deprecated": false,
+            "source_code": "    def decorate(func, module_function=module_function, warn=warn):\n        module, function = module_function.split('.')\n        try:\n            if package:\n                module = import_module('.' + module, package=package)\n            else:\n                module = import_module(module)\n        except Exception as e:\n            _warn(e, warn)\n            return func\n        try:\n            func, oldfunc = getattr(module, function), func\n        except Exception as e:\n            _warn(e, warn)\n            return func\n        globals()[prefix + func.__name__] = oldfunc\n        return func\n",
+            "signature": "(description)",
+            "parameters": {
+                "description": {
+                    "description": null,
+                    "is_optional": false
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

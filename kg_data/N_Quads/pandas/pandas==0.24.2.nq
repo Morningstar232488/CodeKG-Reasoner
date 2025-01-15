@@ -1,0 +1,4 @@
+<http://purl.org/codekg_reasoner/pandas==0.24.2/pandas> <http://purl.org/codekg_reasoner/pandas==0.24.2/has_module> <http://purl.org/codekg_reasoner/pandas==0.24.2/pandas.core.dtypes.inference> <http://purl.org/codekg_reasoner/pandas==0.24.2> .
+<http://purl.org/codekg_reasoner/pandas==0.24.2/pandas.core.dtypes.inference> <http://purl.org/codekg_reasoner/pandas==0.24.2/has_function> <http://purl.org/codekg_reasoner/pandas==0.24.2/_iterable_not_string> <http://purl.org/codekg_reasoner/pandas==0.24.2> .
+<http://purl.org/codekg_reasoner/pandas==0.24.2/_iterable_not_string> <http://purl.org/codekg_reasoner/pandas==0.24.2/has_parameter> <http://purl.org/codekg_reasoner/pandas==0.24.2/_iterable_not_string/parameter/obj> <http://purl.org/codekg_reasoner/pandas==0.24.2> .
+<http://purl.org/codekg_reasoner/pandas==0.24.2/_iterable_not_string/parameter/obj> <http://purl.org/codekg_reasoner/pandas==0.24.2/is_required> "True" <http://purl.org/codekg_reasoner/pandas==0.24.2> .

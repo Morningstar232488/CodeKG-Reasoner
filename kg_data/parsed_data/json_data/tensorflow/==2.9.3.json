@@ -1,0 +1,46 @@
+{
+    "data": {
+        "_placeholder_value": {
+            "_id": "tensorflow.python.autograph.operators.control_flow._placeholder_value",
+            "name": "_placeholder_value",
+            "module": "tensorflow.python.autograph.operators.control_flow",
+            "doc": "Constructs a (dummy) placeholder value for a loop-initialized variable.\n\nArgs:\n  like: Any object. The value created by the first iteration of the loop. If a\n    Python scalar, the placeholder will be the zero value of that type. If a\n    Tensor, the placeholder will be a zero tensor of matching shape and dtype.\n    If a list, dict or tuple, the placeholder will be an identical structure\n    of placeholders.\n  shape_invariant: The shape invariant specified by the user (or None, if\n    nothing was specified) for the respective variable.\n  original: Any object. The value of the variable prior to entering the loop.\n    Typically, this is one of the special \"Undefined\" value, because that's\n    when a placeholder is needed.\n\nReturns:\n  Either a zero value of structure, shape and dtype mathing 'like', or\n  'original', if no such zero value could be created.",
+            "is_deprecated": false,
+            "source_code": "def _placeholder_value(like, shape_invariant, original=None):\n  \"\"\"Constructs a (dummy) placeholder value for a loop-initialized variable.\n\n  Args:\n    like: Any object. The value created by the first iteration of the loop. If a\n      Python scalar, the placeholder will be the zero value of that type. If a\n      Tensor, the placeholder will be a zero tensor of matching shape and dtype.\n      If a list, dict or tuple, the placeholder will be an identical structure\n      of placeholders.\n    shape_invariant: The shape invariant specified by the user (or None, if\n      nothing was specified) for the respective variable.\n    original: Any object. The value of the variable prior to entering the loop.\n      Typically, this is one of the special \"Undefined\" value, because that's\n      when a placeholder is needed.\n\n  Returns:\n    Either a zero value of structure, shape and dtype mathing 'like', or\n    'original', if no such zero value could be created.\n  \"\"\"\n  if isinstance(like, (variables.Undefined, variables.UndefinedReturnValue)):\n    return original, None\n\n  elif isinstance(like, (int, float, bool)):\n    return type(like)(0), None\n\n  elif tensor_util.is_tf_type(like):\n\n    like_shape = shape_invariant if shape_invariant is not None else like.shape\n    if like_shape is None or like_shape.rank is None:\n      return array_ops.zeros((), like.dtype), like_shape\n\n    # If the shape contains dynamic values, set the corresponding starting\n    # dimension to either zero or what the shape invariant specified.\n    placeholder_shape = []\n    has_dynamic_dims = False\n    for s, i in zip(like.shape, like_shape):\n      if i is None:\n        like_dim = 0\n      elif isinstance(i, tensor_shape.Dimension):\n        if i.value is None:\n          like_dim = 0\n        else:\n          like_dim = i.value\n      else:\n        like_dim = i\n\n      if s is None:\n        placeholder_shape.append(like_dim)\n        has_dynamic_dims = True\n      elif isinstance(s, tensor_shape.Dimension):\n        if s.value is None:\n          placeholder_shape.append(like_dim)\n          has_dynamic_dims = True\n        else:\n          placeholder_shape.append(s.value)\n      else:\n        placeholder_shape.append(s)\n\n    if has_dynamic_dims:\n      invariant = like_shape\n    else:\n      invariant = None\n\n    return array_ops.zeros(placeholder_shape, like.dtype), invariant\n\n  elif isinstance(like, (list, tuple, dict)):\n    if shape_invariant is None:\n      zipped = nest.map_structure(lambda v: _placeholder_value(v, None),\n                                  nest.flatten(like))\n    else:\n      zipped = nest.map_structure(_placeholder_value, nest.flatten(like),\n                                  nest.flatten(shape_invariant))\n    vals, invars = zip(*zipped)\n    return (nest.pack_sequence_as(like,\n                                  vals), nest.pack_sequence_as(like, invars))\n\n  return original, None\n",
+            "signature": "(like, shape_invariant, original=None)",
+            "parameters": {
+                "like": {
+                    "name": "like",
+                    "description": "Any object. The value created by the first iteration of the loop. If a\nPython scalar, the placeholder will be the zero value of that type. If a\nTensor, the placeholder will be a zero tensor of matching shape and dtype.\nIf a list, dict or tuple, the placeholder will be an identical structure\nof placeholders.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "shape_invariant": {
+                    "name": "shape_invariant",
+                    "description": "The shape invariant specified by the user (or None, if\nnothing was specified) for the respective variable.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "original": {
+                    "name": "original",
+                    "description": "Any object. The value of the variable prior to entering the loop.\nTypically, this is one of the special \"Undefined\" value, because that's\nwhen a placeholder is needed.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Either a zero value of structure, shape and dtype mathing 'like', or\n'original', if no such zero value could be created.",
+                "type": null
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

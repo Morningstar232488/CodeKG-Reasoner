@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="dc02e6ef-f2fb-4fa6-9328-278e3555a9ba" name="3090">
+        <fileTransfer rootFolder="/root/autodl-tmp" accessType="SFTP" host="connect.yza1.seetacloud.com" port="36485" sshConfigId="88de9610-603b-4158-871f-7a53bbccf03c" sshConfig="root@connect.yza1.seetacloud.com:36485 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="ab7777f2-c6ed-404d-97de-ad9b3697578a" name="3090-2">
+        <fileTransfer accessType="SFTP" host="connect.yza1.seetacloud.com" port="39881" sshConfigId="29e09f07-516b-4fff-9a99-f84aa85eb512" sshConfig="root@connect.yza1.seetacloud.com:39881 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

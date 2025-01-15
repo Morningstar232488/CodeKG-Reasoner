@@ -1,0 +1,5 @@
+<http://purl.org/codekg_reasoner/torch==1.2.0/torch> <http://purl.org/codekg_reasoner/torch==1.2.0/has_module> <http://purl.org/codekg_reasoner/torch==1.2.0/torch._jit_internal> <http://purl.org/codekg_reasoner/torch==1.2.0> .
+<http://purl.org/codekg_reasoner/torch==1.2.0/torch._jit_internal> <http://purl.org/codekg_reasoner/torch==1.2.0/has_function> <http://purl.org/codekg_reasoner/torch==1.2.0/createResolutionCallback> <http://purl.org/codekg_reasoner/torch==1.2.0> .
+<http://purl.org/codekg_reasoner/torch==1.2.0/createResolutionCallback> <http://purl.org/codekg_reasoner/torch==1.2.0/has_parameter> <http://purl.org/codekg_reasoner/torch==1.2.0/createResolutionCallback/parameter/frames_up> <http://purl.org/codekg_reasoner/torch==1.2.0> .
+<http://purl.org/codekg_reasoner/torch==1.2.0/createResolutionCallback/parameter/frames_up> <http://purl.org/codekg_reasoner/torch==1.2.0/is_optional> "True" <http://purl.org/codekg_reasoner/torch==1.2.0> .
+<http://purl.org/codekg_reasoner/torch==1.2.0/createResolutionCallback/parameter/frames_up> <http://purl.org/codekg_reasoner/torch==1.2.0/has_default_value> "0" <http://purl.org/codekg_reasoner/torch==1.2.0> .

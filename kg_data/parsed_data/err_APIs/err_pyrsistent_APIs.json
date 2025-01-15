@@ -1,0 +1,18 @@
+{
+    "data": {
+        "pyrsistent": {
+            "==0.6.2": {
+                "PClass": "cannot unpack non-iterable NoneType object"
+            },
+            "==0.6.1": {
+                "PClass": "cannot unpack non-iterable NoneType object"
+            },
+            "==0.7.0": {
+                "PClass": "cannot unpack non-iterable NoneType object"
+            },
+            "==0.8.0": {
+                "PClass": "cannot unpack non-iterable NoneType object"
+            }
+        }
+    }
+}

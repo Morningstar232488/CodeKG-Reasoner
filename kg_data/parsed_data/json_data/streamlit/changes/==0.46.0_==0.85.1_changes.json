@@ -1,0 +1,53 @@
+{
+    "count": 2,
+    "data": [
+        {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def _concat_any_array(any_array_1, any_array_2):\n    \"\"\"Concat elements from any_array_2 into any_array_1.\"\"\"\n    # Special case if any_array_1 is empty\n    if _any_array_len(any_array_1) == 0:\n        any_array_1.CopyFrom(any_array_2)\n        return\n\n    type1 = any_array_1.WhichOneof(\"type\")\n    type2 = any_array_2.WhichOneof(\"type\")\n    if type1 != type2:\n        raise ValueError(\n            \"Cannot concatenate %(type1)s with %(type2)s.\"\n            % {\"type1\": type1, \"type2\": type2}\n        )\n    getattr(any_array_1, type1).data.extend(getattr(any_array_2, type2).data)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "streamlit.delta_generator.DeltaGenerator.beta_expander",
+            "doc": "Insert a multi-element container that can be expanded/collapsed.\n\nInserts a container into your app that can be used to hold multiple elements\nand can be expanded or collapsed by the user. When collapsed, all that is\nvisible is the provided label.\n\nTo add elements to the returned container, you can use \"with\" notation\n(preferred) or just call methods directly on the returned object. See\nexamples below.\n\n.. warning::\n    Currently, you may not put expanders inside another expander.\n\nParameters\n----------\nlabel : str\n    A string to use as the header for the expander.\nexpanded : bool\n    If True, initializes the expander in \"expanded\" state. Defaults to\n    False (collapsed).\n\nExamples\n--------\n>>> st.line_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n>>>\n>>> with st.beta_expander(\"See explanation\"):\n...     st.write(\"\"\"\n...         The chart above shows some numbers I picked for you.\n...         I rolled actual dice for these, so they're *guaranteed* to\n...         be random.\n...     \"\"\").\n...     st.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n.. output ::\n    https://static.streamlit.io/0.66.0-2BLtg/index.html?id=LzfUAiT1eM9Xy8EDMRkWyF\n    height: 750px",
+            "is_deprecated": false,
+            "source_code": "    def _legacy_add_rows(self, data=None, **kwargs):\n        \"\"\"Concatenate a dataframe to the bottom of the current one.\n\n        Parameters\n        ----------\n        data : pandas.DataFrame, pandas.Styler, numpy.ndarray, Iterable, dict,\n        or None\n            Table to concat. Optional.\n\n        **kwargs : pandas.DataFrame, numpy.ndarray, Iterable, dict, or None\n            The named dataset to concat. Optional. You can only pass in 1\n            dataset (including the one in the data parameter).\n\n        Example\n        -------\n        >>> df1 = pd.DataFrame(\n        ...    np.random.randn(50, 20),\n        ...    columns=('col %d' % i for i in range(20)))\n        ...\n        >>> my_table = st._legacy_table(df1)\n        >>>\n        >>> df2 = pd.DataFrame(\n        ...    np.random.randn(50, 20),\n        ...    columns=('col %d' % i for i in range(20)))\n        ...\n        >>> my_table._legacy_add_rows(df2)\n        >>> # Now the table shown in the Streamlit app contains the data for\n        >>> # df1 followed by the data for df2.\n\n        You can do the same thing with plots. For example, if you want to add\n        more data to a line chart:\n\n        >>> # Assuming df1 and df2 from the example above still exist...\n        >>> my_chart = st._legacy_line_chart(df1)\n        >>> my_chart._legacy_add_rows(df2)\n        >>> # Now the chart shown in the Streamlit app contains the data for\n        >>> # df1 followed by the data for df2.\n\n        And for plots whose datasets are named, you can pass the data with a\n        keyword argument where the key is the name:\n\n        >>> my_chart = st._legacy_vega_lite_chart({\n        ...     'mark': 'line',\n        ...     'encoding': {'x': 'a', 'y': 'b'},\n        ...     'datasets': {\n        ...       'some_fancy_name': df1,  # <-- named dataset\n        ...      },\n        ...     'data': {'name': 'some_fancy_name'},\n        ... }),\n        >>> my_chart._legacy_add_rows(some_fancy_name=df2)  # <-- name used as keyword\n\n        \"\"\"\n        if self._root_container is None or self._cursor is None:\n            return self\n\n        if not self._cursor.is_locked:\n            raise StreamlitAPIException(\"Only existing elements can `add_rows`.\")\n\n        # Accept syntax st._legacy_add_rows(df).\n        if data is not None and len(kwargs) == 0:\n            name = \"\"\n        # Accept syntax st._legacy_add_rows(foo=df).\n        elif len(kwargs) == 1:\n            name, data = kwargs.popitem()\n        # Raise error otherwise.\n        else:\n            raise StreamlitAPIException(\n                \"Wrong number of arguments to add_rows().\"\n                \"Command requires exactly one dataset\"\n            )\n\n        # When doing _legacy_add_rows on an element that does not already have data\n        # (for example, st._legacy_ine_chart() without any args), call the original\n        # st._legacy_foo() element with new data instead of doing an _legacy_add_rows().\n        if (\n            self._cursor.props[\"delta_type\"] in DELTA_TYPES_THAT_MELT_DATAFRAMES\n            and self._cursor.props[\"last_index\"] is None\n        ):\n            # IMPORTANT: This assumes delta types and st method names always\n            # match!\n            # delta_type doesn't have any prefix, but st_method_name starts with \"_legacy_\".\n            st_method_name = \"_legacy_\" + self._cursor.props[\"delta_type\"]\n            st_method = getattr(self, st_method_name)\n            st_method(data, **kwargs)\n            return\n\n        data, self._cursor.props[\"last_index\"] = _maybe_melt_data_for_add_rows(\n            data, self._cursor.props[\"delta_type\"], self._cursor.props[\"last_index\"]\n        )\n\n        msg = ForwardMsg_pb2.ForwardMsg()\n        msg.metadata.delta_path[:] = self._cursor.delta_path\n\n        import streamlit.elements.legacy_data_frame as data_frame\n\n        data_frame.marshall_data_frame(data, msg.delta.add_rows.data)\n\n        if name:\n            msg.delta.add_rows.name = name\n            msg.delta.add_rows.has_name = True\n\n        _enqueue_message(msg)\n\n        return self\n",
+            "signature": "(label=None, expanded=False)",
+            "parameters": {
+                "label": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "expanded": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "member_function",
+            "class": "DeltaGenerator",
+            "pattern": "method_addition"
+        }
+    ]
+}

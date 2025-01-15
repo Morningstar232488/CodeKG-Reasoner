@@ -1,0 +1,90 @@
+{
+    "data": {
+        "register_ddp_comm_hook": {
+            "_id": "pytorch_lightning.utilities.distributed.register_ddp_comm_hook",
+            "name": "register_ddp_comm_hook",
+            "module": "pytorch_lightning.utilities.distributed",
+            "doc": "Function to register communication hook for DDP model https://pytorch.org/docs/master/ddp_comm_hooks.html.\n\nArgs:\n    model:\n        DDP model\n    ddp_comm_state:\n        state is passed to the hook and can be used to maintain\n        and update any state information that users would like to\n        maintain as part of the training process. Examples: error\n        feedback in gradient compression, peers to communicate with\n        next in GossipGrad etc.\n    ddp_comm_hook:\n        hook(state: object, bucket: dist._GradBucket) -> torch.futures.Future\n\n        This callable function is called once the bucket is ready. The\n        hook can perform whatever processing is needed and return\n        a Future indicating completion of any async work (ex: allreduce).\n        If the hook doesn't perform any communication, it can also\n        just return a completed Future. The Future should hold the\n        new value of grad bucket's tensors. Once a bucket is ready,\n        c10d reducer would call this hook and use the tensors returned\n        by the Future and copy grads to individual parameters.\n    ddp_comm_wrapper:\n        communication hook wraper to support a communication hook such\n        as FP16 compression as wrapper, which could be combined with\n        ddp_comm_hook\n\n.. warning ::\n    DDP communication hook needs pytorch version at least 1.8.0\n\n.. warning ::\n    DDP communication wrapper needs pytorch version at least 1.9.0\n    Post-localSGD hook needs pytorch version at least 1.9.0\n\nExample:\n\n    from torch.distributed.algorithms.ddp_comm_hooks import (\n        default_hooks as default,\n        powerSGD_hook as powerSGD,\n        post_localSGD_hook as post_localSGD,\n    )\n\n    # fp16_compress_hook for compress gradients\n    register_ddp_comm_hook(\n        model=ddp_model,\n        ddp_comm_hook=default.fp16_compress_hook,\n    )\n\n    # powerSGD_hook\n    register_ddp_comm_hook(\n        model=ddp_model,\n        ddp_comm_state=powerSGD.PowerSGDState(\n            process_group=None,\n            matrix_approximation_rank=1,\n            start_powerSGD_iter=5000,\n        ),\n        ddp_comm_hook=powerSGD.powerSGD_hook,\n    )\n\n    # post_localSGD_hook\n    subgroup, _ = torch.distributed.new_subgroups()\n    register_comm_hook(\n        model=ddp_model,\n        state=post_localSGD.PostLocalSGDState(\n            process_group=None,\n            subgroup=subgroup,\n            start_localSGD_iter=1_000,\n        ),\n        ddp_comm_hook=post_localSGD.post_localSGD_hook,\n    )\n\n    # fp16_compress_wrapper combined with other communication hook\n    register_ddp_comm_hook(\n        model=ddp_model,\n        ddp_comm_state=powerSGD.PowerSGDState(\n            process_group=None,\n            matrix_approximation_rank=1,\n            start_powerSGD_iter=5000,\n        ),\n        ddp_comm_hook=powerSGD.powerSGD_hook,\n        ddp_comm_wrapper=default.fp16_compress_wrapper,\n    )",
+            "is_deprecated": false,
+            "source_code": "def all_gather_ddp_if_available(\n    tensor: torch.Tensor, group: Optional[\"torch.distributed.ProcessGroup\"] = None, sync_grads: bool = False\n) -> torch.Tensor:\n    \"\"\"Function to gather a tensor from several distributed processes.\n\n    Args:\n        tensor: tensor of shape (batch, ...)\n        group: the process group to gather results from. Defaults to all processes (world)\n        sync_grads: flag that allows users to synchronize gradients for all_gather op\n\n    Return:\n        A tensor of shape (world_size, batch, ...)\n    \"\"\"\n    group = group if group is not None else torch.distributed.group.WORLD\n    if distributed_available():\n        if sync_grads:\n            return AllGatherGrad.apply(tensor, group)\n        with torch.no_grad():\n            return AllGatherGrad.apply(tensor, group)\n    return tensor\n",
+            "signature": "(model: torch.nn.parallel.distributed.DistributedDataParallel, ddp_comm_state: Union[object, NoneType] = None, ddp_comm_hook: Union[Callable, NoneType] = None, ddp_comm_wrapper: Union[Callable, NoneType] = None) -> None",
+            "parameters": {
+                "model": {
+                    "name": "model",
+                    "description": "DDP model",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.nn.parallel.distributed.DistributedDataParallel'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "ddp_comm_state": {
+                    "name": "ddp_comm_state",
+                    "description": "state is passed to the hook and can be used to maintain\nand update any state information that users would like to\nmaintain as part of the training process. Examples: error\nfeedback in gradient compression, peers to communicate with\nnext in GossipGrad etc.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[object, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "ddp_comm_hook": {
+                    "name": "ddp_comm_hook",
+                    "description": "hook(state: object, bucket: dist._GradBucket) -> torch.futures.Future\n\nThis callable function is called once the bucket is ready. The\nhook can perform whatever processing is needed and return\na Future indicating completion of any async work (ex: allreduce).\nIf the hook doesn't perform any communication, it can also\njust return a completed Future. The Future should hold the\nnew value of grad bucket's tensors. Once a bucket is ready,\nc10d reducer would call this hook and use the tensors returned\nby the Future and copy grads to individual parameters.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[typing.Callable, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "ddp_comm_wrapper": {
+                    "name": "ddp_comm_wrapper",
+                    "description": "communication hook wraper to support a communication hook such\nas FP16 compression as wrapper, which could be combined with\nddp_comm_hook",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[typing.Callable, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_load_readme_description": {
+            "_id": "pytorch_lightning.setup_tools._load_readme_description",
+            "name": "_load_readme_description",
+            "module": "pytorch_lightning.setup_tools",
+            "doc": "Load readme as decribtion.\n\n>>> _load_readme_description(_PROJECT_ROOT, \"\", \"\")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE\n'<div align=\"center\">...'",
+            "is_deprecated": false,
+            "source_code": "def _load_readme_description(path_dir: str, homepage: str, version: str) -> str:\n    \"\"\"Load readme as decribtion.\n\n    >>> _load_readme_description(_PROJECT_ROOT, \"\", \"\")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE\n    '<div align=\"center\">...'\n    \"\"\"\n    path_readme = os.path.join(path_dir, \"README.md\")\n    text = open(path_readme, encoding=\"utf-8\").read()\n\n    # drop images from readme\n    text = text.replace(\"![PT to PL](docs/source/_static/images/general/pl_quick_start_full_compressed.gif)\", \"\")\n\n    # https://github.com/PyTorchLightning/pytorch-lightning/raw/master/docs/source/_static/images/lightning_module/pt_to_pl.png\n    github_source_url = os.path.join(homepage, \"raw\", version)\n    # replace relative repository path to absolute link to the release\n    #  do not replace all \"docs\" as in the readme we reger some other sources with particular path to docs\n    text = text.replace(\"docs/source/_static/\", f\"{os.path.join(github_source_url, 'docs/source/_static/')}\")\n\n    # readthedocs badge\n    text = text.replace(\"badge/?version=stable\", f\"badge/?version={version}\")\n    text = text.replace(\"pytorch-lightning.readthedocs.io/en/stable/\", f\"pytorch-lightning.readthedocs.io/en/{version}\")\n    # codecov badge\n    text = text.replace(\"/branch/master/graph/badge.svg\", f\"/release/{version}/graph/badge.svg\")\n    # replace github badges for release ones\n    text = text.replace(\"badge.svg?branch=master&event=push\", f\"badge.svg?tag={version}\")\n    # Azure...\n    text = text.replace(\"?branchName=master\", f\"?branchName=refs%2Ftags%2F{version}\")\n    text = re.sub(r\"\\?definitionId=\\d+&branchName=master\", f\"?definitionId=2&branchName=refs%2Ftags%2F{version}\", text)\n\n    skip_begin = r\"<!-- following section will be skipped from PyPI description -->\"\n    skip_end = r\"<!-- end skipping PyPI description -->\"\n    # todo: wrap content as commented description\n    text = re.sub(rf\"{skip_begin}.+?{skip_end}\", \"<!--  -->\", text, flags=re.IGNORECASE + re.DOTALL)\n\n    # # https://github.com/Borda/pytorch-lightning/releases/download/1.1.0a6/codecov_badge.png\n    # github_release_url = os.path.join(homepage, \"releases\", \"download\", version)\n    # # download badge and replace url with local file\n    # text = _parse_for_badge(text, github_release_url)\n    return text\n",
+            "signature": "(path_dir: str, homepage: str, version: str) -> str",
+            "parameters": {
+                "path_dir": {
+                    "name": "path_dir",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "homepage": {
+                    "name": "homepage",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "version": {
+                    "name": "version",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

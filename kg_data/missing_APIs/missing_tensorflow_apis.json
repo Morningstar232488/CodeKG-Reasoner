@@ -1,0 +1,209 @@
+{
+    "data": {
+        "tensorflow": {
+            "==2.9.3": {
+                "_placeholder_value": "err"
+            },
+            "==2.8.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.2.3": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.4.3": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.15.3": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.9.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.12.3": {
+                "NotDifferentiable": "err"
+            },
+            "==2.7.2": {},
+            "==2.3.2": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==1.2.1": {
+                "NotDifferentiable": "err"
+            },
+            "==1.15.5": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.6.4": {
+                "no_gradient": "err",
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.15.4": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.4.4": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.0.1": {
+                "NotDifferentiable": "err"
+            },
+            "==2.13.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.1.3": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.4.2": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.0.2": {
+                "experimental_distribute_datasets_from_function": "err",
+                "no_gradient": "err"
+            },
+            "==2.5.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.1.2": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==1.15.2": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==1.5.1": {
+                "NotDifferentiable": "err"
+            },
+            "==2.8.2": {},
+            "==2.0.4": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.4.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.2.1": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.6.2": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.3.3": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.1.1": {
+                "experimental_distribute_datasets_from_function": "err",
+                "no_gradient": "err"
+            },
+            "==2.3.1": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.6.3": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.7.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.2.0": {
+                "NotDifferentiable": "err"
+            },
+            "==2.14.0": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.2.0": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.1.0": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.4.0": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.10.0": {
+                "NotDifferentiable": "err"
+            },
+            "==2.5.0": {
+                "no_gradient": "err",
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.0.0": {
+                "experimental_distribute_datasets_from_function": "err",
+                "no_gradient": "err"
+            },
+            "==1.6.0": {
+                "NotDifferentiable": "err"
+            },
+            "==2.9.0": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.15.0": {
+                "placeholder_value": "err"
+            },
+            "==2.6.0": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.11.0": {},
+            "==2.2.2": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.10.0": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.10.1": {
+                "NotDifferentiable": "err"
+            },
+            "==2.1.4": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.3.4": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.7.0": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==2.0.1": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==2.14.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.8.0": {
+                "NotDifferentiable": "err"
+            },
+            "==2.5.2": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.11.0": {
+                "NotDifferentiable": "err"
+            },
+            "==1.1.0": {
+                "NotDifferentiable": "err"
+            },
+            "==2.6.1": {
+                "no_gradient": "err"
+            },
+            "==1.3.0": {
+                "NotDifferentiable": "err"
+            },
+            "==2.11.1": {
+                "distribute_datasets_from_function": "err"
+            },
+            "==1.0.0": {
+                "string_to_index_table_from_tensor": "err"
+            },
+            "==1.12.2": {
+                "index_table_from_tensor": "err"
+            },
+            "==2.3.0": {
+                "experimental_distribute_datasets_from_function": "err"
+            },
+            "==1.13.1": {
+                "no_gradient": "err"
+            },
+            "==1.7.0": {
+                "NotDifferentiable": "err"
+            },
+            "==1.4.0": {
+                "NotDifferentiable": "err"
+            },
+            "==1.14.0": {
+                "no_gradient": "err"
+            }
+        }
+    }
+}

@@ -1,0 +1,98 @@
+{
+    "data": {
+        "__multiclass_roc": {
+            "_id": "pytorch_lightning.metrics.functional.classification.__multiclass_roc",
+            "name": "__multiclass_roc",
+            "module": "pytorch_lightning.metrics.functional.classification",
+            "doc": "Computes the Receiver Operating Characteristic (ROC) for multiclass predictors.\n\n.. warning:: Deprecated\n\nArgs:\n    pred: estimated probabilities\n    target: ground-truth labels\n    sample_weight: sample weights\n    num_classes: number of classes (default: None, computes automatically from data)\n\nReturn:\n    returns roc for each class.\n    Number of classes, false-positive rate (fpr), true-positive rate (tpr), thresholds\n\nExample:\n\n    >>> pred = torch.tensor([[0.85, 0.05, 0.05, 0.05],\n    ...                      [0.05, 0.85, 0.05, 0.05],\n    ...                      [0.05, 0.05, 0.85, 0.05],\n    ...                      [0.05, 0.05, 0.05, 0.85]])\n    >>> target = torch.tensor([0, 1, 3, 2])\n    >>> __multiclass_roc(pred, target)   # doctest: +NORMALIZE_WHITESPACE\n    ((tensor([0., 0., 1.]), tensor([0., 1., 1.]), tensor([1.8500, 0.8500, 0.0500])),\n     (tensor([0., 0., 1.]), tensor([0., 1., 1.]), tensor([1.8500, 0.8500, 0.0500])),\n     (tensor([0.0000, 0.3333, 1.0000]), tensor([0., 0., 1.]), tensor([1.8500, 0.8500, 0.0500])),\n     (tensor([0.0000, 0.3333, 1.0000]), tensor([0., 0., 1.]), tensor([1.8500, 0.8500, 0.0500])))",
+            "is_deprecated": true,
+            "source_code": "def __multiclass_roc(\n        pred: torch.Tensor,\n        target: torch.Tensor,\n        sample_weight: Optional[Sequence] = None,\n        num_classes: Optional[int] = None,\n) -> Tuple[Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:\n    \"\"\"\n    Computes the Receiver Operating Characteristic (ROC) for multiclass predictors.\n\n    .. warning:: Deprecated\n\n    Args:\n        pred: estimated probabilities\n        target: ground-truth labels\n        sample_weight: sample weights\n        num_classes: number of classes (default: None, computes automatically from data)\n\n    Return:\n        returns roc for each class.\n        Number of classes, false-positive rate (fpr), true-positive rate (tpr), thresholds\n\n    Example:\n\n        >>> pred = torch.tensor([[0.85, 0.05, 0.05, 0.05],\n        ...                      [0.05, 0.85, 0.05, 0.05],\n        ...                      [0.05, 0.05, 0.85, 0.05],\n        ...                      [0.05, 0.05, 0.05, 0.85]])\n        >>> target = torch.tensor([0, 1, 3, 2])\n        >>> __multiclass_roc(pred, target)   # doctest: +NORMALIZE_WHITESPACE\n        ((tensor([0., 0., 1.]), tensor([0., 1., 1.]), tensor([1.8500, 0.8500, 0.0500])),\n         (tensor([0., 0., 1.]), tensor([0., 1., 1.]), tensor([1.8500, 0.8500, 0.0500])),\n         (tensor([0.0000, 0.3333, 1.0000]), tensor([0., 0., 1.]), tensor([1.8500, 0.8500, 0.0500])),\n         (tensor([0.0000, 0.3333, 1.0000]), tensor([0., 0., 1.]), tensor([1.8500, 0.8500, 0.0500])))\n    \"\"\"\n    num_classes = get_num_classes(pred, target, num_classes)\n\n    class_roc_vals = []\n    for c in range(num_classes):\n        pred_c = pred[:, c]\n\n        class_roc_vals.append(__roc(pred=pred_c, target=target, sample_weight=sample_weight, pos_label=c))\n\n    return tuple(class_roc_vals)\n",
+            "signature": "(pred: torch.Tensor, target: torch.Tensor, sample_weight: Union[Sequence, NoneType] = None, num_classes: Union[int, NoneType] = None) -> Tuple[Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]",
+            "parameters": {
+                "pred": {
+                    "name": "pred",
+                    "description": "estimated probabilities",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "target": {
+                    "name": "target",
+                    "description": "ground-truth labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "sample_weight": {
+                    "name": "sample_weight",
+                    "description": "sample weights",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[typing.Sequence, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "num_classes": {
+                    "name": "num_classes",
+                    "description": "number of classes (default: None, computes automatically from data)",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[int, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "__roc": {
+            "_id": "pytorch_lightning.metrics.functional.classification.__roc",
+            "name": "__roc",
+            "module": "pytorch_lightning.metrics.functional.classification",
+            "doc": "Computes the Receiver Operating Characteristic (ROC). It assumes classifier is binary.\n\n.. warning:: Deprecated\n\nArgs:\n    pred: estimated probabilities\n    target: ground-truth labels\n    sample_weight: sample weights\n    pos_label: the label for the positive class\n\nReturn:\n    false-positive rate (fpr), true-positive rate (tpr), thresholds\n\nExample:\n\n    >>> x = torch.tensor([0, 1, 2, 3])\n    >>> y = torch.tensor([0, 1, 1, 1])\n    >>> fpr, tpr, thresholds = __roc(x, y)\n    >>> fpr\n    tensor([0., 0., 0., 0., 1.])\n    >>> tpr\n    tensor([0.0000, 0.3333, 0.6667, 1.0000, 1.0000])\n    >>> thresholds\n    tensor([4, 3, 2, 1, 0])",
+            "is_deprecated": true,
+            "source_code": "def __roc(\n        pred: torch.Tensor,\n        target: torch.Tensor,\n        sample_weight: Optional[Sequence] = None,\n        pos_label: int = 1.,\n) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:\n    \"\"\"\n    Computes the Receiver Operating Characteristic (ROC). It assumes classifier is binary.\n\n    .. warning:: Deprecated\n\n    Args:\n        pred: estimated probabilities\n        target: ground-truth labels\n        sample_weight: sample weights\n        pos_label: the label for the positive class\n\n    Return:\n        false-positive rate (fpr), true-positive rate (tpr), thresholds\n\n    Example:\n\n        >>> x = torch.tensor([0, 1, 2, 3])\n        >>> y = torch.tensor([0, 1, 1, 1])\n        >>> fpr, tpr, thresholds = __roc(x, y)\n        >>> fpr\n        tensor([0., 0., 0., 0., 1.])\n        >>> tpr\n        tensor([0.0000, 0.3333, 0.6667, 1.0000, 1.0000])\n        >>> thresholds\n        tensor([4, 3, 2, 1, 0])\n\n    \"\"\"\n    fps, tps, thresholds = _binary_clf_curve(pred=pred, target=target,\n                                             sample_weight=sample_weight,\n                                             pos_label=pos_label)\n\n    # Add an extra threshold position\n    # to make sure that the curve starts at (0, 0)\n    tps = torch.cat([torch.zeros(1, dtype=tps.dtype, device=tps.device), tps])\n    fps = torch.cat([torch.zeros(1, dtype=fps.dtype, device=fps.device), fps])\n    thresholds = torch.cat([thresholds[0][None] + 1, thresholds])\n\n    if fps[-1] <= 0:\n        raise ValueError(\"No negative samples in targets, false positive value should be meaningless\")\n\n    fpr = fps / fps[-1]\n\n    if tps[-1] <= 0:\n        raise ValueError(\"No positive samples in targets, true positive value should be meaningless\")\n\n    tpr = tps / tps[-1]\n\n    return fpr, tpr, thresholds\n",
+            "signature": "(pred: torch.Tensor, target: torch.Tensor, sample_weight: Union[Sequence, NoneType] = None, pos_label: int = 1.0) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]",
+            "parameters": {
+                "pred": {
+                    "name": "pred",
+                    "description": "estimated probabilities",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "target": {
+                    "name": "target",
+                    "description": "ground-truth labels",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "sample_weight": {
+                    "name": "sample_weight",
+                    "description": "sample weights",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": "typing.Union[typing.Sequence, NoneType]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "pos_label": {
+                    "name": "pos_label",
+                    "description": "the label for the positive class",
+                    "is_optional": true,
+                    "default": "1.0",
+                    "annotation": "<class 'int'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

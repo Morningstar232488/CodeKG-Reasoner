@@ -1,0 +1,54 @@
+{
+    "data": {
+        "pyrsistent": {
+            "==0.6.2": {
+                "names": [
+                    "PClass"
+                ],
+                "count": 1
+            },
+            "==0.11.10": {
+                "names": [
+                    "immutable"
+                ],
+                "count": 1
+            },
+            "==0.6.1": {
+                "names": [
+                    "PClass"
+                ],
+                "count": 1
+            },
+            "==0.11.6": {
+                "names": [
+                    "immutable"
+                ],
+                "count": 1
+            },
+            "==0.7.0": {
+                "names": [
+                    "PClass"
+                ],
+                "count": 1
+            },
+            "==0.11.4": {
+                "names": [
+                    "immutable"
+                ],
+                "count": 1
+            },
+            "==0.8.0": {
+                "names": [
+                    "PClass"
+                ],
+                "count": 1
+            },
+            "==0.15.2": {
+                "names": [
+                    "immutable"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

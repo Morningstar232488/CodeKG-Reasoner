@@ -1,0 +1,92 @@
+{
+    "data": {
+        "color_picker": {
+            "_id": "streamlit.delta_generator.ColorPickerMixin.color_picker",
+            "name": "color_picker",
+            "module": "streamlit.delta_generator",
+            "doc": "Display a color picker widget.\n\nNote: This is a beta feature. See\nhttps://docs.streamlit.io/en/latest/api.html#pre-release-features for more\ninformation.\n\nParameters\n----------\nlabel : str\n    A short label explaining to the user what this input is for.\nvalue : str or None\n    The hex value of this widget when it first renders. If None,\n    defaults to black.\nkey : str\n    An optional string to use as the unique key for the widget.\n    If this is omitted, a key will be generated for the widget\n    based on its content. Multiple widgets of the same type may\n    not share the same key.\n\nReturns\n-------\nstr\n    The selected color as a hex string.\n\nExample\n-------\n>>> color = st.color_picker('Pick A Color', '#00f900')\n>>> st.write('The current color is', color)",
+            "is_deprecated": false,
+            "source_code": "    def color_picker(self, label, value=None, key=None):\n        \"\"\"Display a color picker widget.\n\n        Note: This is a beta feature. See\n        https://docs.streamlit.io/en/latest/api.html#pre-release-features for more\n        information.\n\n        Parameters\n        ----------\n        label : str\n            A short label explaining to the user what this input is for.\n        value : str or None\n            The hex value of this widget when it first renders. If None,\n            defaults to black.\n        key : str\n            An optional string to use as the unique key for the widget.\n            If this is omitted, a key will be generated for the widget\n            based on its content. Multiple widgets of the same type may\n            not share the same key.\n\n        Returns\n        -------\n        str\n            The selected color as a hex string.\n\n        Example\n        -------\n        >>> color = st.color_picker('Pick A Color', '#00f900')\n        >>> st.write('The current color is', color)\n\n        \"\"\"\n        # set value default\n        if value is None:\n            value = \"#000000\"\n\n        # make sure the value is a string\n        if not isinstance(value, str):\n            raise StreamlitAPIException(\n                \"\"\"\n                Color Picker Value has invalid type: %s. Expects a hex string\n                like '#00FFAA' or '#000'.\n                \"\"\"\n                % type(value).__name__\n            )\n\n        # validate the value and expects a hex string\n        match = re.match(r\"^#(?:[0-9a-fA-F]{3}){1,2}$\", value)\n\n        if not match:\n            raise StreamlitAPIException(\n                \"\"\"\n                '%s' is not a valid hex code for colors. Valid ones are like\n                '#00FFAA' or '#000'.\n                \"\"\"\n                % value\n            )\n\n        color_picker_proto = ColorPickerProto()\n        color_picker_proto.label = label\n        color_picker_proto.default = str(value)\n\n        ui_value = register_widget(\"color_picker\", color_picker_proto, user_key=key)\n        current_value = ui_value if ui_value is not None else value\n        return self.dg._enqueue(\"color_picker\", color_picker_proto, str(current_value))\n",
+            "signature": "(label, value=None, key=None)",
+            "parameters": {
+                "label": {
+                    "name": "label",
+                    "description": "A short label explaining to the user what this input is for.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "value": {
+                    "name": "value",
+                    "description": "The hex value of this widget when it first renders. If None,\ndefaults to black.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "key": {
+                    "name": "key",
+                    "description": "An optional string to use as the unique key for the widget.\nIf this is omitted, a key will be generated for the widget\nbased on its content. Multiple widgets of the same type may\nnot share the same key.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The selected color as a hex string.",
+                "type": "str"
+            },
+            "raise_doc": null,
+            "type": "member_function",
+            "class": "ColorPickerMixin"
+        },
+        "add_rows": {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def _marshall_any_array(pandas_array, proto_array):\n    \"\"\"Convert a 1D numpy.Array into a proto.AnyArray.\n\n    pandas_array - 1D arrays which is AnyArray compatible (input).\n    proto_array  - proto.AnyArray (output)\n    \"\"\"\n    import numpy as np\n\n    # Convert to np.array as necessary.\n    if not hasattr(pandas_array, \"dtype\"):\n        pandas_array = np.array(pandas_array)\n\n    # Only works on 1D arrays.\n    if len(pandas_array.shape) != 1:\n        raise ValueError(\"Array must be 1D.\")\n\n    # Perform type-conversion based on the array dtype.\n    if issubclass(pandas_array.dtype.type, np.floating):\n        proto_array.doubles.data.extend(pandas_array)\n    elif issubclass(pandas_array.dtype.type, np.timedelta64):\n        proto_array.timedeltas.data.extend(pandas_array.astype(np.int64))\n    elif issubclass(pandas_array.dtype.type, np.integer):\n        proto_array.int64s.data.extend(pandas_array)\n    elif pandas_array.dtype == np.bool:\n        proto_array.int64s.data.extend(pandas_array)\n    elif pandas_array.dtype == np.object:\n        proto_array.strings.data.extend(map(str, pandas_array))\n    # dtype='string', <class 'pandas.core.arrays.string_.StringDtype'>\n    # NOTE: StringDtype is considered experimental.\n    # The implementation and parts of the API may change without warning.\n    elif pandas_array.dtype.name == \"string\":\n        proto_array.strings.data.extend(map(str, pandas_array))\n    # Setting a timezone changes (dtype, dtype.type) from\n    #   'datetime64[ns]', <class 'numpy.datetime64'>\n    # to\n    #   datetime64[ns, UTC], <class 'pandas._libs.tslibs.timestamps.Timestamp'>\n    elif pandas_array.dtype.name.startswith(\"datetime64\"):\n        # TODO(armando): Convert eveything to UTC not local timezone.\n        if pandas_array.dt.tz is None:\n            current_zone = tzlocal.get_localzone()\n            pandas_array = pandas_array.dt.tz_localize(current_zone)\n        proto_array.datetimes.data.extend(pandas_array.astype(np.int64))\n    else:\n        raise NotImplementedError(\"Dtype %s not understood.\" % pandas_array.dtype)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "beta_expander": {
+            "_id": "streamlit.delta_generator.DeltaGenerator.beta_expander",
+            "doc": "Insert a multi-element container that can be expanded/collapsed.\n\nInserts a container into your app that can be used to hold multiple elements\nand can be expanded or collapsed by the user. When collapsed, all that is\nvisible is the provided label.\n\nTo add elements to the returned container, you can use \"with\" notation\n(preferred) or just call methods directly on the returned object. See\nexamples below.\n\n.. warning::\n    Currently, you may not put expanders inside another expander.\n\nParameters\n----------\nlabel : str\n    A string to use as the header for the expander.\nexpanded : bool\n    If True, initializes the expander in \"expanded\" state. Defaults to\n    False (collapsed).\n\nExamples\n--------\n>>> st.line_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n>>>\n>>> with st.beta_expander(\"See explanation\"):\n...     st.write(\"\"\"\n...         The chart above shows some numbers I picked for you.\n...         I rolled actual dice for these, so they're *guaranteed* to\n...         be random.\n...     \"\"\").\n...     st.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n.. output ::\n    https://static.streamlit.io/0.66.0-2BLtg/index.html?id=LzfUAiT1eM9Xy8EDMRkWyF\n    height: 750px",
+            "is_deprecated": false,
+            "source_code": "def _maybe_melt_data_for_add_rows(data, delta_type, last_index):\n    import pandas as pd\n    import streamlit.elements.data_frame_proto as data_frame_proto\n\n    # For some delta types we have to reshape the data structure\n    # otherwise the input data and the actual data used\n    # by vega_lite will be different and it will throw an error.\n    if delta_type in DELTAS_TYPES_THAT_MELT_DATAFRAMES:\n        if not isinstance(data, pd.DataFrame):\n            data = type_util.convert_anything_to_df(data)\n\n        if type(data.index) is pd.RangeIndex:\n            old_step = _get_pandas_index_attr(data, \"step\")\n\n            # We have to drop the predefined index\n            data = data.reset_index(drop=True)\n\n            old_stop = _get_pandas_index_attr(data, \"stop\")\n\n            if old_step is None or old_stop is None:\n                raise StreamlitAPIException(\n                    \"'RangeIndex' object has no attribute 'step'\"\n                )\n\n            start = last_index + old_step\n            stop = last_index + old_step + old_stop\n\n            data.index = pd.RangeIndex(start=start, stop=stop, step=old_step)\n            last_index = stop - 1\n\n        index_name = data.index.name\n        if index_name is None:\n            index_name = \"index\"\n\n        data = pd.melt(data.reset_index(), id_vars=[index_name])\n\n    return data, last_index\n",
+            "signature": "(label=None, expanded=False)",
+            "parameters": {
+                "label": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "expanded": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "member_function",
+            "class": "DeltaGenerator"
+        }
+    }
+}

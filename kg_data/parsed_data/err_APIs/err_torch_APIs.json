@@ -1,0 +1,27 @@
+{
+    "data": {
+        "torch": {
+            "==1.8.0": {
+                "register_comm_hook": "_ARRAY_API not found"
+            },
+            "==1.10.0": {
+                "to_sparse_csr": "() method: bad call flags"
+            },
+            "==1.11.0": {
+                "createResolutionCallbackFromFrame": "cannot unpack non-iterable NoneType object"
+            },
+                        "==2.2.0": {
+    "new_dynamic_size": "module 'torch' has no attribute 'new_dynamic_size'",
+    "createResolutionCallbackFromFrame": "module 'torch' has no attribute 'createResolutionCallbackFromFrame'"
+},
+
+"==2.0.0": {
+    "createResolutionCallbackFromFrame": "module 'torch' has no attribute 'createResolutionCallbackFromFrame'"
+},
+
+"==2.1.2": {
+    "create_unbacked_symint": "module 'torch' has no attribute 'create_unbacked_symint'"
+}
+        }
+    }
+}

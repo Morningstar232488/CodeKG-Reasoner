@@ -1,0 +1,176 @@
+{
+    "data": {
+        "pytorch_lightning": {
+            "==2.0.5": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            },
+            "==2.1.2": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            },
+            "==1.4.2": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.0.1": {
+                "names": [
+                    "_parse_env_variables"
+                ],
+                "count": 1
+            },
+            "==1.5.10": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.1.1": {
+                "names": [
+                    "_parse_env_variables"
+                ],
+                "count": 1
+            },
+            "==2.0.8": {
+                "names": [
+                    "_register_ddp_comm_hook"
+                ],
+                "count": 1
+            },
+            "==1.2.10": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.0.7": {
+                "names": [
+                    "_register_ddp_comm_hook"
+                ],
+                "count": 1
+            },
+            "==1.5.2": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.1.3": {
+                "names": [
+                    "_parse_env_variables"
+                ],
+                "count": 1
+            },
+            "==2.0.9": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            },
+            "==1.6.3": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==1.4.6": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.0.2": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            },
+            "==1.5.1": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==1.3.1": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==1.4.9": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.2.0": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            },
+            "==2.1.0": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            },
+            "==1.5.4": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==1.5.3": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==1.5.0": {
+                "names": [
+                    "_load_readme_description"
+                ],
+                "count": 1
+            },
+            "==2.0.3": {
+                "names": [
+                    "_register_ddp_comm_hook"
+                ],
+                "count": 1
+            },
+            "==1.1.0": {
+                "names": [
+                    "__multiclass_roc",
+                    "__roc"
+                ],
+                "count": 2
+            },
+            "==1.1.1": {
+                "names": [
+                    "_roc"
+                ],
+                "count": 1
+            },
+            "==2.0.0": {
+                "names": [
+                    "_register_ddp_comm_hook",
+                    "_parse_env_variables"
+                ],
+                "count": 2
+            }
+        }
+    }
+}

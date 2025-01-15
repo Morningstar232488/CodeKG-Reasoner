@@ -1,0 +1,29 @@
+{
+    "data": {
+        "add_rows": {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def add_rows(delta1, delta2, name=None):\n    \"\"\"Concat the DataFrame in delta2 to the DataFrame in delta1.\n\n    Parameters\n    ----------\n    delta1 : Delta\n    delta2 : Delta\n    name : str or None\n\n    \"\"\"\n    df1 = _get_data_frame(delta1, name)\n    df2 = _get_data_frame(delta2, name)\n\n    if len(df1.data.cols) == 0:\n        if len(df2.data.cols) == 0:\n            return\n        df1.CopyFrom(df2)\n        return\n\n    # Copy Data\n    if len(df1.data.cols) != len(df2.data.cols):\n        raise ValueError(\"Dataframes have incompatible shapes\")\n    for (col1, col2) in zip(df1.data.cols, df2.data.cols):\n        _concat_any_array(col1, col2)\n\n    # Copy index\n    _concat_index(df1.index, df2.index)\n\n    # Don't concat columns! add_rows should leave the dataframe with the same\n    # number of columns as it had before.\n    # DON'T DO: _concat_index(df1.columns, df2.columns)\n\n    # Copy styles\n    for (style_col1, style_col2) in zip(df1.style.cols, df2.style.cols):\n        _concat_cell_style_array(style_col1, style_col2)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

@@ -1,0 +1,2 @@
+<http://purl.org/codekg_reasoner/tensorflow==1.5.1/NotDifferentiable> <http://purl.org/codekg_reasoner/tensorflow/has_removed_to> <http://purl.org/codekg_reasoner/tensorflow==2.11.0/blank_node> <http://purl.org/codekg_reasoner/tensorflow> .
+<http://purl.org/codekg_reasoner/tensorflow==1.5.1/blank_node> <http://purl.org/codekg_reasoner/tensorflow/has_added_to> <http://purl.org/codekg_reasoner/tensorflow==2.11.0/no_gradient> <http://purl.org/codekg_reasoner/tensorflow> .

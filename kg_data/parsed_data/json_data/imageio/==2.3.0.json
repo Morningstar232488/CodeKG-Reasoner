@@ -1,0 +1,21 @@
+{
+    "data": {
+        "imagej_description_metadata": {
+            "_id": "imageio.plugins._tifffile.imagej_description_metadata",
+            "doc": "Return metatata from ImageJ image description as dict.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = 'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_metadata(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+            "is_deprecated": false,
+            "source_code": "def sequence(value):\n    \"\"\"Return tuple containing value if value is not a sequence.\n\n    >>> sequence(1)\n    (1,)\n    >>> sequence([1])\n    [1]\n\n    \"\"\"\n    try:\n        len(value)\n        return value\n    except TypeError:\n        return (value,)\n",
+            "signature": "(description)",
+            "parameters": {
+                "description": {
+                    "description": null,
+                    "is_optional": false
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

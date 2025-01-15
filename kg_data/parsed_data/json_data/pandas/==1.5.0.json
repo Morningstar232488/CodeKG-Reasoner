@@ -1,0 +1,53 @@
+{
+    "data": {
+        "_ensure_nanosecond_dtype": {
+            "_id": "pandas.core.dtypes.cast._ensure_nanosecond_dtype",
+            "name": "_ensure_nanosecond_dtype",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Convert dtypes with granularity less than nanosecond to nanosecond\n\n>>> _ensure_nanosecond_dtype(np.dtype(\"M8[us]\"))\n\n>>> _ensure_nanosecond_dtype(np.dtype(\"M8[D]\"))\nTraceback (most recent call last):\n    ...\nTypeError: dtype=datetime64[D] is not supported. Supported resolutions are 's', 'ms', 'us', and 'ns'\n\n>>> _ensure_nanosecond_dtype(np.dtype(\"m8[ps]\"))\nTraceback (most recent call last):\n    ...\nTypeError: dtype=timedelta64[ps] is not supported. Supported resolutions are 's', 'ms', 'us', and 'ns'",
+            "is_deprecated": false,
+            "source_code": "    def try_timedelta(v: np.ndarray) -> np.ndarray:\n        # safe coerce to timedelta64\n\n        # will try first with a string & object conversion\n        try:\n            # bc we know v.dtype == object, this is equivalent to\n            #  `np.asarray(to_timedelta(v))`, but using a lower-level API that\n            #  does not require a circular import.\n            td_values = array_to_timedelta64(v).view(\"m8[ns]\")\n        except (ValueError, OverflowError):\n            return v.reshape(shape)\n        else:\n            return td_values.reshape(shape)\n",
+            "signature": "(dtype: 'DtypeObj') -> 'None'",
+            "parameters": {
+                "dtype": {
+                    "name": "dtype",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "DtypeObj",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "_maybe_infer_dtype_type": {
+            "_id": "pandas.core.dtypes.cast._maybe_infer_dtype_type",
+            "name": "_maybe_infer_dtype_type",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Try to infer an object's dtype, for use in arithmetic ops.\n\nUses `element.dtype` if that's available.\nObjects implementing the iterator protocol are cast to a NumPy array,\nand from there the array's type is used.\n\nParameters\n----------\nelement : object\n    Possibly has a `.dtype` attribute, and possibly the iterator\n    protocol.\n\nReturns\n-------\ntipo : type\n\nExamples\n--------\n>>> from collections import namedtuple\n>>> Foo = namedtuple(\"Foo\", \"dtype\")\n>>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\ndtype('int64')",
+            "is_deprecated": false,
+            "source_code": "def _maybe_infer_dtype_type(element):\n    \"\"\"\n    Try to infer an object's dtype, for use in arithmetic ops.\n\n    Uses `element.dtype` if that's available.\n    Objects implementing the iterator protocol are cast to a NumPy array,\n    and from there the array's type is used.\n\n    Parameters\n    ----------\n    element : object\n        Possibly has a `.dtype` attribute, and possibly the iterator\n        protocol.\n\n    Returns\n    -------\n    tipo : type\n\n    Examples\n    --------\n    >>> from collections import namedtuple\n    >>> Foo = namedtuple(\"Foo\", \"dtype\")\n    >>> _maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))\n    dtype('int64')\n    \"\"\"\n    tipo = None\n    if hasattr(element, \"dtype\"):\n        tipo = element.dtype\n    elif is_list_like(element):\n        element = np.asarray(element)\n        tipo = element.dtype\n    return tipo\n",
+            "signature": "(element)",
+            "parameters": {
+                "element": {
+                    "name": "element",
+                    "description": "Possibly has a `.dtype` attribute, and possibly the iterator\nprotocol.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "type"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

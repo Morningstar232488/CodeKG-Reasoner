@@ -1,0 +1,74 @@
+{
+    "data": {
+        "_load_readme_description": {
+            "_id": "pytorch_lightning.setup_tools._load_readme_description",
+            "name": "_load_readme_description",
+            "module": "pytorch_lightning.setup_tools",
+            "doc": "Load readme as decribtion\n\n>>> _load_readme_description(_PROJECT_ROOT, \"\", \"\")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE\n'<div align=\"center\">...'",
+            "is_deprecated": false,
+            "source_code": "def _load_readme_description(path_dir: str, homepage: str, version: str) -> str:\n    \"\"\"Load readme as decribtion\n\n    >>> _load_readme_description(_PROJECT_ROOT, \"\", \"\")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE\n    '<div align=\"center\">...'\n    \"\"\"\n    path_readme = os.path.join(path_dir, \"README.md\")\n    text = open(path_readme, encoding=\"utf-8\").read()\n\n    # drop images from readme\n    text = text.replace(\"![PT to PL](docs/source/_static/images/general/pl_quick_start_full_compressed.gif)\", \"\")\n\n    # https://github.com/PyTorchLightning/pytorch-lightning/raw/master/docs/source/_static/images/lightning_module/pt_to_pl.png\n    github_source_url = os.path.join(homepage, \"raw\", version)\n    # replace relative repository path to absolute link to the release\n    #  do not replace all \"docs\" as in the readme we reger some other sources with particular path to docs\n    text = text.replace(\"docs/source/_static/\", f\"{os.path.join(github_source_url, 'docs/source/_static/')}\")\n\n    # readthedocs badge\n    text = text.replace(\"badge/?version=stable\", f\"badge/?version={version}\")\n    text = text.replace(\"pytorch-lightning.readthedocs.io/en/stable/\", f\"pytorch-lightning.readthedocs.io/en/{version}\")\n    # codecov badge\n    text = text.replace(\"/branch/master/graph/badge.svg\", f\"/release/{version}/graph/badge.svg\")\n    # replace github badges for release ones\n    text = text.replace(\"badge.svg?branch=master&event=push\", f\"badge.svg?tag={version}\")\n    # Azure...\n    text = text.replace(\"?branchName=master\", f\"?branchName=refs%2Ftags%2F{version}\")\n    text = re.sub(r\"\\?definitionId=\\d+&branchName=master\", f\"?definitionId=2&branchName=refs%2Ftags%2F{version}\", text)\n\n    skip_begin = r\"<!-- following section will be skipped from PyPI description -->\"\n    skip_end = r\"<!-- end skipping PyPI description -->\"\n    # todo: wrap content as commented description\n    text = re.sub(rf\"{skip_begin}.+?{skip_end}\", \"<!--  -->\", text, flags=re.IGNORECASE + re.DOTALL)\n\n    # # https://github.com/Borda/pytorch-lightning/releases/download/1.1.0a6/codecov_badge.png\n    # github_release_url = os.path.join(homepage, \"releases\", \"download\", version)\n    # # download badge and replace url with local file\n    # text = _parse_for_badge(text, github_release_url)\n    return text\n",
+            "signature": "(path_dir: str, homepage: str, version: str) -> str",
+            "parameters": {
+                "path_dir": {
+                    "name": "path_dir",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "homepage": {
+                    "name": "homepage",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "version": {
+                    "name": "version",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "parse_env_variables": {
+            "_id": "pytorch_lightning.utilities.argparse.parse_env_variables",
+            "name": "parse_env_variables",
+            "module": "pytorch_lightning.utilities.argparse",
+            "doc": "Parse environment arguments if they are defined.\n\nExample:\n    >>> from pytorch_lightning import Trainer\n    >>> parse_env_variables(Trainer)\n    Namespace()\n    >>> import os\n    >>> os.environ[\"PL_TRAINER_GPUS\"] = '42'\n    >>> os.environ[\"PL_TRAINER_BLABLABLA\"] = '1.23'\n    >>> parse_env_variables(Trainer)\n    Namespace(gpus=42)\n    >>> del os.environ[\"PL_TRAINER_GPUS\"]",
+            "is_deprecated": false,
+            "source_code": "def parse_env_variables(cls, template: str = \"PL_%(cls_name)s_%(cls_argument)s\") -> Namespace:\n    \"\"\"Parse environment arguments if they are defined.\n\n    Example:\n        >>> from pytorch_lightning import Trainer\n        >>> parse_env_variables(Trainer)\n        Namespace()\n        >>> import os\n        >>> os.environ[\"PL_TRAINER_GPUS\"] = '42'\n        >>> os.environ[\"PL_TRAINER_BLABLABLA\"] = '1.23'\n        >>> parse_env_variables(Trainer)\n        Namespace(gpus=42)\n        >>> del os.environ[\"PL_TRAINER_GPUS\"]\n    \"\"\"\n    cls_arg_defaults = get_init_arguments_and_types(cls)\n\n    env_args = {}\n    for arg_name, _, _ in cls_arg_defaults:\n        env = template % {\"cls_name\": cls.__name__.upper(), \"cls_argument\": arg_name.upper()}\n        val = os.environ.get(env)\n        if not (val is None or val == \"\"):\n            # todo: specify the possible exception\n            with suppress(Exception):\n                # converting to native types like int/float/bool\n                val = eval(val)\n            env_args[arg_name] = val\n    return Namespace(**env_args)\n",
+            "signature": "(cls: Type[ForwardRef('pl.Trainer')], template: str = 'PL_%(cls_name)s_%(cls_argument)s') -> argparse.Namespace",
+            "parameters": {
+                "cls": {
+                    "name": "cls",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Type[ForwardRef('pl.Trainer')]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "template": {
+                    "name": "template",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "PL_%(cls_name)s_%(cls_argument)s",
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

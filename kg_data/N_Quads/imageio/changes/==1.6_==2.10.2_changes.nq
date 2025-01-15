@@ -1,0 +1,3 @@
+<http://purl.org/codekg_reasoner/imageio==1.6/unpack_rgb> <http://purl.org/codekg_reasoner/imageio/has_removed_to> <http://purl.org/codekg_reasoner/imageio==2.10.2/blank_node> <http://purl.org/codekg_reasoner/imageio> .
+<http://purl.org/codekg_reasoner/imageio==1.6/imagej_description_dict> <http://purl.org/codekg_reasoner/imageio/has_removed_to> <http://purl.org/codekg_reasoner/imageio==2.10.2/blank_node> <http://purl.org/codekg_reasoner/imageio> .
+<http://purl.org/codekg_reasoner/imageio==1.6/blank_node> <http://purl.org/codekg_reasoner/imageio/has_added_to> <http://purl.org/codekg_reasoner/imageio==2.10.2/imagej_description_metadata> <http://purl.org/codekg_reasoner/imageio> .

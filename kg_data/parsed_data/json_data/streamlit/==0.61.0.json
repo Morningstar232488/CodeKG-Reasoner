@@ -1,0 +1,29 @@
+{
+    "data": {
+        "add_rows": {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def _get_data_frame(delta, name=None):\n    \"\"\"Extract the dataframe from a delta.\"\"\"\n    delta_type = delta.WhichOneof(\"type\")\n\n    if delta_type == \"new_element\":\n        element_type = delta.new_element.WhichOneof(\"type\")\n\n        # Some element types don't support named datasets.\n        if name and element_type in (\"data_frame\", \"table\", \"chart\"):\n            raise ValueError(\"Dataset names not supported for st.%s\" % element_type)\n\n        if element_type in \"data_frame\":\n            return delta.new_element.data_frame\n        elif element_type in \"table\":\n            return delta.new_element.table\n        elif element_type == \"chart\":\n            return delta.new_element.chart.data\n        elif element_type == \"vega_lite_chart\":\n            chart_proto = delta.new_element.vega_lite_chart\n            if name:\n                return _get_or_create_dataset(chart_proto.datasets, name)\n            elif len(chart_proto.datasets) == 1:\n                # Support the case where the dataset name was randomly given by\n                # the charting library (e.g. Altair) and the user has no\n                # knowledge of it.\n                return chart_proto.datasets[0].data\n            else:\n                return chart_proto.data\n        # TODO: Support DeckGL. Need to figure out how to handle layer indices\n        # first.\n\n    elif delta_type == \"add_rows\":\n        if delta.add_rows.has_name and name != delta.add_rows.name:\n            raise ValueError('No dataset found with name \"%s\".' % name)\n        return delta.add_rows.data\n    else:\n        raise ValueError(\"Cannot extract DataFrame from %s.\" % delta_type)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

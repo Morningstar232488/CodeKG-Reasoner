@@ -1,0 +1,4 @@
+<http://purl.org/codekg_reasoner/markupsafe==2.0.1/markupsafe> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/has_module> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/markupsafe._native> <http://purl.org/codekg_reasoner/markupsafe==2.0.1> .
+<http://purl.org/codekg_reasoner/markupsafe==2.0.1/markupsafe._native> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/has_function> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/soft_str> <http://purl.org/codekg_reasoner/markupsafe==2.0.1> .
+<http://purl.org/codekg_reasoner/markupsafe==2.0.1/soft_str> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/has_parameter> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/soft_str/parameter/s> <http://purl.org/codekg_reasoner/markupsafe==2.0.1> .
+<http://purl.org/codekg_reasoner/markupsafe==2.0.1/soft_str/parameter/s> <http://purl.org/codekg_reasoner/markupsafe==2.0.1/is_required> "True" <http://purl.org/codekg_reasoner/markupsafe==2.0.1> .

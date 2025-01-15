@@ -1,0 +1,2 @@
+<http://purl.org/codekg_reasoner/torch==1.2.0/createResolutionCallback> <http://purl.org/codekg_reasoner/torch/has_removed_to> <http://purl.org/codekg_reasoner/torch==2.2.0/blank_node> <http://purl.org/codekg_reasoner/torch> .
+<http://purl.org/codekg_reasoner/torch==1.2.0/blank_node> <http://purl.org/codekg_reasoner/torch/has_added_to> <http://purl.org/codekg_reasoner/torch==2.2.0/createResolutionCallbackFromFrame> <http://purl.org/codekg_reasoner/torch> .

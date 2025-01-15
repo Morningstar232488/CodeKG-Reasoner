@@ -1,0 +1,115 @@
+{
+    "data": {
+        "imageio": {
+            "==2.1.2": {
+                "names": [
+                    "imagej_description_dict"
+                ],
+                "count": 1
+            },
+            "==2.33.1": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==1.6": {
+                "names": [
+                    "unpack_rgb",
+                    "imagej_description_dict"
+                ],
+                "count": 2
+            },
+            "==2.12.0": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==1.5": {
+                "names": [
+                    "unpackrgb"
+                ],
+                "count": 1
+            },
+            "==2.13.0": {
+                "names": [
+                    "unpack_rgb"
+                ],
+                "count": 1
+            },
+            "==2.9.0": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.2.0": {
+                "names": [
+                    "imagej_description_dict"
+                ],
+                "count": 1
+            },
+            "==2.25.0": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.1.1": {
+                "names": [
+                    "imagej_description_dict"
+                ],
+                "count": 1
+            },
+            "==2.14.0": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.0.1": {
+                "names": [
+                    "imagej_description_dict"
+                ],
+                "count": 1
+            },
+            "==2.33.0": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.0.0": {
+                "names": [
+                    "imagej_description_dict"
+                ],
+                "count": 1
+            },
+            "==2.13.2": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.10.2": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.21.3": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            },
+            "==2.3.0": {
+                "names": [
+                    "imagej_description_metadata"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

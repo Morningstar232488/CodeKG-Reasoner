@@ -1,0 +1,471 @@
+{
+    "data": {
+        "pandas": {
+            "==0.23.4": {
+                "names": [
+                    "backfill",
+                    "_ensure_index",
+                    "_iterable_not_string"
+                ],
+                "count": 3
+            },
+            "==1.2.2": {
+                "names": [
+                    "normalize_keyword_aggregation",
+                    "ensure_index",
+                    "is_multi_agg_with_relabel",
+                    "iterable_not_string"
+                ],
+                "count": 4
+            },
+            "==0.23.3": {
+                "names": [
+                    "maybe_infer_dtype_type",
+                    "_ensure_index"
+                ],
+                "count": 2
+            },
+            "==1.1.3": {
+                "names": [
+                    "ensure_index",
+                    "maybe_mangle_lambdas",
+                    "is_multi_agg_with_relabel",
+                    "normalize_keyword_aggregation",
+                    "_iterable_not_string"
+                ],
+                "count": 5
+            },
+            "==0.20.1": {
+                "names": [
+                    "backfill",
+                    "_iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==2.1.3": {
+                "names": [
+                    "ensure_index",
+                    "bfill",
+                    "_maybe_infer_dtype_type"
+                ],
+                "count": 3
+            },
+            "==0.20.3": {
+                "names": [
+                    "backfill",
+                    "_iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==1.4.3": {
+                "names": [
+                    "bfill",
+                    "iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==0.24.2": {
+                "names": [
+                    "_iterable_not_string"
+                ],
+                "count": 1
+            },
+            "==0.25.2": {
+                "names": [
+                    "_maybe_mangle_lambdas",
+                    "_iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==1.2.5": {
+                "names": [
+                    "iterable_not_string"
+                ],
+                "count": 1
+            },
+            "==0.25.1": {
+                "names": [
+                    "_maybe_mangle_lambdas",
+                    "_iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==1.2.4": {
+                "names": [
+                    "maybe_mangle_lambdas"
+                ],
+                "count": 1
+            },
+            "==0.23.2": {
+                "names": [
+                    "_ensure_index"
+                ],
+                "count": 1
+            },
+            "==1.4.4": {
+                "names": [
+                    "maybe_infer_dtype_type",
+                    "ensure_index",
+                    "bfill",
+                    "ensure_nanosecond_dtype"
+                ],
+                "count": 4
+            },
+            "==1.0.2": {
+                "names": [
+                    "_normalize_keyword_aggregation",
+                    "_is_multi_agg_with_relabel",
+                    "backfill",
+                    "_internal_get_values"
+                ],
+                "count": 4
+            },
+            "==1.0.4": {
+                "names": [
+                    "_maybe_mangle_lambdas",
+                    "_iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==1.4.2": {
+                "names": [
+                    "maybe_mangle_lambdas",
+                    "iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==1.0.5": {
+                "names": [
+                    "_make_unique",
+                    "_recode_for_categories",
+                    "_normalize_keyword_aggregation",
+                    "_maybe_mangle_lambdas",
+                    "_is_multi_agg_with_relabel"
+                ],
+                "count": 5
+            },
+            "==1.2.3": {
+                "names": [
+                    "_make_unique_kwarg_list",
+                    "iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==0.25.3": {
+                "names": [
+                    "get_values",
+                    "_normalize_keyword_aggregation"
+                ],
+                "count": 2
+            },
+            "==1.3.5": {
+                "names": [
+                    "ensure_index",
+                    "backfill"
+                ],
+                "count": 2
+            },
+            "==0.13.1": {
+                "names": [
+                    "diff"
+                ],
+                "count": 1
+            },
+            "==0.17.1": {
+                "names": [
+                    "difference"
+                ],
+                "count": 1
+            },
+            "==0.23.1": {
+                "names": [
+                    "_ensure_index"
+                ],
+                "count": 1
+            },
+            "==1.0.1": {
+                "names": [
+                    "maybe_infer_dtype_type",
+                    "_make_unique",
+                    "_internal_get_values",
+                    "_normalize_keyword_aggregation",
+                    "_maybe_mangle_lambdas",
+                    "backfill"
+                ],
+                "count": 6
+            },
+            "==0.19.1": {
+                "names": [
+                    "get_values"
+                ],
+                "count": 1
+            },
+            "==2.1.1": {
+                "names": [
+                    "bfill",
+                    "_make_unique_kwarg_list"
+                ],
+                "count": 2
+            },
+            "==1.3.4": {
+                "names": [
+                    "_make_unique_kwarg_list",
+                    "iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==1.1.5": {
+                "names": [
+                    "_make_unique_kwarg_list",
+                    "maybe_mangle_lambdas",
+                    "_iterable_not_string"
+                ],
+                "count": 3
+            },
+            "==0.6.1": {
+                "names": [
+                    "diff"
+                ],
+                "count": 1
+            },
+            "==0.15.2": {
+                "names": [
+                    "difference"
+                ],
+                "count": 1
+            },
+            "==1.5.2": {
+                "names": [
+                    "bfill"
+                ],
+                "count": 1
+            },
+            "==1.4.1": {
+                "names": [
+                    "ensure_index",
+                    "bfill",
+                    "maybe_mangle_lambdas"
+                ],
+                "count": 3
+            },
+            "==2.1.4": {
+                "names": [
+                    "bfill",
+                    "_make_unique_kwarg_list",
+                    "_maybe_infer_dtype_type"
+                ],
+                "count": 3
+            },
+            "==1.2.0": {
+                "names": [
+                    "normalize_keyword_aggregation",
+                    "backfill",
+                    "iterable_not_string"
+                ],
+                "count": 3
+            },
+            "==1.4.0": {
+                "names": [
+                    "maybe_infer_dtype_type",
+                    "bfill",
+                    "iterable_not_string"
+                ],
+                "count": 3
+            },
+            "==0.21.0": {
+                "names": [
+                    "backfill"
+                ],
+                "count": 1
+            },
+            "==1.5.0": {
+                "names": [
+                    "bfill",
+                    "_maybe_infer_dtype_type",
+                    "_ensure_nanosecond_dtype"
+                ],
+                "count": 3
+            },
+            "==0.19.0": {
+                "names": [
+                    "backfill"
+                ],
+                "count": 1
+            },
+            "==0.22.0": {
+                "names": [
+                    "maybe_infer_dtype_type",
+                    "_ensure_index",
+                    "get_values",
+                    "backfill",
+                    "_iterable_not_string"
+                ],
+                "count": 5
+            },
+            "==1.0.0": {
+                "names": [
+                    "_iterable_not_string",
+                    "_internal_get_values",
+                    "_make_unique"
+                ],
+                "count": 3
+            },
+            "==1.0.3": {
+                "names": [
+                    "_recode_for_categories",
+                    "_internal_get_values"
+                ],
+                "count": 2
+            },
+            "==1.1.0": {
+                "names": [
+                    "_make_unique_kwarg_list",
+                    "maybe_mangle_lambdas",
+                    "is_multi_agg_with_relabel",
+                    "recode_for_categories",
+                    "normalize_keyword_aggregation"
+                ],
+                "count": 5
+            },
+            "==0.21.1": {
+                "names": [
+                    "_recode_for_categories"
+                ],
+                "count": 1
+            },
+            "==2.0.0": {
+                "names": [
+                    "normalize_keyword_aggregation"
+                ],
+                "count": 1
+            },
+            "==2.2.0": {
+                "names": [
+                    "bfill",
+                    "_maybe_infer_dtype_type"
+                ],
+                "count": 2
+            },
+            "==0.20.2": {
+                "names": [
+                    "backfill"
+                ],
+                "count": 1
+            },
+            "==0.14.1": {
+                "names": [
+                    "diff"
+                ],
+                "count": 1
+            },
+            "==0.16.0": {
+                "names": [
+                    "difference"
+                ],
+                "count": 1
+            },
+            "==1.1.1": {
+                "names": [
+                    "backfill",
+                    "_iterable_not_string"
+                ],
+                "count": 2
+            },
+            "==2.1.0": {
+                "names": [
+                    "ensure_index",
+                    "maybe_mangle_lambdas"
+                ],
+                "count": 2
+            },
+            "==0.20.0": {
+                "names": [
+                    "get_values"
+                ],
+                "count": 1
+            },
+            "==0.25.0": {
+                "names": [
+                    "_normalize_keyword_aggregation",
+                    "_maybe_mangle_lambdas"
+                ],
+                "count": 2
+            },
+            "==0.23.0": {
+                "names": [
+                    "maybe_infer_dtype_type",
+                    "_ensure_index",
+                    "backfill"
+                ],
+                "count": 3
+            },
+            "==1.5.3": {
+                "names": [
+                    "_maybe_infer_dtype_type"
+                ],
+                "count": 1
+            },
+            "==2.0.3": {
+                "names": [
+                    "ensure_index",
+                    "_maybe_infer_dtype_type"
+                ],
+                "count": 2
+            },
+            "==1.3.0": {
+                "names": [
+                    "ensure_nanosecond_dtype"
+                ],
+                "count": 1
+            },
+            "==2.1.2": {
+                "names": [
+                    "_ensure_nanosecond_dtype"
+                ],
+                "count": 1
+            },
+            "==0.13.0": {
+                "names": [
+                    "diff"
+                ],
+                "count": 1
+            },
+            "==0.16.2": {
+                "names": [
+                    "difference"
+                ],
+                "count": 1
+            },
+            "==0.18.0": {
+                "names": [
+                    "backfill"
+                ],
+                "count": 1
+            },
+            "==0.16.1": {
+                "names": [
+                    "difference"
+                ],
+                "count": 1
+            },
+            "==0.4.0": {
+                "names": [
+                    "diff"
+                ],
+                "count": 1
+            },
+            "==0.5.0": {
+                "names": [
+                    "diff"
+                ],
+                "count": 1
+            },
+            "==0.15.1": {
+                "names": [
+                    "difference"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

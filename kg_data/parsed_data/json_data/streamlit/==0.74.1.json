@@ -1,0 +1,29 @@
+{
+    "data": {
+        "add_rows": {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def _marshall_any_array(pandas_array, proto_array):\n    \"\"\"Convert a 1D numpy.Array into a proto.AnyArray.\n\n    pandas_array - 1D arrays which is AnyArray compatible (input).\n    proto_array  - proto.AnyArray (output)\n    \"\"\"\n    import numpy as np\n\n    # Convert to np.array as necessary.\n    if not hasattr(pandas_array, \"dtype\"):\n        pandas_array = np.array(pandas_array)\n\n    # Only works on 1D arrays.\n    if len(pandas_array.shape) != 1:\n        raise ValueError(\"Array must be 1D.\")\n\n    # Perform type-conversion based on the array dtype.\n    if issubclass(pandas_array.dtype.type, np.floating):\n        proto_array.doubles.data.extend(pandas_array)\n    elif issubclass(pandas_array.dtype.type, np.timedelta64):\n        proto_array.timedeltas.data.extend(pandas_array.astype(np.int64))\n    elif issubclass(pandas_array.dtype.type, np.integer):\n        proto_array.int64s.data.extend(pandas_array)\n    elif pandas_array.dtype == np.bool:\n        proto_array.int64s.data.extend(pandas_array)\n    elif pandas_array.dtype == np.object:\n        proto_array.strings.data.extend(map(str, pandas_array))\n    # dtype='string', <class 'pandas.core.arrays.string_.StringDtype'>\n    # NOTE: StringDtype is considered experimental.\n    # The implementation and parts of the API may change without warning.\n    elif pandas_array.dtype.name == \"string\":\n        proto_array.strings.data.extend(map(str, pandas_array))\n    # Setting a timezone changes (dtype, dtype.type) from\n    #   'datetime64[ns]', <class 'numpy.datetime64'>\n    # to\n    #   datetime64[ns, UTC], <class 'pandas._libs.tslibs.timestamps.Timestamp'>\n    elif pandas_array.dtype.name.startswith(\"datetime64\"):\n        # TODO(armando): Convert eveything to UTC not local timezone.\n        if pandas_array.dt.tz is None:\n            current_zone = tzlocal.get_localzone()\n            pandas_array = pandas_array.dt.tz_localize(current_zone)\n        proto_array.datetimes.data.extend(pandas_array.astype(np.int64))\n    else:\n        raise NotImplementedError(\"Dtype %s not understood.\" % pandas_array.dtype)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

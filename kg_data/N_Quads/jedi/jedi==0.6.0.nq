@@ -1,0 +1,4 @@
+<http://purl.org/codekg_reasoner/jedi==0.6.0/jedi> <http://purl.org/codekg_reasoner/jedi==0.6.0/has_module> <http://purl.org/codekg_reasoner/jedi==0.6.0/jedi.docstrings> <http://purl.org/codekg_reasoner/jedi==0.6.0> .
+<http://purl.org/codekg_reasoner/jedi==0.6.0/jedi.docstrings> <http://purl.org/codekg_reasoner/jedi==0.6.0/has_function> <http://purl.org/codekg_reasoner/jedi==0.6.0/_strip_rest_role> <http://purl.org/codekg_reasoner/jedi==0.6.0> .
+<http://purl.org/codekg_reasoner/jedi==0.6.0/_strip_rest_role> <http://purl.org/codekg_reasoner/jedi==0.6.0/has_parameter> <http://purl.org/codekg_reasoner/jedi==0.6.0/_strip_rest_role/parameter/type_str> <http://purl.org/codekg_reasoner/jedi==0.6.0> .
+<http://purl.org/codekg_reasoner/jedi==0.6.0/_strip_rest_role/parameter/type_str> <http://purl.org/codekg_reasoner/jedi==0.6.0/is_required> "True" <http://purl.org/codekg_reasoner/jedi==0.6.0> .

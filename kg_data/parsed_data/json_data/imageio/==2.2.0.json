@@ -1,0 +1,21 @@
+{
+    "data": {
+        "imagej_description_dict": {
+            "_id": "imageio.plugins._tifffile.imagej_description_dict",
+            "doc": "Return dictionary from ImageJ image description byte string.\n\nRaise ValueError if not a valid ImageJ description.\n\n>>> description = b'ImageJ=1.11a\\nimages=510\\nhyperstack=true\\n'\n>>> imagej_description_dict(description)  # doctest: +SKIP\n{'ImageJ': '1.11a', 'images': 510, 'hyperstack': True}",
+            "is_deprecated": false,
+            "source_code": "def read_cz_lsm_floatpairs(fh):\n    \"\"\"Read LSM sequence of float pairs from file and return as list.\"\"\"\n    size = struct.unpack('<i', fh.read(4))[0]\n    return fh.read_array('<2f8', count=size)\n",
+            "signature": "(description)",
+            "parameters": {
+                "description": {
+                    "description": null,
+                    "is_optional": false
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "data": {
+        "torch": {
+            "==1.9.1": {
+                "names": [
+                    "_to_sparse_csr"
+                ],
+                "count": 1
+            },
+            "==1.7.1": {
+                "names": [
+                    "_register_comm_hook"
+                ],
+                "count": 1
+            }
+        }
+    }
+}

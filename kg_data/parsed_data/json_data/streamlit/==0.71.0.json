@@ -1,0 +1,71 @@
+{
+    "data": {
+        "color_picker": {
+            "_id": "streamlit.delta_generator.ColorPickerMixin.color_picker",
+            "name": "color_picker",
+            "module": "streamlit.delta_generator",
+            "doc": "Display a color picker widget.\n\nNote: This is a beta feature. See\nhttps://docs.streamlit.io/en/latest/api.html#pre-release-features for more\ninformation.\n\nParameters\n----------\nlabel : str\n    A short label explaining to the user what this input is for.\nvalue : str or None\n    The hex value of this widget when it first renders. If None,\n    defaults to black.\nkey : str\n    An optional string to use as the unique key for the widget.\n    If this is omitted, a key will be generated for the widget\n    based on its content. Multiple widgets of the same type may\n    not share the same key.\n\nReturns\n-------\nstr\n    The selected color as a hex string.\n\nExample\n-------\n>>> color = st.color_picker('Pick A Color', '#00f900')\n>>> st.write('The current color is', color)",
+            "is_deprecated": false,
+            "source_code": "    def color_picker(dg, label, value=None, key=None):\n        \"\"\"Display a color picker widget.\n\n        Note: This is a beta feature. See\n        https://docs.streamlit.io/en/latest/api.html#pre-release-features for more\n        information.\n\n        Parameters\n        ----------\n        label : str\n            A short label explaining to the user what this input is for.\n        value : str or None\n            The hex value of this widget when it first renders. If None,\n            defaults to black.\n        key : str\n            An optional string to use as the unique key for the widget.\n            If this is omitted, a key will be generated for the widget\n            based on its content. Multiple widgets of the same type may\n            not share the same key.\n\n        Returns\n        -------\n        str\n            The selected color as a hex string.\n\n        Example\n        -------\n        >>> color = st.color_picker('Pick A Color', '#00f900')\n        >>> st.write('The current color is', color)\n\n        \"\"\"\n        # set value default\n        if value is None:\n            value = \"#000000\"\n\n        # make sure the value is a string\n        if not isinstance(value, str):\n            raise StreamlitAPIException(\n                \"\"\"\n                Color Picker Value has invalid type: %s. Expects a hex string\n                like '#00FFAA' or '#000'.\n                \"\"\"\n                % type(value).__name__\n            )\n\n        # validate the value and expects a hex string\n        match = re.match(r\"^#(?:[0-9a-fA-F]{3}){1,2}$\", value)\n\n        if not match:\n            raise StreamlitAPIException(\n                \"\"\"\n                '%s' is not a valid hex code for colors. Valid ones are like\n                '#00FFAA' or '#000'.\n                \"\"\"\n                % value\n            )\n\n        color_picker_proto = ColorPickerProto()\n        color_picker_proto.label = label\n        color_picker_proto.default = str(value)\n\n        ui_value = _get_widget_ui_value(\n            \"color_picker\", color_picker_proto, user_key=key\n        )\n        current_value = ui_value if ui_value is not None else value\n        return dg._enqueue(\"color_picker\", color_picker_proto, str(current_value))  # type: ignore\n",
+            "signature": "(label, value=None, key=None)",
+            "parameters": {
+                "label": {
+                    "name": "label",
+                    "description": "A short label explaining to the user what this input is for.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "value": {
+                    "name": "value",
+                    "description": "The hex value of this widget when it first renders. If None,\ndefaults to black.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "key": {
+                    "name": "key",
+                    "description": "An optional string to use as the unique key for the widget.\nIf this is omitted, a key will be generated for the widget\nbased on its content. Multiple widgets of the same type may\nnot share the same key.",
+                    "is_optional": true,
+                    "default": "None",
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The selected color as a hex string.",
+                "type": "str"
+            },
+            "raise_doc": null,
+            "type": "member_function",
+            "class": "ColorPickerMixin"
+        },
+        "add_rows": {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def add_rows(delta1, delta2, name=None):\n    \"\"\"Concat the DataFrame in delta2 to the DataFrame in delta1.\n\n    Parameters\n    ----------\n    delta1 : Delta\n    delta2 : Delta\n    name : str or None\n\n    \"\"\"\n    df1 = _get_data_frame(delta1, name)\n    df2 = _get_data_frame(delta2, name)\n\n    if len(df1.data.cols) == 0:\n        if len(df2.data.cols) == 0:\n            return\n        df1.CopyFrom(df2)\n        return\n\n    # Copy Data\n    if len(df1.data.cols) != len(df2.data.cols):\n        raise ValueError(\"Dataframes have incompatible shapes\")\n    for (col1, col2) in zip(df1.data.cols, df2.data.cols):\n        _concat_any_array(col1, col2)\n\n    # Copy index\n    _concat_index(df1.index, df2.index)\n\n    # Don't concat columns! add_rows should leave the dataframe with the same\n    # number of columns as it had before.\n    # DON'T DO: _concat_index(df1.columns, df2.columns)\n\n    # Copy styles\n    for (style_col1, style_col2) in zip(df1.style.cols, df2.style.cols):\n        _concat_cell_style_array(style_col1, style_col2)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

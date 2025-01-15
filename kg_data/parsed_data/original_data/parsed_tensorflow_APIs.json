@@ -1,0 +1,867 @@
+{
+    "data": {
+        "tensorflow": {
+            "==2.9.3": {
+        "_placeholder_value": {
+          "_id": "tensorflow.python.autograph.operators.control_flow._placeholder_value",
+          "name": "_placeholder_value",
+          "module": "tensorflow.python.autograph.operators.control_flow",
+          "doc": "Constructs a (dummy) placeholder value for a loop-initialized variable.\n\nArgs:\n  like: Any object. The value created by the first iteration of the loop. If a\n    Python scalar, the placeholder will be the zero value of that type. If a\n    Tensor, the placeholder will be a zero tensor of matching shape and dtype.\n    If a list, dict or tuple, the placeholder will be an identical structure\n    of placeholders.\n  shape_invariant: The shape invariant specified by the user (or None, if\n    nothing was specified) for the respective variable.\n  original: Any object. The value of the variable prior to entering the loop.\n    Typically, this is one of the special \"Undefined\" value, because that's\n    when a placeholder is needed.\n\nReturns:\n  Either a zero value of structure, shape and dtype mathing 'like', or\n  'original', if no such zero value could be created.",
+          "is_deprecated": false,
+          "source_code": "def _placeholder_value(like, shape_invariant, original=None):\n  \"\"\"Constructs a (dummy) placeholder value for a loop-initialized variable.\n\n  Args:\n    like: Any object. The value created by the first iteration of the loop. If a\n      Python scalar, the placeholder will be the zero value of that type. If a\n      Tensor, the placeholder will be a zero tensor of matching shape and dtype.\n      If a list, dict or tuple, the placeholder will be an identical structure\n      of placeholders.\n    shape_invariant: The shape invariant specified by the user (or None, if\n      nothing was specified) for the respective variable.\n    original: Any object. The value of the variable prior to entering the loop.\n      Typically, this is one of the special \"Undefined\" value, because that's\n      when a placeholder is needed.\n\n  Returns:\n    Either a zero value of structure, shape and dtype mathing 'like', or\n    'original', if no such zero value could be created.\n  \"\"\"\n  if isinstance(like, (variables.Undefined, variables.UndefinedReturnValue)):\n    return original, None\n\n  elif isinstance(like, (int, float, bool)):\n    return type(like)(0), None\n\n  elif tensor_util.is_tf_type(like):\n\n    like_shape = shape_invariant if shape_invariant is not None else like.shape\n    if like_shape is None or like_shape.rank is None:\n      return array_ops.zeros((), like.dtype), like_shape\n\n    # If the shape contains dynamic values, set the corresponding starting\n    # dimension to either zero or what the shape invariant specified.\n    placeholder_shape = []\n    has_dynamic_dims = False\n    for s, i in zip(like.shape, like_shape):\n      if i is None:\n        like_dim = 0\n      elif isinstance(i, tensor_shape.Dimension):\n        if i.value is None:\n          like_dim = 0\n        else:\n          like_dim = i.value\n      else:\n        like_dim = i\n\n      if s is None:\n        placeholder_shape.append(like_dim)\n        has_dynamic_dims = True\n      elif isinstance(s, tensor_shape.Dimension):\n        if s.value is None:\n          placeholder_shape.append(like_dim)\n          has_dynamic_dims = True\n        else:\n          placeholder_shape.append(s.value)\n      else:\n        placeholder_shape.append(s)\n\n    if has_dynamic_dims:\n      invariant = like_shape\n    else:\n      invariant = None\n\n    return array_ops.zeros(placeholder_shape, like.dtype), invariant\n\n  elif isinstance(like, (list, tuple, dict)):\n    if shape_invariant is None:\n      zipped = nest.map_structure(lambda v: _placeholder_value(v, None),\n                                  nest.flatten(like))\n    else:\n      zipped = nest.map_structure(_placeholder_value, nest.flatten(like),\n                                  nest.flatten(shape_invariant))\n    vals, invars = zip(*zipped)\n    return (nest.pack_sequence_as(like,\n                                  vals), nest.pack_sequence_as(like, invars))\n\n  return original, None\n",
+          "signature": "(like, shape_invariant, original=None)",
+          "parameters": {
+            "like": {
+              "name": "like",
+              "description": "Any object. The value created by the first iteration of the loop. If a\nPython scalar, the placeholder will be the zero value of that type. If a\nTensor, the placeholder will be a zero tensor of matching shape and dtype.\nIf a list, dict or tuple, the placeholder will be an identical structure\nof placeholders.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "shape_invariant": {
+              "name": "shape_invariant",
+              "description": "The shape invariant specified by the user (or None, if\nnothing was specified) for the respective variable.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "original": {
+              "name": "original",
+              "description": "Any object. The value of the variable prior to entering the loop.\nTypically, this is one of the special \"Undefined\" value, because that's\nwhen a placeholder is needed.",
+              "is_optional": true,
+              "default": "None",
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": {
+            "description": "Either a zero value of structure, shape and dtype mathing 'like', or\n'original', if no such zero value could be created.",
+            "type": null
+          },
+          "raise_doc": null,
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.12.3": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@tf_export(\"NoGradient\", \"NotDifferentiable\")\ndef NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.2.1": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "def NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==2.6.4": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==2.0.2": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.5.1": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "def NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==2.1.1": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.2.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "def NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.10.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@tf_export(\"NoGradient\", \"NotDifferentiable\")\ndef NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==2.5.0": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==2.0.0": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.6.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@tf_export(\"NoGradient\", \"NotDifferentiable\")\ndef NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.1.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@tf_export(\"NoGradient\", \"NotDifferentiable\")\ndef NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.3.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "def NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.12.2": {
+        "index_table_from_tensor": {
+          "_id": "tensorflow.contrib.lookup.lookup_ops.index_table_from_tensor",
+          "name": "index_table_from_tensor",
+          "module": "tensorflow.contrib.lookup.lookup_ops",
+          "doc": "Returns a lookup table that converts a string tensor into int64 IDs.\n\nThis operation constructs a lookup table to convert tensor of strings into\nint64 IDs. The mapping can be initialized from a string `mapping` 1-D tensor\nwhere each element is a key and corresponding index within the tensor is the\nvalue.\n\nAny lookup of an out-of-vocabulary token will return a bucket ID based on its\nhash if `num_oov_buckets` is greater than zero. Otherwise it is assigned the\n`default_value`.\nThe bucket ID range is `[mapping size, mapping size + num_oov_buckets - 1]`.\n\nThe underlying table must be initialized by calling\n`tf.tables_initializer.run()` or `table.init.run()` once.\n\nElements in `mapping` cannot have duplicates, otherwise when executing the\ntable initializer op, it will throw a `FailedPreconditionError`.\n\nSample Usages:\n\n```python\nmapping_strings = tf.constant([\"emerson\", \"lake\", \"palmer\"])\ntable = tf.contrib.lookup.index_table_from_tensor(\n    mapping=mapping_strings, num_oov_buckets=1, default_value=-1)\nfeatures = tf.constant([\"emerson\", \"lake\", \"and\", \"palmer\"])\nids = table.lookup(features)\n...\ntf.tables_initializer().run()\n\nids.eval()  ==> [0, 1, 3, 2]\n```\n\nArgs:\n  mapping: A 1-D `Tensor` that specifies the mapping of keys to indices. The\n    type of this object must be castable to `dtype`.\n  num_oov_buckets: The number of out-of-vocabulary buckets.\n  default_value: The value to use for out-of-vocabulary feature values.\n    Defaults to -1.\n  hasher_spec: A `HasherSpec` to specify the hash function to use for\n    assignment of out-of-vocabulary buckets.\n  dtype: The type of values passed to `lookup`. Only string and integers are\n    supported.\n  name: A name for this op (optional).\n\nReturns:\n  The lookup table to map an input `Tensor` to index `int64` `Tensor`.\n\nRaises:\n  ValueError: If `mapping` is invalid.\n  ValueError: If `num_oov_buckets` is negative.",
+          "is_deprecated": false,
+          "source_code": "def index_table_from_tensor(mapping,\n                            num_oov_buckets=0,\n                            default_value=-1,\n                            hasher_spec=FastHashSpec,\n                            dtype=dtypes.string,\n                            name=None):\n  \"\"\"Returns a lookup table that converts a string tensor into int64 IDs.\n\n  This operation constructs a lookup table to convert tensor of strings into\n  int64 IDs. The mapping can be initialized from a string `mapping` 1-D tensor\n  where each element is a key and corresponding index within the tensor is the\n  value.\n\n  Any lookup of an out-of-vocabulary token will return a bucket ID based on its\n  hash if `num_oov_buckets` is greater than zero. Otherwise it is assigned the\n  `default_value`.\n  The bucket ID range is `[mapping size, mapping size + num_oov_buckets - 1]`.\n\n  The underlying table must be initialized by calling\n  `tf.tables_initializer.run()` or `table.init.run()` once.\n\n  Elements in `mapping` cannot have duplicates, otherwise when executing the\n  table initializer op, it will throw a `FailedPreconditionError`.\n\n  Sample Usages:\n\n  ```python\n  mapping_strings = tf.constant([\"emerson\", \"lake\", \"palmer\"])\n  table = tf.contrib.lookup.index_table_from_tensor(\n      mapping=mapping_strings, num_oov_buckets=1, default_value=-1)\n  features = tf.constant([\"emerson\", \"lake\", \"and\", \"palmer\"])\n  ids = table.lookup(features)\n  ...\n  tf.tables_initializer().run()\n\n  ids.eval()  ==> [0, 1, 3, 2]\n  ```\n\n  Args:\n    mapping: A 1-D `Tensor` that specifies the mapping of keys to indices. The\n      type of this object must be castable to `dtype`.\n    num_oov_buckets: The number of out-of-vocabulary buckets.\n    default_value: The value to use for out-of-vocabulary feature values.\n      Defaults to -1.\n    hasher_spec: A `HasherSpec` to specify the hash function to use for\n      assignment of out-of-vocabulary buckets.\n    dtype: The type of values passed to `lookup`. Only string and integers are\n      supported.\n    name: A name for this op (optional).\n\n  Returns:\n    The lookup table to map an input `Tensor` to index `int64` `Tensor`.\n\n  Raises:\n    ValueError: If `mapping` is invalid.\n    ValueError: If `num_oov_buckets` is negative.\n  \"\"\"\n  if mapping is None:\n    raise ValueError(\"mapping must be specified.\")\n  return lookup_ops.index_table_from_tensor(\n      vocabulary_list=mapping,\n      num_oov_buckets=num_oov_buckets,\n      default_value=default_value,\n      hasher_spec=hasher_spec,\n      dtype=dtype,\n      name=name)\n",
+          "signature": "(mapping, num_oov_buckets=0, default_value=-1, hasher_spec=HasherSpec(hasher='fasthash', key=None), dtype=tf.string, name=None)",
+          "parameters": {
+            "mapping": {
+              "name": "mapping",
+              "description": "A 1-D `Tensor` that specifies the mapping of keys to indices. The\ntype of this object must be castable to `dtype`.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "num_oov_buckets": {
+              "name": "num_oov_buckets",
+              "description": "The number of out-of-vocabulary buckets.",
+              "is_optional": true,
+              "default": "0",
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "default_value": {
+              "name": "default_value",
+              "description": "The value to use for out-of-vocabulary feature values.\nDefaults to -1.",
+              "is_optional": true,
+              "default": "-1",
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "hasher_spec": {
+              "name": "hasher_spec",
+              "description": "A `HasherSpec` to specify the hash function to use for\nassignment of out-of-vocabulary buckets.",
+              "is_optional": true,
+              "default": "HasherSpec(hasher='fasthash', key=None)",
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "dtype": {
+              "name": "dtype",
+              "description": "The type of values passed to `lookup`. Only string and integers are\nsupported.",
+              "is_optional": true,
+              "default": "<dtype: 'string'>",
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            },
+            "name": {
+              "name": "name",
+              "description": "A name for this op (optional).",
+              "is_optional": true,
+              "default": "None",
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": {
+            "description": "The lookup table to map an input `Tensor` to index `int64` `Tensor`.",
+            "type": null
+          },
+          "raise_doc": [
+            {
+              "type": "ValueError",
+              "description": "If `mapping` is invalid."
+            },
+            {
+              "type": "ValueError",
+              "description": "If `num_oov_buckets` is negative."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.13.1": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.7.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@tf_export(\"NoGradient\", \"NotDifferentiable\")\ndef NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.4.0": {
+        "NotDifferentiable": {
+          "_id": "tensorflow.python.framework.ops.NotDifferentiable",
+          "name": "NotDifferentiable",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.NotDifferentiable(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "def NotDifferentiable(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.NotDifferentiable(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+      "==1.14.0": {
+        "no_gradient": {
+          "_id": "tensorflow.python.framework.ops.no_gradient",
+          "name": "no_gradient",
+          "module": "tensorflow.python.framework.ops",
+          "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+          "is_deprecated": false,
+          "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+          "signature": "(op_type)",
+          "parameters": {
+            "op_type": {
+              "name": "op_type",
+              "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+              "is_optional": false,
+              "default": null,
+              "annotation": null,
+              "kind": "POSITIONAL_OR_KEYWORD"
+            }
+          },
+          "returns_doc": null,
+          "raise_doc": [
+            {
+              "type": "TypeError",
+              "description": "If `op_type` is not a string."
+            }
+          ],
+          "type": "function",
+          "class": null
+        }
+      },
+            "==2.7.2": {
+                "no_gradient":{
+    "_id": "tensorflow.python.framework.ops.no_gradient",
+    "name": "no_gradient",
+    "module": "tensorflow.python.framework.ops",
+    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+    "is_deprecated": false,
+    "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  gradient_registry.register(None, op_type)\n",
+    "signature": "(op_type)",
+    "parameters": {
+        "op_type": {
+            "name": "op_type",
+            "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+            "is_optional": false,
+            "default": null,
+            "annotation": null,
+            "kind": "POSITIONAL_OR_KEYWORD"
+        }
+    },
+    "returns_doc": null,
+    "raise_doc": [
+        {
+            "type": "TypeError",
+            "description": "If `op_type` is not a string."
+        }
+    ],
+    "type": "function",
+    "class": null
+}
+
+            },
+            "==2.2.3":{
+                "no_gradient": {
+    "_id": "tensorflow.python.framework.ops.no_gradient",
+    "name": "no_gradient",
+    "module": "tensorflow.python.framework.ops",
+    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+    "is_deprecated": false,
+    "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  _gradient_registry.register(None, op_type)\n",
+    "signature": "(op_type)",
+    "parameters": {
+        "op_type": {
+            "name": "op_type",
+            "description": "The string type of an operation. This corresponds to the\n`OpDef.name` field for the proto that defines the operation.",
+            "is_optional": false,
+            "default": null,
+            "annotation": null,
+            "kind": "POSITIONAL_OR_KEYWORD"
+        }
+    },
+    "returns_doc": null,
+    "raise_doc": [
+        {
+            "type": "TypeError",
+            "description": "If `op_type` is not a string."
+        }
+    ],
+    "type": "function",
+    "class": null
+}
+
+            },
+            "==2.8.1": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  gradient_registry.register(None, op_type)\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.13.1": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "  def __enter__(self):\n    return self\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.8.2": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "@deprecation.deprecated_endpoints(\"NotDifferentiable\", \"NoGradient\")\n@tf_export(\"no_gradient\", v1=[\"no_gradient\", \"NotDifferentiable\", \"NoGradient\"])\ndef no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  gradient_registry.register(None, op_type)\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.14.0": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "  def _add_new_tf_operations(self, compute_devices=True):\n    \"\"\"Creates `Operations` in this graph for any new TF_Operations.\n\n    This is useful for when TF_Operations are indirectly created by the C API\n    outside of the Operation constructor (e.g. by TF_ImportGraphDef,\n    TF_FinishWhile). This ensures there are corresponding Operations for all\n    TF_Operations in the underlying TF_Graph.\n\n    Args:\n      compute_devices: (Optional.) If True, device functions will be executed to\n        compute the device properties of each new Operation.\n\n    Returns:\n      A list of the new `Operation` objects.\n    \"\"\"\n    self._check_not_finalized()\n\n    # Create all Operation objects before accessing their inputs since an op may\n    # be created before its inputs.\n    new_ops = [\n        self._create_op_from_tf_operation(c_op, compute_device=compute_devices)\n        for c_op in self.new_operations()\n    ]\n\n    # pylint: disable=protected-access\n    for op in new_ops:\n      new_control_inputs = self._control_dependencies_for_inputs(op.inputs)\n      op._add_control_inputs(new_control_inputs)\n      op._control_flow_post_processing()\n    # pylint: enable=protected-access\n\n    return new_ops\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.9.0": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "def no_gradient(op_type):\n  \"\"\"Specifies that ops of type `op_type` is not differentiable.\n\n  This function should *not* be used for operations that have a\n  well-defined gradient that is not yet implemented.\n\n  This function is only used when defining a new op type. It may be\n  used for ops such as `tf.size()` that are not differentiable.  For\n  example:\n\n  ```python\n  tf.no_gradient(\"Size\")\n  ```\n\n  The gradient computed for 'op_type' will then propagate zeros.\n\n  For ops that have a well-defined gradient but are not yet implemented,\n  no declaration should be made, and an error *must* be thrown if\n  an attempt to request its gradient is made.\n\n  Args:\n    op_type: The string type of an operation. This corresponds to the\n      `OpDef.name` field for the proto that defines the operation.\n\n  Raises:\n    TypeError: If `op_type` is not a string.\n\n  \"\"\"\n  if not isinstance(op_type, six.string_types):\n    raise TypeError(\"op_type must be a string\")\n  gradient_registry.register(None, op_type)\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.11.0": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "  def __init__(self, op_type):\n    \"\"\"Creates a new decorator with `op_type` as the Operation type.\n\n    Args:\n      op_type: The string type of an operation. This corresponds to the\n        `OpDef.name` field for the proto that defines the operation.\n\n    Raises:\n      TypeError: If `op_type` is not string.\n    \"\"\"\n    if not isinstance(op_type, str):\n      raise TypeError(\"op_type must be a string\")\n    self._op_type = op_type\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.14.1": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "  def _add_new_tf_operations(self, compute_devices=True):\n    \"\"\"Creates `Operations` in this graph for any new TF_Operations.\n\n    This is useful for when TF_Operations are indirectly created by the C API\n    outside of the Operation constructor (e.g. by TF_ImportGraphDef,\n    TF_FinishWhile). This ensures there are corresponding Operations for all\n    TF_Operations in the underlying TF_Graph.\n\n    Args:\n      compute_devices: (Optional.) If True, device functions will be executed to\n        compute the device properties of each new Operation.\n\n    Returns:\n      A list of the new `Operation` objects.\n    \"\"\"\n    self._check_not_finalized()\n\n    # Create all Operation objects before accessing their inputs since an op may\n    # be created before its inputs.\n    new_ops = [\n        self._create_op_from_tf_operation(c_op, compute_device=compute_devices)\n        for c_op in self.new_operations()\n    ]\n\n    # pylint: disable=protected-access\n    for op in new_ops:\n      new_control_inputs = self._control_dependencies_for_inputs(op.inputs)\n      op._add_control_inputs(new_control_inputs)\n      op._control_flow_post_processing()\n    # pylint: enable=protected-access\n\n    return new_ops\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            },
+            "==2.11.1": {
+                "no_gradient": {
+                    "_id": "tensorflow.python.framework.ops.no_gradient",
+                    "doc": "Specifies that ops of type `op_type` is not differentiable.\n\nThis function should *not* be used for operations that have a\nwell-defined gradient that is not yet implemented.\n\nThis function is only used when defining a new op type. It may be\nused for ops such as `tf.size()` that are not differentiable.  For\nexample:\n\n```python\ntf.no_gradient(\"Size\")\n```\n\nThe gradient computed for 'op_type' will then propagate zeros.\n\nFor ops that have a well-defined gradient but are not yet implemented,\nno declaration should be made, and an error *must* be thrown if\nan attempt to request its gradient is made.\n\nArgs:\n  op_type: The string type of an operation. This corresponds to the\n    `OpDef.name` field for the proto that defines the operation.\n\nRaises:\n  TypeError: If `op_type` is not a string.",
+                    "is_deprecated": false,
+                    "source_code": "  def __init__(self, op_type):\n    \"\"\"Creates a new decorator with `op_type` as the Operation type.\n\n    Args:\n      op_type: The string type of an operation. This corresponds to the\n        `OpDef.name` field for the proto that defines the operation.\n\n    Raises:\n      TypeError: If `op_type` is not string.\n    \"\"\"\n    if not isinstance(op_type, str):\n      raise TypeError(\"op_type must be a string\")\n    self._op_type = op_type\n",
+                    "signature": "(op_type)",
+                    "parameters": {
+                        "op_type": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": [
+                        "If `op_type` is not a string."
+                    ],
+                    "type": "function",
+                    "class": null
+                }
+            }
+        }
+    }
+}

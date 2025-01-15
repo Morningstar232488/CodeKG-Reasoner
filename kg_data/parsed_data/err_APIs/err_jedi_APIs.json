@@ -1,0 +1,15 @@
+{
+    "data": {
+        "jedi": {
+            "==0.6.0": {
+                "_strip_rest_role": "No module named 'IPython'"
+            },
+            "==0.17.2": {
+                "_strip_rst_role": "cannot unpack non-iterable NoneType object"
+            },
+            "==0.13.1": {
+                "_strip_rst_role": "cannot unpack non-iterable NoneType object"
+            }
+        }
+    }
+}

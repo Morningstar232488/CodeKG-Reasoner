@@ -1,0 +1,30 @@
+{
+    "data": {
+        "normalize_keyword_aggregation": {
+            "_id": "pandas.core.apply.normalize_keyword_aggregation",
+            "name": "normalize_keyword_aggregation",
+            "module": "pandas.core.apply",
+            "doc": "Normalize user-provided \"named aggregation\" kwargs.\nTransforms from the new ``Mapping[str, NamedAgg]`` style kwargs\nto the old Dict[str, List[scalar]]].\n\nParameters\n----------\nkwargs : dict\n\nReturns\n-------\naggspec : dict\n    The transformed kwargs.\ncolumns : List[str]\n    The user-provided keys.\ncol_idx_order : List[int]\n    List of columns indices.\n\nExamples\n--------\n>>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n(defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))",
+            "is_deprecated": false,
+            "source_code": "def normalize_keyword_aggregation(\n    kwargs: dict,\n) -> tuple[dict, list[str], npt.NDArray[np.intp]]:\n    \"\"\"\n    Normalize user-provided \"named aggregation\" kwargs.\n    Transforms from the new ``Mapping[str, NamedAgg]`` style kwargs\n    to the old Dict[str, List[scalar]]].\n\n    Parameters\n    ----------\n    kwargs : dict\n\n    Returns\n    -------\n    aggspec : dict\n        The transformed kwargs.\n    columns : List[str]\n        The user-provided keys.\n    col_idx_order : List[int]\n        List of columns indices.\n\n    Examples\n    --------\n    >>> normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})\n    (defaultdict(<class 'list'>, {'input': ['sum']}), ('output',), array([0]))\n    \"\"\"\n    from pandas.core.indexes.base import Index\n\n    # Normalize the aggregation functions as Mapping[column, List[func]],\n    # process normally, then fixup the names.\n    # TODO: aggspec type: typing.Dict[str, List[AggScalar]]\n    # May be hitting https://github.com/python/mypy/issues/5958\n    # saying it doesn't have an attribute __name__\n    aggspec: DefaultDict = defaultdict(list)\n    order = []\n    columns, pairs = list(zip(*kwargs.items()))\n\n    for column, aggfunc in pairs:\n        aggspec[column].append(aggfunc)\n        order.append((column, com.get_callable_name(aggfunc) or aggfunc))\n\n    # uniquify aggfunc name if duplicated in order list\n    uniquified_order = _make_unique_kwarg_list(order)\n\n    # GH 25719, due to aggspec will change the order of assigned columns in aggregation\n    # uniquified_aggspec will store uniquified order list and will compare it with order\n    # based on index\n    aggspec_order = [\n        (column, com.get_callable_name(aggfunc) or aggfunc)\n        for column, aggfuncs in aggspec.items()\n        for aggfunc in aggfuncs\n    ]\n    uniquified_aggspec = _make_unique_kwarg_list(aggspec_order)\n\n    # get the new index of columns by comparison\n    col_idx_order = Index(uniquified_aggspec).get_indexer(uniquified_order)\n    return aggspec, columns, col_idx_order\n",
+            "signature": "(kwargs: 'dict') -> 'tuple[dict, list[str], npt.NDArray[np.intp]]'",
+            "parameters": {
+                "kwargs": {
+                    "name": "kwargs",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "dict",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "The transformed kwargs.",
+                "type": "dict"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "data": {
+        "markupsafe": {
+            "==2.0.1": {
+                "soft_str": {
+                    "_id": "markupsafe._native.soft_str",
+                    "doc": "Convert an object to a string if it isn't already. This preserves\na :class:`Markup` string rather than converting it back to a basic\nstring, so it will still be marked as safe and won't be escaped\nagain.\n\n>>> value = escape(\"<User 1>\")\n>>> value\nMarkup('&lt;User 1&gt;')\n>>> escape(str(value))\nMarkup('&amp;lt;User 1&amp;gt;')\n>>> escape(soft_str(value))\nMarkup('&lt;User 1&gt;')",
+                    "is_deprecated": false,
+                    "source_code": "def soft_str(s: t.Any) -> str:\n    \"\"\"Convert an object to a string if it isn't already. This preserves\n    a :class:`Markup` string rather than converting it back to a basic\n    string, so it will still be marked as safe and won't be escaped\n    again.\n\n    >>> value = escape(\"<User 1>\")\n    >>> value\n    Markup('&lt;User 1&gt;')\n    >>> escape(str(value))\n    Markup('&amp;lt;User 1&amp;gt;')\n    >>> escape(soft_str(value))\n    Markup('&lt;User 1&gt;')\n    \"\"\"\n    if not isinstance(s, str):\n        return str(s)\n\n    return s\n",
+                    "signature": "(s: Any) -> str",
+                    "parameters": {
+                        "s": {
+                            "description": null,
+                            "is_optional": false
+                        }
+                    },
+                    "returns_doc": null,
+                    "raise_doc": null,
+                    "type": "function",
+                    "class": null
+                }
+            }
+        }
+    }
+}

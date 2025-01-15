@@ -1,0 +1,29 @@
+{
+    "data": {
+        "add_rows": {
+            "_id": "streamlit.elements.data_frame_proto.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def _concat_any_array(any_array_1, any_array_2):\n    \"\"\"Concat elements from any_array_2 into any_array_1.\"\"\"\n    # Special case if any_array_1 is empty\n    if _any_array_len(any_array_1) == 0:\n        any_array_1.CopyFrom(any_array_2)\n        return\n\n    type1 = any_array_1.WhichOneof('type')\n    type2 = any_array_2.WhichOneof('type')\n    if type1 != type2:\n        raise ValueError('Cannot concatenate %(type1)s with %(type2)s.' % {\n            'type1': type1,\n            'type2': type2\n        })\n    getattr(any_array_1, type1).data.extend(getattr(any_array_2, type2).data)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

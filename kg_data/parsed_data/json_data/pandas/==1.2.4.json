@@ -1,0 +1,30 @@
+{
+    "data": {
+        "maybe_mangle_lambdas": {
+            "_id": "pandas.core.aggregation.maybe_mangle_lambdas",
+            "name": "maybe_mangle_lambdas",
+            "module": "pandas.core.aggregation",
+            "doc": "Make new lambdas with unique names.\n\nParameters\n----------\nagg_spec : Any\n    An argument to GroupBy.agg.\n    Non-dict-like `agg_spec` are pass through as is.\n    For dict-like `agg_spec` a new spec is returned\n    with name-mangled lambdas.\n\nReturns\n-------\nmangled : Any\n    Same type as the input.\n\nExamples\n--------\n>>> maybe_mangle_lambdas('sum')\n'sum'\n>>> maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP\n[<function __main__.<lambda_0>,\n <function pandas...._make_lambda.<locals>.f(*args, **kwargs)>]",
+            "is_deprecated": false,
+            "source_code": "        # don't mangle for .agg([lambda x: .])\n",
+            "signature": "(agg_spec: 'Any') -> 'Any'",
+            "parameters": {
+                "agg_spec": {
+                    "name": "agg_spec",
+                    "description": "An argument to GroupBy.agg.\nNon-dict-like `agg_spec` are pass through as is.\nFor dict-like `agg_spec` a new spec is returned\nwith name-mangled lambdas.",
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "Any",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": "Same type as the input.",
+                "type": "Any"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

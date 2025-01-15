@@ -1,0 +1,33 @@
+{
+    "data": {
+        "unpack_rgb": {
+            "_id": "imageio.plugins._tifffile.unpack_rgb",
+            "doc": "Return array from byte string containing packed samples.\n\nUse to unpack RGB565 or RGB555 to RGB888 format.\n\nParameters\n----------\ndata : byte str\n    The data to be decoded. Samples in each pixel are stored consecutively.\n    Pixels are aligned to 8, 16, or 32 bit boundaries.\ndtype : numpy.dtype\n    The sample data type. The byteorder applies also to the data stream.\nbitspersample : tuple\n    Number of bits for each sample in a pixel.\nrescale : bool\n    Upscale samples to the number of bits in dtype.\n\nReturns\n-------\nresult : ndarray\n    Flattened array of unpacked samples of native dtype.\n\nExamples\n--------\n>>> data = struct.pack('BBBB', 0x21, 0x08, 0xff, 0xff)\n>>> print(unpack_rgb(data, '<B', (5, 6, 5), False))\n[ 1  1  1 31 63 31]\n>>> print(unpack_rgb(data, '<B', (5, 6, 5)))\n[  8   4   8 255 255 255]\n>>> print(unpack_rgb(data, '<B', (5, 5, 5)))\n[ 16   8   8 255 255 255]",
+            "is_deprecated": false,
+            "source_code": "    def is_geotiff(self):\n        \"\"\"Page contains GeoTIFF metadata.\"\"\"\n        return \"GeoKeyDirectoryTag\" in self.tags\n",
+            "signature": "(data, dtype='<B', bitspersample=(5, 6, 5), rescale=True)",
+            "parameters": {
+                "data": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "dtype": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "bitspersample": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "rescale": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": "Flattened array of unpacked samples of native dtype.",
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

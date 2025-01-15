@@ -1,0 +1,75 @@
+{
+    "count": 3,
+    "data": [
+        {
+            "_id": "streamlit.elements.data_frame.add_rows",
+            "doc": "Concat the DataFrame in delta2 to the DataFrame in delta1.\n\nParameters\n----------\ndelta1 : Delta\ndelta2 : Delta\nname : str or None",
+            "is_deprecated": false,
+            "source_code": "def add_rows(delta1, delta2, name=None):\n    \"\"\"Concat the DataFrame in delta2 to the DataFrame in delta1.\n\n    Parameters\n    ----------\n    delta1 : Delta\n    delta2 : Delta\n    name : str or None\n\n    \"\"\"\n    df1 = _get_data_frame(delta1, name)\n    df2 = _get_data_frame(delta2, name)\n\n    if len(df1.data.cols) == 0:\n        if len(df2.data.cols) == 0:\n            return\n        df1.CopyFrom(df2)\n        return\n\n    # Copy Data\n    if len(df1.data.cols) != len(df2.data.cols):\n        raise ValueError(\"Dataframes have incompatible shapes\")\n    for (col1, col2) in zip(df1.data.cols, df2.data.cols):\n        _concat_any_array(col1, col2)\n\n    # Copy index\n    _concat_index(df1.index, df2.index)\n\n    # Don't concat columns! add_rows should leave the dataframe with the same\n    # number of columns as it had before.\n    # DON'T DO: _concat_index(df1.columns, df2.columns)\n\n    # Copy styles\n    for (style_col1, style_col2) in zip(df1.style.cols, df2.style.cols):\n        _concat_cell_style_array(style_col1, style_col2)\n",
+            "signature": "(delta1, delta2, name=None)",
+            "parameters": {
+                "delta1": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "delta2": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "name": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null,
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "streamlit.delta_generator.DeltaGenerator.beta_expander",
+            "doc": "Insert a multi-element container that can be expanded/collapsed.\n\nInserts a container into your app that can be used to hold multiple elements\nand can be expanded or collapsed by the user. When collapsed, all that is\nvisible is the provided label.\n\nTo add elements to the returned container, you can use \"with\" notation\n(preferred) or just call methods directly on the returned object. See\nexamples below.\n\n.. warning::\n    Currently, you may not put expanders inside another expander.\n\nParameters\n----------\nlabel : str\n    A string to use as the header for the expander.\nexpanded : bool\n    If True, initializes the expander in \"expanded\" state. Defaults to\n    False (collapsed).\n\nExamples\n--------\n>>> st.line_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n>>>\n>>> with st.beta_expander(\"See explanation\"):\n...     st.write(\"\"\"\n...         The chart above shows some numbers I picked for you.\n...         I rolled actual dice for these, so they're *guaranteed* to\n...         be random.\n...     \"\"\").\n...     st.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n.. output ::\n    https://static.streamlit.io/0.66.0-2BLtg/index.html?id=LzfUAiT1eM9Xy8EDMRkWyF\n    height: 750px",
+            "is_deprecated": false,
+            "source_code": "def _maybe_melt_data_for_add_rows(data, delta_type, last_index):\n    import pandas as pd\n    import streamlit.elements.data_frame as data_frame\n\n    # For some delta types we have to reshape the data structure\n    # otherwise the input data and the actual data used\n    # by vega_lite will be different and it will throw an error.\n    if delta_type in DELTAS_TYPES_THAT_MELT_DATAFRAMES:\n        if not isinstance(data, pd.DataFrame):\n            data = type_util.convert_anything_to_df(data)\n\n        if type(data.index) is pd.RangeIndex:\n            old_step = _get_pandas_index_attr(data, \"step\")\n\n            # We have to drop the predefined index\n            data = data.reset_index(drop=True)\n\n            old_stop = _get_pandas_index_attr(data, \"stop\")\n\n            if old_step is None or old_stop is None:\n                raise StreamlitAPIException(\n                    \"'RangeIndex' object has no attribute 'step'\"\n                )\n\n            start = last_index + old_step\n            stop = last_index + old_step + old_stop\n\n            data.index = pd.RangeIndex(start=start, stop=stop, step=old_step)\n            last_index = stop - 1\n\n        index_name = data.index.name\n        if index_name is None:\n            index_name = \"index\"\n\n        data = pd.melt(data.reset_index(), id_vars=[index_name])\n\n    return data, last_index\n",
+            "signature": "(label=None, expanded=False)",
+            "parameters": {
+                "label": {
+                    "description": null,
+                    "is_optional": true
+                },
+                "expanded": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "member_function",
+            "class": "DeltaGenerator",
+            "pattern": "method_removal"
+        },
+        {
+            "_id": "streamlit.delta_generator.LayoutsMixin.expander",
+            "doc": "Insert a multi-element container that can be expanded/collapsed.\n\nInserts a container into your app that can be used to hold multiple elements\nand can be expanded or collapsed by the user. When collapsed, all that is\nvisible is the provided label.\n\nTo add elements to the returned container, you can use \"with\" notation\n(preferred) or just call methods directly on the returned object. See\nexamples below.\n\n.. warning::\n    Currently, you may not put expanders inside another expander.\n\nParameters\n----------\nlabel : str\n    A string to use as the header for the expander. The label can optionally\n    contain Markdown and supports the following elements: Bold, Italics,\n    Strikethroughs, Inline Code, Emojis, and Links.\n\n    This also supports:\n\n    * Emoji shortcodes, such as ``:+1:``  and ``:sunglasses:``.\n      For a list of all supported codes,\n      see https://share.streamlit.io/streamlit/emoji-shortcodes.\n\n    * LaTeX expressions, by wrapping them in \"$\" or \"$$\" (the \"$$\"\n      must be on their own lines). Supported LaTeX functions are listed\n      at https://katex.org/docs/supported.html.\n\n    * Colored text, using the syntax ``:color[text to be colored]``,\n      where ``color`` needs to be replaced with any of the following\n      supported colors: blue, green, orange, red, violet, gray/grey, rainbow.\n\n    Unsupported elements are unwrapped so only their children (text contents) render.\n    Display unsupported elements as literal characters by\n    backslash-escaping them. E.g. ``1\\. Not an ordered list``.\nexpanded : bool\n    If True, initializes the expander in \"expanded\" state. Defaults to\n    False (collapsed).\n\nExamples\n--------\nYou can use `with` notation to insert any element into an expander\n\n>>> import streamlit as st\n>>>\n>>> st.bar_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n>>>\n>>> with st.expander(\"See explanation\"):\n...     st.write(\\\"\\\"\\\"\n...         The chart above shows some numbers I picked for you.\n...         I rolled actual dice for these, so they're *guaranteed* to\n...         be random.\n...     \\\"\\\"\\\")\n...     st.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n.. output ::\n    https://doc-expander.streamlit.app/\n    height: 750px\n\nOr you can just call methods directly in the returned objects:\n\n>>> import streamlit as st\n>>>\n>>> st.bar_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n>>>\n>>> expander = st.expander(\"See explanation\")\n>>> expander.write(\\\"\\\"\\\"\n...     The chart above shows some numbers I picked for you.\n...     I rolled actual dice for these, so they're *guaranteed* to\n...     be random.\n... \\\"\\\"\\\")\n>>> expander.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n.. output ::\n    https://doc-expander.streamlit.app/\n    height: 750px",
+            "is_deprecated": false,
+            "source_code": "    def expander(self, label: str, expanded: bool = False) -> \"DeltaGenerator\":\n        r\"\"\"Insert a multi-element container that can be expanded/collapsed.\n\n        Inserts a container into your app that can be used to hold multiple elements\n        and can be expanded or collapsed by the user. When collapsed, all that is\n        visible is the provided label.\n\n        To add elements to the returned container, you can use \"with\" notation\n        (preferred) or just call methods directly on the returned object. See\n        examples below.\n\n        .. warning::\n            Currently, you may not put expanders inside another expander.\n\n        Parameters\n        ----------\n        label : str\n            A string to use as the header for the expander. The label can optionally\n            contain Markdown and supports the following elements: Bold, Italics,\n            Strikethroughs, Inline Code, Emojis, and Links.\n\n            This also supports:\n\n            * Emoji shortcodes, such as ``:+1:``  and ``:sunglasses:``.\n              For a list of all supported codes,\n              see https://share.streamlit.io/streamlit/emoji-shortcodes.\n\n            * LaTeX expressions, by wrapping them in \"$\" or \"$$\" (the \"$$\"\n              must be on their own lines). Supported LaTeX functions are listed\n              at https://katex.org/docs/supported.html.\n\n            * Colored text, using the syntax ``:color[text to be colored]``,\n              where ``color`` needs to be replaced with any of the following\n              supported colors: blue, green, orange, red, violet, gray/grey, rainbow.\n\n            Unsupported elements are unwrapped so only their children (text contents) render.\n            Display unsupported elements as literal characters by\n            backslash-escaping them. E.g. ``1\\. Not an ordered list``.\n        expanded : bool\n            If True, initializes the expander in \"expanded\" state. Defaults to\n            False (collapsed).\n\n        Examples\n        --------\n        You can use `with` notation to insert any element into an expander\n\n        >>> import streamlit as st\n        >>>\n        >>> st.bar_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n        >>>\n        >>> with st.expander(\"See explanation\"):\n        ...     st.write(\\\"\\\"\\\"\n        ...         The chart above shows some numbers I picked for you.\n        ...         I rolled actual dice for these, so they're *guaranteed* to\n        ...         be random.\n        ...     \\\"\\\"\\\")\n        ...     st.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n        .. output ::\n            https://doc-expander.streamlit.app/\n            height: 750px\n\n        Or you can just call methods directly in the returned objects:\n\n        >>> import streamlit as st\n        >>>\n        >>> st.bar_chart({\"data\": [1, 5, 2, 6, 2, 1]})\n        >>>\n        >>> expander = st.expander(\"See explanation\")\n        >>> expander.write(\\\"\\\"\\\"\n        ...     The chart above shows some numbers I picked for you.\n        ...     I rolled actual dice for these, so they're *guaranteed* to\n        ...     be random.\n        ... \\\"\\\"\\\")\n        >>> expander.image(\"https://static.streamlit.io/examples/dice.jpg\")\n\n        .. output ::\n            https://doc-expander.streamlit.app/\n            height: 750px\n\n        \"\"\"\n        if label is None:\n            raise StreamlitAPIException(\"A label is required for an expander\")\n\n        expandable_proto = BlockProto.Expandable()\n        expandable_proto.expanded = expanded\n        expandable_proto.label = label\n\n        block_proto = BlockProto()\n        block_proto.allow_empty = False\n        block_proto.expandable.CopyFrom(expandable_proto)\n\n        return self.dg._block(block_proto=block_proto)\n",
+            "signature": "(label: 'str', expanded: 'bool' = False) -> \"'DeltaGenerator'\"",
+            "parameters": {
+                "label": {
+                    "description": null,
+                    "is_optional": false
+                },
+                "expanded": {
+                    "description": null,
+                    "is_optional": true
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "member_function",
+            "class": "LayoutsMixin",
+            "pattern": "method_addition"
+        }
+    ]
+}

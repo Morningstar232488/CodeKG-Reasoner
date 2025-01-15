@@ -1,0 +1,27 @@
+{
+    "data": {
+        "_ensure_nanosecond_dtype": {
+            "_id": "pandas.core.dtypes.cast._ensure_nanosecond_dtype",
+            "name": "_ensure_nanosecond_dtype",
+            "module": "pandas.core.dtypes.cast",
+            "doc": "Convert dtypes with granularity less than nanosecond to nanosecond\n\n>>> _ensure_nanosecond_dtype(np.dtype(\"M8[us]\"))\n\n>>> _ensure_nanosecond_dtype(np.dtype(\"M8[D]\"))\nTraceback (most recent call last):\n    ...\nTypeError: dtype=datetime64[D] is not supported. Supported resolutions are 's', 'ms', 'us', and 'ns'\n\n>>> _ensure_nanosecond_dtype(np.dtype(\"m8[ps]\"))\nTraceback (most recent call last):\n    ...\nTypeError: dtype=timedelta64[ps] is not supported. Supported resolutions are 's', 'ms', 'us', and 'ns'",
+            "is_deprecated": false,
+            "source_code": "def _ensure_nanosecond_dtype(dtype: DtypeObj) -> None:\n    \"\"\"\n    Convert dtypes with granularity less than nanosecond to nanosecond\n\n    >>> _ensure_nanosecond_dtype(np.dtype(\"M8[us]\"))\n\n    >>> _ensure_nanosecond_dtype(np.dtype(\"M8[D]\"))\n    Traceback (most recent call last):\n        ...\n    TypeError: dtype=datetime64[D] is not supported. Supported resolutions are 's', 'ms', 'us', and 'ns'\n\n    >>> _ensure_nanosecond_dtype(np.dtype(\"m8[ps]\"))\n    Traceback (most recent call last):\n        ...\n    TypeError: dtype=timedelta64[ps] is not supported. Supported resolutions are 's', 'ms', 'us', and 'ns'\n    \"\"\"  # noqa: E501\n    msg = (\n        f\"The '{dtype.name}' dtype has no unit. \"\n        f\"Please pass in '{dtype.name}[ns]' instead.\"\n    )\n\n    # unpack e.g. SparseDtype\n    dtype = getattr(dtype, \"subtype\", dtype)\n\n    if not isinstance(dtype, np.dtype):\n        # i.e. datetime64tz\n        pass\n\n    elif dtype.kind in \"mM\":\n        reso = get_unit_from_dtype(dtype)\n        if not is_supported_unit(reso):\n            # pre-2.0 we would silently swap in nanos for lower-resolutions,\n            #  raise for above-nano resolutions\n            if dtype.name in [\"datetime64\", \"timedelta64\"]:\n                raise ValueError(msg)\n            # TODO: ValueError or TypeError? existing test\n            #  test_constructor_generic_timestamp_bad_frequency expects TypeError\n            raise TypeError(\n                f\"dtype={dtype} is not supported. Supported resolutions are 's', \"\n                \"'ms', 'us', and 'ns'\"\n            )\n",
+            "signature": "(dtype: 'DtypeObj') -> 'None'",
+            "parameters": {
+                "dtype": {
+                    "name": "dtype",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "DtypeObj",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

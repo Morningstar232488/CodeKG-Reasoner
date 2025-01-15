@@ -1,0 +1,4 @@
+<http://purl.org/codekg_reasoner/pandas==2.1.2/pandas> <http://purl.org/codekg_reasoner/pandas==2.1.2/has_module> <http://purl.org/codekg_reasoner/pandas==2.1.2/pandas.core.dtypes.cast> <http://purl.org/codekg_reasoner/pandas==2.1.2> .
+<http://purl.org/codekg_reasoner/pandas==2.1.2/pandas.core.dtypes.cast> <http://purl.org/codekg_reasoner/pandas==2.1.2/has_function> <http://purl.org/codekg_reasoner/pandas==2.1.2/_ensure_nanosecond_dtype> <http://purl.org/codekg_reasoner/pandas==2.1.2> .
+<http://purl.org/codekg_reasoner/pandas==2.1.2/_ensure_nanosecond_dtype> <http://purl.org/codekg_reasoner/pandas==2.1.2/has_parameter> <http://purl.org/codekg_reasoner/pandas==2.1.2/_ensure_nanosecond_dtype/parameter/dtype> <http://purl.org/codekg_reasoner/pandas==2.1.2> .
+<http://purl.org/codekg_reasoner/pandas==2.1.2/_ensure_nanosecond_dtype/parameter/dtype> <http://purl.org/codekg_reasoner/pandas==2.1.2/is_required> "True" <http://purl.org/codekg_reasoner/pandas==2.1.2> .

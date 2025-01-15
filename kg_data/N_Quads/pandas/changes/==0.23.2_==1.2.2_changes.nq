@@ -1,0 +1,5 @@
+<http://purl.org/codekg_reasoner/pandas==0.23.2/_ensure_index> <http://purl.org/codekg_reasoner/pandas/has_removed_to> <http://purl.org/codekg_reasoner/pandas==1.2.2/blank_node> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.2/blank_node> <http://purl.org/codekg_reasoner/pandas/has_added_to> <http://purl.org/codekg_reasoner/pandas==1.2.2/iterable_not_string> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.2/blank_node> <http://purl.org/codekg_reasoner/pandas/has_added_to> <http://purl.org/codekg_reasoner/pandas==1.2.2/ensure_index> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.2/blank_node> <http://purl.org/codekg_reasoner/pandas/has_added_to> <http://purl.org/codekg_reasoner/pandas==1.2.2/is_multi_agg_with_relabel> <http://purl.org/codekg_reasoner/pandas> .
+<http://purl.org/codekg_reasoner/pandas==0.23.2/blank_node> <http://purl.org/codekg_reasoner/pandas/has_added_to> <http://purl.org/codekg_reasoner/pandas==1.2.2/normalize_keyword_aggregation> <http://purl.org/codekg_reasoner/pandas> .

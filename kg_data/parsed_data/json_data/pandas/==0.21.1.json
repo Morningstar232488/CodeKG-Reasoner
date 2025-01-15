@@ -1,0 +1,46 @@
+{
+    "data": {
+        "_recode_for_categories": {
+            "_id": "pandas.core.categorical._recode_for_categories",
+            "name": "_recode_for_categories",
+            "module": "pandas.core.categorical",
+            "doc": "Convert a set of codes for to a new set of categories\n\nParameters\n----------\ncodes : array\nold_categories, new_categories : Index\n\nReturns\n-------\nnew_codes : array\n\nExamples\n--------\n>>> old_cat = pd.Index(['b', 'a', 'c'])\n>>> new_cat = pd.Index(['a', 'b'])\n>>> codes = np.array([0, 1, 1, 2])\n>>> _recode_for_categories(codes, old_cat, new_cat)\narray([ 1,  0,  0, -1])",
+            "is_deprecated": false,
+            "source_code": "def _recode_for_categories(codes, old_categories, new_categories):\n    \"\"\"\n    Convert a set of codes for to a new set of categories\n\n    Parameters\n    ----------\n    codes : array\n    old_categories, new_categories : Index\n\n    Returns\n    -------\n    new_codes : array\n\n    Examples\n    --------\n    >>> old_cat = pd.Index(['b', 'a', 'c'])\n    >>> new_cat = pd.Index(['a', 'b'])\n    >>> codes = np.array([0, 1, 1, 2])\n    >>> _recode_for_categories(codes, old_cat, new_cat)\n    array([ 1,  0,  0, -1])\n    \"\"\"\n    from pandas.core.algorithms import take_1d\n\n    if len(old_categories) == 0:\n        # All null anyway, so just retain the nulls\n        return codes.copy()\n    indexer = coerce_indexer_dtype(new_categories.get_indexer(old_categories),\n                                   new_categories)\n    new_codes = take_1d(indexer, codes.copy(), fill_value=-1)\n    return new_codes\n",
+            "signature": "(codes, old_categories, new_categories)",
+            "parameters": {
+                "codes": {
+                    "name": "codes",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "old_categories": {
+                    "name": "old_categories",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "new_categories": {
+                    "name": "new_categories",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": null,
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": {
+                "description": null,
+                "type": "array"
+            },
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}

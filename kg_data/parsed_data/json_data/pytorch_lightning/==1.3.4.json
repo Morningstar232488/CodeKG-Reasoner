@@ -1,0 +1,66 @@
+{
+    "data": {
+        "mean_squared_error": {
+            "_id": "pytorch_lightning.metrics.functional.mean_squared_error.mean_squared_error",
+            "name": "mean_squared_error",
+            "module": "pytorch_lightning.metrics.functional.mean_squared_error",
+            "doc": ".. deprecated::\n    Use :func:`torchmetrics.functional.mean_squared_error`. Will be removed in v1.5.0.",
+            "is_deprecated": true,
+            "source_code": "@deprecated_metrics(target=_mean_squared_error)\ndef mean_squared_error(preds: torch.Tensor, target: torch.Tensor) -> torch.Tensor:\n    \"\"\"\n    .. deprecated::\n        Use :func:`torchmetrics.functional.mean_squared_error`. Will be removed in v1.5.0.\n    \"\"\"\n",
+            "signature": "(preds: torch.Tensor, target: torch.Tensor) -> torch.Tensor",
+            "parameters": {
+                "preds": {
+                    "name": "preds",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "target": {
+                    "name": "target",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "<class 'torch.Tensor'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        },
+        "parse_env_variables": {
+            "_id": "pytorch_lightning.utilities.argparse.parse_env_variables",
+            "name": "parse_env_variables",
+            "module": "pytorch_lightning.utilities.argparse",
+            "doc": "Parse environment arguments if they are defined.\n\nExample:\n    >>> from pytorch_lightning import Trainer\n    >>> parse_env_variables(Trainer)\n    Namespace()\n    >>> import os\n    >>> os.environ[\"PL_TRAINER_GPUS\"] = '42'\n    >>> os.environ[\"PL_TRAINER_BLABLABLA\"] = '1.23'\n    >>> parse_env_variables(Trainer)\n    Namespace(gpus=42)\n    >>> del os.environ[\"PL_TRAINER_GPUS\"]",
+            "is_deprecated": false,
+            "source_code": "def parse_env_variables(cls, template: str = \"PL_%(cls_name)s_%(cls_argument)s\") -> Namespace:\n    \"\"\"Parse environment arguments if they are defined.\n\n    Example:\n        >>> from pytorch_lightning import Trainer\n        >>> parse_env_variables(Trainer)\n        Namespace()\n        >>> import os\n        >>> os.environ[\"PL_TRAINER_GPUS\"] = '42'\n        >>> os.environ[\"PL_TRAINER_BLABLABLA\"] = '1.23'\n        >>> parse_env_variables(Trainer)\n        Namespace(gpus=42)\n        >>> del os.environ[\"PL_TRAINER_GPUS\"]\n    \"\"\"\n    cls_arg_defaults = get_init_arguments_and_types(cls)\n\n    env_args = {}\n    for arg_name, _, _ in cls_arg_defaults:\n        env = template % {'cls_name': cls.__name__.upper(), 'cls_argument': arg_name.upper()}\n        val = os.environ.get(env)\n        if not (val is None or val == ''):\n            # todo: specify the possible exception\n            with suppress(Exception):\n                # converting to native types like int/float/bool\n                val = eval(val)\n            env_args[arg_name] = val\n    return Namespace(**env_args)\n",
+            "signature": "(cls: Type[ForwardRef('pl.Trainer')], template: str = 'PL_%(cls_name)s_%(cls_argument)s') -> argparse.Namespace",
+            "parameters": {
+                "cls": {
+                    "name": "cls",
+                    "description": null,
+                    "is_optional": false,
+                    "default": null,
+                    "annotation": "typing.Type[ForwardRef('pl.Trainer')]",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                },
+                "template": {
+                    "name": "template",
+                    "description": null,
+                    "is_optional": true,
+                    "default": "PL_%(cls_name)s_%(cls_argument)s",
+                    "annotation": "<class 'str'>",
+                    "kind": "POSITIONAL_OR_KEYWORD"
+                }
+            },
+            "returns_doc": null,
+            "raise_doc": null,
+            "type": "function",
+            "class": null
+        }
+    }
+}
