@@ -126,14 +126,14 @@
                 "\nprint(unpack_rgb(data, '<B', (5, 6, 5), False))\nprint(unpack_rgb(data, '<B', (5, 6, 5)))\nprint(unpack_rgb(data, '<B', (5, 5, 5)))\n",
                 "\ndata = struct.pack('BBBB', 0x21, 0x08, 0xff, 0xff)\nprint(unpack_rgb(data, '<B', (5, 6, 5), False))\nprint(unpack_rgb(data, '<B', (5, 6, 5)))\nprint(unpack_rgb(data, '<B', (5, 5, 5)))\n"
             ],
-            "core_line_in_core_block": "print(unpack_rgb(data, '<B', (5, 6, 5)))",
+            "core_line_in_core_block": "print(unpack_rgb(data, '<B', (5, 5, 5)))",
             "core_line_in_output_clear": [
+                "print(unpack_rgb(data, '<B', (5, 6, 5), False))",
                 "print(unpack_rgb(data, '<B', (5, 6, 5)))",
                 "print(unpack_rgb(data, '<B', (5, 6, 5)))",
-                "print(unpack_rgb(data, '<B', (5, 6, 5), False))",
-                "print(unpack_rgb(data, '<B', (5, 6, 5), False))",
-                "print(unpack_rgb(data, '<B', (5, 5, 5)))",
-                "print(unpack_rgb(data, '<B', (5, 6, 5)))"
+                "print(unpack_rgb(data, '<B', (5, 6, 5)))",
+                "print(unpack_rgb(data, '<B', (5, 6, 5)))",
+                "print(unpack_rgb(data, '<B', (5, 6, 5), False))"
             ]
         },
         {
@@ -398,14 +398,14 @@
                 "\nfrom datasets.data_files import resolve_pattern\n\nbase_path = \".\"\nresolve_pattern(base_path, \"src/**/*.yaml\")\n",
                 "\nfrom datasets.data_files import resolve_pattern\n\nbase_path = \".\"\nresolve_pattern(base_path, \"src/**/*.yaml\")\n"
             ],
-            "core_line_in_core_block": "resolve_pattern(\"docs/**/*.py\", base_path)",
+            "core_line_in_core_block": "from datasets.data_files import resolve_pattern",
             "core_line_in_output_clear": [
                 "from datasets.data_files import resolve_pattern",
                 "from datasets.data_files import resolve_pattern",
-                "resolve_pattern(base_path, \"src/**/*.yaml\")",
-                "resolve_pattern(base_path, \"src/**/*.yaml\")",
                 "from datasets.data_files import resolve_pattern",
-                "resolve_pattern(base_path, \"src/**/*.yaml\")"
+                "from datasets.data_files import resolve_pattern",
+                "from datasets.data_files import resolve_pattern",
+                "from datasets.data_files import resolve_pattern"
             ]
         },
         {

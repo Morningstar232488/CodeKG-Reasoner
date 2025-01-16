@@ -20,17 +20,10 @@ model_name = sys.argv[1]
 edit_order_1 = sys.argv[2]  # 原始 JSONL 文件路径
 edit_order_2 = sys.argv[3]  # 原始 JSONL 文件路径
 
-if model_name == "deepseek":
-    model_file_name = "DeepSeek-V3"
-elif model_name == "llama70":
-    model_file_name = "Llama-3.3-70B-Instruct-Turbo"
-elif model_name == "Qwen":
-    model_file_name = "Qwen2.5-7B-Instruct-Turbo"
-elif model_name == "QwenCode":
-    model_file_name = "Qwen/Qwen2.5-Coder-32B-Instruct"
+if "/" in model_name:
+    model_file_name = model_name.split("/")[-1]
 else:
     model_file_name = model_name
-
 
 input_file = f"../../datasets/code_migration/samples/outputs/{model_file_name}/{edit_order_1}_to_{edit_order_2}.json"
 
