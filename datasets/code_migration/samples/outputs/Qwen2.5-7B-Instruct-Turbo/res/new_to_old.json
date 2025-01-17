@@ -1,5 +1,4 @@
 {
-    "count": 12,
     "data": [
         {
             "dependency": "datasets",
@@ -33,7 +32,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresolved_files = datasets.data_files.resolve_file_patterns(base_path, [pattern])\\n```', '```python\\nresolved_files = datasets.data_files.find(pattern, base_path=base_path)\\n```', '```python\\nresolved_files = datasets.data_files.resolve_dataset_file(pattern, base_path=base_path)\\n```', '```python\\nresolved_files = datasets.data_files.resolve_filepattern(pattern, base_path)\\n```', '```python\\nresolved_files = datasets.data_files.find_files(pattern, base_path=base_path)\\n```', '```python\\nresolved_files = datasets.data_files.find_files(pattern=pattern, search_path=base_path)\\n```']"
+            "model_output": "['```python\\n<start>\\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path, download_config=None, allowed_extensions=None)\\nreturn result\\n<end>', '```python\\n    result = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path, allowed_extensions=None)\\n    return result\\n```', '```python\\n<start>\\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path=base_path, download_config=None, allowed_extensions=None)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path=base_path, allowed_extensions=None, download_config=None)\\nreturn result\\n<end>', '```python\\n    result = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path, download_config=None, allowed_extensions=None)\\n    return result\\n```', '```python\\n<start>\\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path, allowed_extensions=None)\\nreturn result\\n<end>']",
+            "model_output_clear": [
+                "\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path, download_config=None, allowed_extensions=None)\nreturn result\n",
+                "no_answer",
+                "\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path=base_path, download_config=None, allowed_extensions=None)\nreturn result\n",
+                "\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path=base_path, allowed_extensions=None, download_config=None)\nreturn result\n",
+                "no_answer",
+                "\nresult = datasets.data_files.resolve_patterns_locally_or_by_urls(pattern_list, base_path, allowed_extensions=None)\nreturn result\n"
+            ],
+            "core_line_in_core_block": "from datasets.data_files import resolve_pattern",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "imageio",
@@ -67,7 +83,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "[\"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dimensions=dimensions)\\n```\", \"```python\\n    data = struct.pack('BBBB', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpack_rgb(data, fmt=fmt, dimensions=dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt, dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt, dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dimensions=dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt, dimensions)\\n```\"]"
+            "model_output": "['```python\\nimport struct\\nimport imageio.plugins._tifffile\\n\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    dtype = \\'uint8\\'\\n    bitspersample = 8\\n    rescale = False\\n    result = imageio.plugins._tifffile.unpackrgb(data, dtype=dtype, bitspersample=bitspersample, rescale=rescale)\\n    return result\\n```', '```python\\nimport struct\\nimport imageio.plugins._tifffile\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dtype=\\'uint8\\', bitspersample=8, rescale=False)\\n    return result\\n```', \"```python\\n    data = struct.pack('BBBB', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dtype=None, bitspersample=None, rescale=False)\\n    return result\\n```\", \"```python\\n    - from imageio.plugins.tifffile import unpackrgb\\n      data = struct.pack('BBBB', r, g, b, a)\\n      result = unpackrgb(data, fmt=fmt, dtype='uint8', bitspersample=8, rescale=False)\\n      return result\\n```\", \"```python\\n    data = struct.pack('BBBB', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dtype=None, bitspersample=None, rescale=False)\\n    <end>\\n```\", \"```python\\n    data = struct.pack('BBBB', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dtype=None, bitspersample=None, rescale=False)\\n    return result\\n```\"]",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "\n    data = struct.pack('BBBB', r, g, b, a)\n    result = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dtype=None, bitspersample=None, rescale=False)\n    ",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "print(unpack_rgb(data, '<B', (5, 6, 5), False))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "imageio",
@@ -101,7 +134,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(str(description))\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(str(description))\\n```']"
+            "model_output": "['```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode())\\n```', \"```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode('utf-8'))\\n```\", \"```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode('utf-8'))\\n```\", '```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode())\\n```', \"```python\\n<start>\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode('utf-8'))\\n<end>\\n```\", '```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode())\\nreturn result\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "\nresult = imageio.plugins._tifffile.imagej_description_metadata(description.decode('utf-8'))\n",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "imagej_description_metadata(description)",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "result = imageio.plugins._tifffile.imagej_description_metadata(description.decode('utf-8'))",
+                "N/A"
+            ]
         },
         {
             "dependency": "keras",
@@ -135,7 +185,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```']"
+            "model_output": "['```python\\n    result = keras.src.utils.data_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    return result\\n```', '```python\\n    result = keras.src.utils.data_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    return result\\n```', '```python\\n    result = keras.src.utils.data_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    return result\\n```', '```python\\n    result = keras.src.utils.data_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    return result\\n```', '```python\\n    result = keras.src.utils.data_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    return result\\n```', '```python\\n    result = keras.src.utils.data_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    return result\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "hash_file('/path/to/file.zip')",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -169,7 +236,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(*aggregations.items())\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```']"
+            "model_output": "['```python\\nresult = _is_multi_agg_with_relabel(aggregations)\\nreturn result\\n```', '```python\\n<start>\\nresult = _is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>', '```python\\n    result = _is_multi_agg_with_relabel(aggregations)\\n    return result\\n```', '```python\\nresult = _is_multi_agg_with_relabel(aggregations)\\nreturn result\\n```', '```python\\n<start>\\nresult = _is_multi_agg_with_relabel(aggregations)\\n<end>\\n```', '```python\\n<start>\\nresult = _is_multi_agg_with_relabel(aggregations)\\n<end>\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "\nresult = _is_multi_agg_with_relabel(**aggregations)\nreturn result\n",
+                "no_answer",
+                "no_answer",
+                "\nresult = _is_multi_agg_with_relabel(aggregations)\n",
+                "\nresult = _is_multi_agg_with_relabel(aggregations)\n"
+            ],
+            "core_line_in_core_block": "is_multi_agg_with_relabel(a_max=(\"a\", \"max\"), a_min=(\"a\", \"min\"))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -203,7 +287,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nfrom collections import defaultdict\\nimport pandas.core.groupby.generic as pd_groupby_generic\\n\\nnormalized_aggregation = pd_groupby_generic._normalize_keyword_aggregation(aggregation_dict)\\n```', '```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nfrom collections import defaultdict\\nimport numpy as np\\nimport pandas._libs.lib as lib\\n\\nnormalized_aggregation = pd_aggregation._normalize_aggregations(aggregation_dict)\\ngroupby_aggs, output_names, order = normalized_aggregation\\ngroupby_aggs = lib.input_core._maybe_convert_aggs(groupby_aggs, None)\\nreturn (defaultdict(list, groupby_aggs), output_names, np.array(order))\\n```']"
+            "model_output": "['```python\\n<start>\\nimport pandas.core.groupby.generic as pd_groupby_generic\\n\\ndef task_function(aggregation_dict):\\n    \"\"\"\\n    Normalize the aggregation operations as per pandas internals. This function transforms\\n    a user-provided aggregation mapping into a format that pandas can internally use for\\n    groupby operations.\\n\\n    Args:\\n        aggregation_dict (dict): A dictionary where each key is the name of the output\\n                                 column, and the value is a tuple specifying the input\\n                                 column name and the aggregation function.\\n\\n    Returns:\\n        tuple: A tuple containing three elements:\\n            - A defaultdict mapping each input column to a list of aggregation functions.\\n            - A tuple of output column names, reflecting the keys from the input dictionary.\\n            - An array of indices representing the order of the columns.\\n    \"\"\"\\n    normalized_aggregation = pd_groupby_generic.normalize_aggregation(aggregation_dict)\\n    return normalized_aggregation\\n<end>\\n```', '```python\\n<start>\\nfrom collections import defaultdict\\nimport numpy as np\\n\\ndef task_function(aggregation_dict):\\n    \"\"\"\\n    Normalize the aggregation operations as per pandas internals. This function transforms\\n    a user-provided aggregation mapping into a format that pandas can internally use for\\n    groupby operations.\\n\\n    Args:\\n        aggregation_dict (dict): A dictionary where each key is the name of the output\\n                                 column, and the value is a tuple specifying the input\\n                                 column name and the aggregation function.\\n\\n    Returns:\\n        tuple: A tuple containing three elements:\\n            - A defaultdict mapping each input column to a list of aggregation functions.\\n            - A tuple of output column names, reflecting the keys from the input dictionary.\\n            - An array of indices representing the order of the columns.\\n    \"\"\"\\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\\n    return normalized_aggregation\\n<end>\\n```', '```python\\n<start>\\nfrom collections import defaultdict\\nimport numpy as np\\n\\ndef task_function(aggregation_dict):\\n    \"\"\"\\n    Normalize the aggregation operations as per pandas internals. This function transforms\\n    a user-provided aggregation mapping into a format that pandas can internally use for\\n    groupby operations.\\n\\n    Args:\\n        aggregation_dict (dict): A dictionary where each key is the name of the output\\n                                 column, and the value is a tuple specifying the input\\n                                 column name and the aggregation function.\\n\\n    Returns:\\n        tuple: A tuple containing three elements:\\n            - A defaultdict mapping each input column to a list of aggregation functions.\\n            - A tuple of output column names, reflecting the keys from the input dictionary.\\n            - An array of indices representing the order of the columns.\\n    \"\"\"\\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\\n    return normalized_aggregation\\n<end>\\n```', '```python\\n<start>\\nnormalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\\n<end>\\n```', '```python\\n<start>\\nfrom collections import defaultdict\\nimport numpy as np\\n\\ndef task_function(aggregation_dict):\\n    \"\"\"\\n    Normalize the aggregation operations as per pandas internals. This function transforms\\n    a user-provided aggregation mapping into a format that pandas can internally use for\\n    groupby operations.\\n\\n    Args:\\n        aggregation_dict (dict): A dictionary where each key is the name of the output\\n                                 column, and the value is a tuple specifying the input\\n                                 column name and the aggregation function.\\n\\n    Returns:\\n        tuple: A tuple containing three elements:\\n            - A defaultdict mapping each input column to a list of aggregation functions.\\n            - A tuple of output column names, reflecting the keys from the input dictionary.\\n            - An array of indices representing the order of the columns.\\n    \"\"\"\\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\\n    return normalized_aggregation\\n<end>\\n```', '```python\\n<start>\\nfrom collections import defaultdict\\nimport numpy as np\\n\\ndef task_function(aggregation_dict):\\n    \"\"\"\\n    Normalize the aggregation operations as per pandas internals. This function transforms\\n    a user-provided aggregation mapping into a format that pandas can internally use for\\n    groupby operations.\\n\\n    Args:\\n        aggregation_dict (dict): A dictionary where each key is the name of the output\\n                                 column, and the value is a tuple specifying the input\\n                                 column name and the aggregation function.\\n\\n    Returns:\\n        tuple: A tuple containing three elements:\\n            - A defaultdict mapping each input column to a list of aggregation functions.\\n            - A tuple of output column names, reflecting the keys from the input dictionary.\\n            - An array of indices representing the order of the columns.\\n    \"\"\"\\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\\n    return normalized_aggregation\\n<end>\\n```']",
+            "model_output_clear": [
+                "\nimport pandas.core.groupby.generic as pd_groupby_generic\n\ndef task_function(aggregation_dict):\n    \"\"\"\n    Normalize the aggregation operations as per pandas internals. This function transforms\n    a user-provided aggregation mapping into a format that pandas can internally use for\n    groupby operations.\n\n    Args:\n        aggregation_dict (dict): A dictionary where each key is the name of the output\n                                 column, and the value is a tuple specifying the input\n                                 column name and the aggregation function.\n\n    Returns:\n        tuple: A tuple containing three elements:\n            - A defaultdict mapping each input column to a list of aggregation functions.\n            - A tuple of output column names, reflecting the keys from the input dictionary.\n            - An array of indices representing the order of the columns.\n    \"\"\"\n    normalized_aggregation = pd_groupby_generic.normalize_aggregation(aggregation_dict)\n    return normalized_aggregation\n",
+                "\nfrom collections import defaultdict\nimport numpy as np\n\ndef task_function(aggregation_dict):\n    \"\"\"\n    Normalize the aggregation operations as per pandas internals. This function transforms\n    a user-provided aggregation mapping into a format that pandas can internally use for\n    groupby operations.\n\n    Args:\n        aggregation_dict (dict): A dictionary where each key is the name of the output\n                                 column, and the value is a tuple specifying the input\n                                 column name and the aggregation function.\n\n    Returns:\n        tuple: A tuple containing three elements:\n            - A defaultdict mapping each input column to a list of aggregation functions.\n            - A tuple of output column names, reflecting the keys from the input dictionary.\n            - An array of indices representing the order of the columns.\n    \"\"\"\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\n    return normalized_aggregation\n",
+                "\nfrom collections import defaultdict\nimport numpy as np\n\ndef task_function(aggregation_dict):\n    \"\"\"\n    Normalize the aggregation operations as per pandas internals. This function transforms\n    a user-provided aggregation mapping into a format that pandas can internally use for\n    groupby operations.\n\n    Args:\n        aggregation_dict (dict): A dictionary where each key is the name of the output\n                                 column, and the value is a tuple specifying the input\n                                 column name and the aggregation function.\n\n    Returns:\n        tuple: A tuple containing three elements:\n            - A defaultdict mapping each input column to a list of aggregation functions.\n            - A tuple of output column names, reflecting the keys from the input dictionary.\n            - An array of indices representing the order of the columns.\n    \"\"\"\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\n    return normalized_aggregation\n",
+                "\nnormalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\n",
+                "\nfrom collections import defaultdict\nimport numpy as np\n\ndef task_function(aggregation_dict):\n    \"\"\"\n    Normalize the aggregation operations as per pandas internals. This function transforms\n    a user-provided aggregation mapping into a format that pandas can internally use for\n    groupby operations.\n\n    Args:\n        aggregation_dict (dict): A dictionary where each key is the name of the output\n                                 column, and the value is a tuple specifying the input\n                                 column name and the aggregation function.\n\n    Returns:\n        tuple: A tuple containing three elements:\n            - A defaultdict mapping each input column to a list of aggregation functions.\n            - A tuple of output column names, reflecting the keys from the input dictionary.\n            - An array of indices representing the order of the columns.\n    \"\"\"\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\n    return normalized_aggregation\n",
+                "\nfrom collections import defaultdict\nimport numpy as np\n\ndef task_function(aggregation_dict):\n    \"\"\"\n    Normalize the aggregation operations as per pandas internals. This function transforms\n    a user-provided aggregation mapping into a format that pandas can internally use for\n    groupby operations.\n\n    Args:\n        aggregation_dict (dict): A dictionary where each key is the name of the output\n                                 column, and the value is a tuple specifying the input\n                                 column name and the aggregation function.\n\n    Returns:\n        tuple: A tuple containing three elements:\n            - A defaultdict mapping each input column to a list of aggregation functions.\n            - A tuple of output column names, reflecting the keys from the input dictionary.\n            - An array of indices representing the order of the columns.\n    \"\"\"\n    normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)\n    return normalized_aggregation\n"
+            ],
+            "core_line_in_core_block": "normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})",
+            "core_line_in_output_clear": [
+                "N/A",
+                "normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)",
+                "normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)",
+                "normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)",
+                "normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)",
+                "normalized_aggregation = pd_groupby_generic.normalize_keyword_aggregation(aggregation_dict)"
+            ]
         },
         {
             "dependency": "pandas",
@@ -237,7 +338,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```']"
+            "model_output": "['```python\\n<start>\\nimport pandas.core.groupby.generic as pd_groupby_generic\\n\\ndef task_function(pairs):\\n    \"\"\"\\n    Make unique pairs of column names and aggregation functions, ensuring that\\n    each aggregation function has a unique identifier if the same function is used\\n    more than once for a column. This is particularly useful in pandas groupby\\n    operations where function names need to be unique.\\n\\n    Args:\\n        pairs (list of tuple): A list of tuples, where each tuple contains a string\\n                               representing the column name and a string representing\\n                               an aggregation function.\\n\\n    Returns:\\n        list: A list of tuples where function names have been made unique by appending\\n              an index if necessary.\\n    \"\"\"\\n    unique_pairs = pd_groupby_generic._make_unique_kwarg_list(pairs)\\n    return unique_pairs\\n<end>\\n```', '```python\\n<start>\\nunique_pairs = pd_groupby_generic._make_unique_kwarg_list(pairs)\\n<end>', \"```python\\n<start>\\nfrom pandas._libs.lib import make_unique\\n\\ndef _make_unique_kwarg_list(pairs):\\n    unique_pairs = make_unique(pairs)\\n    return unique_pairs\\n\\ndef _is_multi_agg_with_relabel(pairs):\\n    # Implementation details based on the old version's logic\\n    pass\\n\\ndef _normalize_keyword_aggregation(pairs):\\n    # Implementation details based on the old version's logic\\n    pass\\n\\ndef _maybe_mangle_lambdas(pairs):\\n    # Implementation details based on the old version's logic\\n    pass\\n\\ndef _recode_for_categories(pairs):\\n    # Implementation details based on the old version's logic\\n    pass\\n\\ndef _make_unique(pairs):\\n    unique_pairs = make_unique(pairs)\\n    return unique_pairs\\n<end>\\n```\", '```python\\n<start>\\nunique_pairs = _make_unique_kwarg_list(pairs)\\nreturn unique_pairs\\n<end>', '```python\\n<start>\\nfrom pandas.core.groupby.generic import _normalize_keyword_aggregation, _maybe_mangle_lambdas, _is_multi_agg_with_relabel, _make_unique_kwarg_list, _recode_for_categories\\n\\ndef task_function(pairs):\\n    \"\"\"\\n    Make unique pairs of column names and aggregation functions, ensuring that\\n    each aggregation function has a unique identifier if the same function is used\\n    more than once for a column. This is particularly useful in pandas groupby\\n    operations where function names need to be unique.\\n\\n    Args:\\n        pairs (list of tuple): A list of tuples, where each tuple contains a string\\n                               representing the column name and a string representing\\n                               an aggregation function.\\n\\n    Returns:\\n        list: A list of tuples where function names have been made unique by appending\\n              an index if necessary.\\n    \"\"\"\\n    unique_pairs = _make_unique_kwarg_list(pairs)\\n    return unique_pairs\\n<end>\\n```', '```python\\n<start>\\nunique_pairs = _make_unique_kwarg_list(pairs)\\n<end>']",
+            "model_output_clear": [
+                "\nimport pandas.core.groupby.generic as pd_groupby_generic\n\ndef task_function(pairs):\n    \"\"\"\n    Make unique pairs of column names and aggregation functions, ensuring that\n    each aggregation function has a unique identifier if the same function is used\n    more than once for a column. This is particularly useful in pandas groupby\n    operations where function names need to be unique.\n\n    Args:\n        pairs (list of tuple): A list of tuples, where each tuple contains a string\n                               representing the column name and a string representing\n                               an aggregation function.\n\n    Returns:\n        list: A list of tuples where function names have been made unique by appending\n              an index if necessary.\n    \"\"\"\n    unique_pairs = pd_groupby_generic._make_unique_kwarg_list(pairs)\n    return unique_pairs\n",
+                "\nunique_pairs = pd_groupby_generic._make_unique_kwarg_list(pairs)\n",
+                "\nfrom pandas._libs.lib import make_unique\n\ndef _make_unique_kwarg_list(pairs):\n    unique_pairs = make_unique(pairs)\n    return unique_pairs\n\ndef _is_multi_agg_with_relabel(pairs):\n    # Implementation details based on the old version's logic\n    pass\n\ndef _normalize_keyword_aggregation(pairs):\n    # Implementation details based on the old version's logic\n    pass\n\ndef _maybe_mangle_lambdas(pairs):\n    # Implementation details based on the old version's logic\n    pass\n\ndef _recode_for_categories(pairs):\n    # Implementation details based on the old version's logic\n    pass\n\ndef _make_unique(pairs):\n    unique_pairs = make_unique(pairs)\n    return unique_pairs\n",
+                "\nunique_pairs = _make_unique_kwarg_list(pairs)\nreturn unique_pairs\n",
+                "\nfrom pandas.core.groupby.generic import _normalize_keyword_aggregation, _maybe_mangle_lambdas, _is_multi_agg_with_relabel, _make_unique_kwarg_list, _recode_for_categories\n\ndef task_function(pairs):\n    \"\"\"\n    Make unique pairs of column names and aggregation functions, ensuring that\n    each aggregation function has a unique identifier if the same function is used\n    more than once for a column. This is particularly useful in pandas groupby\n    operations where function names need to be unique.\n\n    Args:\n        pairs (list of tuple): A list of tuples, where each tuple contains a string\n                               representing the column name and a string representing\n                               an aggregation function.\n\n    Returns:\n        list: A list of tuples where function names have been made unique by appending\n              an index if necessary.\n    \"\"\"\n    unique_pairs = _make_unique_kwarg_list(pairs)\n    return unique_pairs\n",
+                "\nunique_pairs = _make_unique_kwarg_list(pairs)\n"
+            ],
+            "core_line_in_core_block": "_make_unique_kwarg_list(kwarg_list)",
+            "core_line_in_output_clear": [
+                "unique_pairs = pd_groupby_generic._make_unique_kwarg_list(pairs)",
+                "unique_pairs = pd_groupby_generic._make_unique_kwarg_list(pairs)",
+                "def _make_unique_kwarg_list(pairs):",
+                "unique_pairs = _make_unique_kwarg_list(pairs)",
+                "unique_pairs = _make_unique_kwarg_list(pairs)",
+                "unique_pairs = _make_unique_kwarg_list(pairs)"
+            ]
         },
         {
             "dependency": "pandas",
@@ -271,7 +389,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation.GroupBy._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```']"
+            "model_output": "['```python\\nfrom pandas.core.groupby import maybe_mangle_lambdas, normalize_keyword_aggregation, is_multi_agg_with_relabel, make_unique_kwarg_list, recode_for_categories\\n\\ndef task_function(aggregation):\\n    \"\"\"\\n    Apply the mangling of lambda functions to ensure uniqueness, or simply pass through the input\\n    if it is not a lambda function. This function adjusts lambda function names when used within\\n    aggregation operations to prevent conflicts and ensure clear identification.\\n\\n    Args:\\n        aggregation (str or list): A string representing an aggregation function or\\n                                   a list of lambda functions.\\n\\n    Returns:\\n        The mangled name of a string input or a list with mangled lambda functions.\\n    \"\"\"\\n    result = maybe_mangle_lambdas(aggregation)\\n    return result\\n```', '```python\\n    - from pandas.core.groupby.generic import maybe_mangle_lambdas, normalize_keyword_aggregation, is_multi_agg_with_relabel, make_unique_kwarg_list, recode_for_categories\\n\\n    - result = maybe_mangle_lambdas(aggregation)\\n      if isinstance(aggregation, list):\\n          result = [maybe_mangle_lambdas(func) for func in aggregation]\\n      return result\\n```', '```python\\nfrom pandas._typing import AggFuncType\\n\\ndef task_function(aggregation: AggFuncType) -> AggFuncType:\\n    \"\"\"\\n    Apply the mangling of lambda functions to ensure uniqueness, or simply pass through the input\\n    if it is not a lambda function. This function adjusts lambda function names when used within\\n    aggregation operations to prevent conflicts and ensure clear identification.\\n\\n    Args:\\n        aggregation (str or list): A string representing an aggregation function or\\n                                   a list of lambda functions.\\n\\n    Returns:\\n        The mangled name of a string input or a list with mangled lambda functions.\\n    \"\"\"\\n    from pandas.core.groupby import maybe_mangle_lambdas\\n\\n    if isinstance(aggregation, list):\\n        aggregation = [maybe_mangle_lambdas(func) if callable(func) and isinstance(func, (str, type(lambda x: x))) else func for func in aggregation]\\n    else:\\n        aggregation = maybe_mangle_lambdas(aggregation) if callable(aggregation) and isinstance(aggregation, (str, type(lambda x: x))) else aggregation\\n\\n    return aggregation\\n```', '```python\\n<start>\\nresult = pd_groupby_generic.normalize_keyword_aggregation(aggregation)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = pd_groupby_generic.normalize_keyword_aggregation(aggregation)\\nreturn result\\n<end>', '```python\\nresult = pd_groupby_generic.normalize_keyword_aggregation.maybe_mangle_lambdas(aggregation)\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "\nresult = pd_groupby_generic.normalize_keyword_aggregation(aggregation)\nreturn result\n",
+                "\nresult = pd_groupby_generic.normalize_keyword_aggregation(aggregation)\nreturn result\n",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "maybe_mangle_lambdas([lambda: 1, lambda: 2])  # doctest: +SKIP",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -305,7 +440,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nrecoded_codes = pc._recode_for_categories(codes, old_cat, new_cat).values\\n```', '```python\\nrecoded_codes = pc._recode_for_categories(codes, old_cat, new_cat).values\\n```', '```python\\nrecoded_codes = pc.recode(codes, old_categories=old_cat, new_categories=new_cat)\\n```', \"```python\\nrecoded_codes = pc._recode_for_categories(codes, old_cat, new_cat, method='identity')\\n```\", '```python\\nrecoded_codes = pc.recode(codes, old_categories=old_cat, new_categories=new_cat)\\n```', '```python\\nrecoded_codes = pc._recode(codes, old_cat, new_cat)\\n```']"
+            "model_output": "['```python\\n<start>\\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\\n<end>', '```python\\n<start>\\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\\n<end>', '```python\\n<start>\\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\\n<end>', '```python\\n<start>\\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\\n<end>', '<start>\\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\\n<end>', '```python\\n<start>\\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\\n<end>']",
+            "model_output_clear": [
+                "\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\n",
+                "\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\n",
+                "\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\n",
+                "\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\n",
+                "\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\n",
+                "\nrecoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)\n"
+            ],
+            "core_line_in_core_block": "recode_for_categories(codes, old_cat, new_cat)",
+            "core_line_in_output_clear": [
+                "recoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)",
+                "recoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)",
+                "recoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)",
+                "recoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)",
+                "recoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)",
+                "recoded_codes = pc.recode_for_categories(codes, old_cat, new_cat)"
+            ]
         },
         {
             "dependency": "pandas",
@@ -339,7 +491,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable(input_value) and not isinstance(input_value, str)\\n```', '```python\\nresult = pd_inference.isIterableNotString(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```']"
+            "model_output": "['```python\\n    result = pd_inference.maybe_mangle_lambdas(pd_inference._iterable_not_string(input_value))\\n    return result\\n```', '```python\\nresult = pd_inference.maybe_mangle_lambdas(input_value)\\nreturn result\\n```', '```python\\nresult = pd_inference._iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\nreturn result\\n```', \"```python\\nresult = pd_inference.maybe_mangle_lambdas(input_value, 'iterable_not_string')\\nreturn result\\n```\", '```python\\nresult = pd_inference.maybe_mangle_lambdas(input_value)\\nreturn result\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "iterable_not_string(1)",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -373,7 +542,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype(foo_instance)\\n    return inferred_dtype\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast._maybe_infer_dtype_type(foo_instance)\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype(foo_instance._asdict())\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype(foo_instance._asdict())\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.infer_dtype(foo_instance._asdict()[\"dtype\"])\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.infer_dtype_from_object(foo_instance)\\n```']"
+            "model_output": "['```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pd.core.dtypes.cast._maybe_infer_dtype_type(foo_instance)\\n    return inferred_dtype\\n```', '```python\\n    inferred_dtype = pandas.core.dtypes.cast._maybe_infer_dtype_type(pandas.core.dtypes.common.ensure_nanosecond_dtype(Foo(dtype=input_dtype)))\\n    return inferred_dtype\\n```', '```python\\n    inferred_dtype = pd.core.dtypes.cast._maybe_infer_dtype_type(pd.core.dtypes.common.ensure_nanosecond_dtype(Foo(dtype=input_dtype)))\\n    return inferred_dtype\\n```', '```python\\n    inferred_dtype = pd.core.dtypes.common._maybe_infer_dtype_type(pd.core.dtypes.common.ensure_nanosecond_dtype(Foo(dtype=input_dtype)))\\n    return inferred_dtype\\n```', '```python\\n    inferred_dtype = pd.core.dtypes.cast._maybe_infer_dtype_type(pd.core.dtypes.common.ensure_nanosecond_dtype(Foo(dtype=input_dtype)))\\n    return inferred_dtype\\n```', '```python\\n    inferred_dtype = pd.core.dtypes.cast._maybe_infer_dtype_type(pd.core.dtypes.common.ensure_nanosecond_dtype(Foo(dtype=input_dtype)))\\n    return inferred_dtype\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "_maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -407,7 +593,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.api.types.casting.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pd.core.dtypes.common.ensure_nanoseconds_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.api.types.categorical_dtype(type=\\'datetime64[ns]\\' if dtype.kind == \\'M\\' else \\'timedelta64[ns]\\')\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```']"
+            "model_output": "['```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\n<start>\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pd.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n<end>\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pd.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "\ntry:\n    if dtype.kind not in ['M', 'm']:\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\n    if dtype == np.dtype('datetime64[ns]') or dtype == np.dtype('timedelta64[ns]'):\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\n    result = pd.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\n    return result\nexcept Exception as e:\n    raise ValueError(f\"Error converting dtype: {e}\")\n",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "_ensure_nanosecond_dtype(np.dtype(\"M8[s]\"))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "result = pd.core.dtypes.cast._ensure_nanosecond_dtype(dtype)",
+                "N/A",
+                "N/A"
+            ]
         }
     ]
 }

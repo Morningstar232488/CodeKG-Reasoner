@@ -4,7 +4,7 @@
 allowed_models=(
     "Qwen/Qwen2.5-7B-Instruct-Turbo"
     "deepseek-ai/DeepSeek-V3"
-    "Llama-3.3-70B-Instruct-Turbo"
+    "meta-llama/Meta-Llama-3-70B-Instruct-Turbo"
     "Qwen/Qwen2.5-Coder-32B-Instruct"
     "meta-llama/Llama-2-13b-chat-hf"
 )

@@ -17,18 +17,18 @@ import sys
 import json
 
 model_name = sys.argv[1]
-edit_order_1 = sys.argv[2]  # 原始 JSONL 文件路径
-edit_order_2 = sys.argv[3]  # 原始 JSONL 文件路径
+edit_order_1 = sys.argv[2]
+edit_order_2 = sys.argv[3]
 
 if "/" in model_name:
     model_file_name = model_name.split("/")[-1]
 else:
     model_file_name = model_name
 
-if "new" or "old" in sys.argv[1]:
-    input_file = f"../../../datasets/code_migration/samples/vanilla/outputs/{model_file_name}/code_migration_exe_{edit_order_1}_to_{edit_order_2}.json"
-else:
-    input_file = f"../../../datasets/code_migration/samples/vanilla/outputs/{model_file_name}/{edit_order_1}_to_{edit_order_2}.json"
+
+
+input_file = f"../../datasets/code_migration/samples/outputs/{model_file_name}/code_migration_exe_{edit_order_1}_to_{edit_order_2}.json"
+
 key_to_check = 'model_output'  # 需要检查的键
 
 clear_list = []
@@ -41,11 +41,11 @@ with open(input_file, 'r', encoding='utf-8') as infile:
 clear_dict = {"data":clear_list}
 sample_num = len(clear_list)
 
-output_dir = f"../../../datasets/code_migration/samples/vanilla/outputs/{model_file_name}/res/"
+output_dir = f"../../datasets/code_migration/samples/outputs/{model_file_name}/res/"
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
-result_path = f"../../../datasets/code_migration/samples/vanilla/outputs/{model_file_name}/res/{edit_order_1}_to_{edit_order_2}.json"
+result_path = f"../../datasets/code_migration/samples/outputs/{model_file_name}/res/{edit_order_1}_to_{edit_order_2}.json"
 
 with open(result_path,"w",encoding='utf-8') as f:
     json.dump(clear_dict, f, indent=4, ensure_ascii=False)

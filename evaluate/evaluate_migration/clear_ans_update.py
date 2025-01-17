@@ -25,7 +25,10 @@ if "/" in model_name:
 else:
     model_file_name = model_name
 
-input_file = f"../../datasets/code_migration/samples/outputs/{model_file_name}/{edit_order_1}_to_{edit_order_2}.json"
+if "new" or "old" in sys.argv[1]:
+    input_file = f"../../datasets/code_migration/samples/outputs/{model_file_name}/code_migration_exe_{edit_order_1}_to_{edit_order_2}.json"
+else:
+    input_file = f"../../datasets/code_migration/samples/outputs/{model_file_name}/{edit_order_1}_to_{edit_order_2}.json"
 
 key_to_check = 'model_output'  # 需要检查的键
 

@@ -1,5 +1,4 @@
 {
-    "count": 12,
     "data": [
         {
             "dependency": "datasets",
@@ -33,7 +32,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresolved_files = datasets.data_files.resolve_file_patterns(base_path, [pattern])\\n```', '```python\\nresolved_files = datasets.data_files.find(pattern, base_path=base_path)\\n```', '```python\\nresolved_files = datasets.data_files.resolve_dataset_file(pattern, base_path=base_path)\\n```', '```python\\nresolved_files = datasets.data_files.resolve_filepattern(pattern, base_path)\\n```', '```python\\nresolved_files = datasets.data_files.find_files(pattern, base_path=base_path)\\n```', '```python\\nresolved_files = datasets.data_files.find_files(pattern=pattern, search_path=base_path)\\n```']"
+            "model_output": "['```python\\n<start>\\nresolved_files = datasets.data_files.resolve_pattern(base_path=base_path, pattern=pattern)\\nreturn resolved_files\\n<end>', '```python\\n    resolved_files = datasets.data_files.resolve_pattern(base_path=base_path, pattern=pattern)\\n    return resolved_files\\n```', '<start>\\nresolved_files = datasets.data_files.resolve_patterns_locally_or_by_urls(base_path, [pattern])\\n<end>', '<start>\\nresolved_files = datasets.data_files.resolve_pattern(base_path, pattern)\\nreturn resolved_files\\n<end>', '```python\\n    resolved_files = datasets.data_files.resolve_pattern(base_path=base_path, pattern=pattern)\\n    return resolved_files\\n```', '```python\\n    resolved_files = datasets.data_files.resolve_pattern(base_path=base_path, pattern=pattern)\\n    return resolved_files\\n```']",
+            "model_output_clear": [
+                "\nresolved_files = datasets.data_files.resolve_pattern(base_path=base_path, pattern=pattern)\nreturn resolved_files\n",
+                "no_answer",
+                "\nresolved_files = datasets.data_files.resolve_patterns_locally_or_by_urls(base_path, [pattern])\n",
+                "\nresolved_files = datasets.data_files.resolve_pattern(base_path, pattern)\nreturn resolved_files\n",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "resolve_pattern(\"docs/**/*.py\", base_path)",
+            "core_line_in_output_clear": [
+                "resolved_files = datasets.data_files.resolve_pattern(base_path=base_path, pattern=pattern)",
+                "N/A",
+                "N/A",
+                "resolved_files = datasets.data_files.resolve_pattern(base_path, pattern)",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "imageio",
@@ -67,7 +83,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "[\"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dimensions=dimensions)\\n```\", \"```python\\n    data = struct.pack('BBBB', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpack_rgb(data, fmt=fmt, dimensions=dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt, dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt, dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt=fmt, dimensions=dimensions)\\n```\", \"```python\\ndata = struct.pack('BBBB', r, g, b, a)\\nresult = imageio.plugins._tifffile.unpackrgb(data, fmt, dimensions)\\n```\"]"
+            "model_output": "['```python\\nimport struct\\nimport imageio\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpack_rgb(data, fmt, dimensions)\\n    return result\\n```', '```python\\nimport struct\\nimport imageio.v3 as imageio\\n\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = imageio.v3.unpack_rgb(data, fmt=fmt, shape=dimensions)\\n    return result\\n```', '```python\\nimport struct\\nfrom imageio.plugins._tifffile import unpack_rgb\\n\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = unpack_rgb(data, fmt, dimensions)\\n    return result\\n```', '```python\\nimport struct\\nimport imageio\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = imageio.plugins.tiff.unpack_rgb(data, fmt=fmt, shape=dimensions)\\n    return result\\n```', '```python\\nimport struct\\nimport imageio.plugins._tifffile\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpack_rgb(data, fmt, dimensions)\\n    return result\\n```', '```python\\nimport struct\\nimport imageio\\n\\n\\ndef task_function(r, g, b, a, fmt, dimensions):\\n    \"\"\"\\n    Pack RGB values into binary data and unpack them into a specified format.\\n\\n    Args:\\n        r, g, b, a (int): Red, Green, Blue, and Alpha byte values.\\n        fmt (str): The format string to use for unpacking.\\n        dimensions (tuple): The dimensions tuple indicating RGB splits.\\n\\n    Returns:\\n        result (tuple): The unpacked RGB values.\\n    \"\"\"\\n    data = struct.pack(\\'BBBB\\', r, g, b, a)\\n    result = imageio.plugins._tifffile.unpack_rgb(data, fmt, dimensions)\\n    return result\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "print(unpack_rgb(data, '<B', (5, 6, 5), False))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "imageio",
@@ -101,7 +134,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(str(description))\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(str(description))\\n```']"
+            "model_output": "['```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description.decode())\\n```', \"```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description).get('description')\\n```\", '```python\\nresult = imageio.plugins._tifffile.imagej_description_dict(description.decode())\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description)\\n```', '```python\\nresult = imageio.plugins._tifffile.imagej_description_metadata(description)\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "imagej_description_metadata(description)",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "keras",
@@ -135,7 +185,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```']"
+            "model_output": "['```python\\n    result = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\n    - result = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\n    - result = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```', '```python\\n    result = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n    ```', '```python\\nresult = keras.src.utils.file_utils._hash_file(file_path, algorithm=algorithm, chunk_size=chunk_size)\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "hash_file('/path/to/file.zip')",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -169,7 +236,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(*aggregations.items())\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```', '```python\\nresult = pd_aggregation._is_multi_agg_with_relabel(**aggregations)\\n```']"
+            "model_output": "['```python\\n<start>\\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>', '```python\\n<start>\\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\\nreturn result\\n<end>']",
+            "model_output_clear": [
+                "\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\nreturn result\n",
+                "\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\nreturn result\n",
+                "\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\nreturn result\n",
+                "\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\nreturn result\n",
+                "\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\nreturn result\n",
+                "\nresult = pd_aggregation.is_multi_agg_with_relabel(**aggregations)\nreturn result\n"
+            ],
+            "core_line_in_core_block": "is_multi_agg_with_relabel(a_max=(\"a\", \"max\"), a_min=(\"a\", \"min\"))",
+            "core_line_in_output_clear": [
+                "result = pd_aggregation.is_multi_agg_with_relabel(**aggregations)",
+                "result = pd_aggregation.is_multi_agg_with_relabel(**aggregations)",
+                "result = pd_aggregation.is_multi_agg_with_relabel(**aggregations)",
+                "result = pd_aggregation.is_multi_agg_with_relabel(**aggregations)",
+                "result = pd_aggregation.is_multi_agg_with_relabel(**aggregations)",
+                "result = pd_aggregation.is_multi_agg_with_relabel(**aggregations)"
+            ]
         },
         {
             "dependency": "pandas",
@@ -203,7 +287,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nfrom collections import defaultdict\\nimport pandas.core.groupby.generic as pd_groupby_generic\\n\\nnormalized_aggregation = pd_groupby_generic._normalize_keyword_aggregation(aggregation_dict)\\n```', '```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nnormalized_aggregation = pd_aggregation._normalize_aggregation_dict(aggregation_dict)\\n```', '```python\\nfrom collections import defaultdict\\nimport numpy as np\\nimport pandas._libs.lib as lib\\n\\nnormalized_aggregation = pd_aggregation._normalize_aggregations(aggregation_dict)\\ngroupby_aggs, output_names, order = normalized_aggregation\\ngroupby_aggs = lib.input_core._maybe_convert_aggs(groupby_aggs, None)\\nreturn (defaultdict(list, groupby_aggs), output_names, np.array(order))\\n```']"
+            "model_output": "['```python\\n<start>\\nimport pandas.core.groupby.generic as pd_groupby_generic\\n\\ndef task_function(aggregation_dict):\\n    \"\"\"\\n    Normalize the aggregation operations as per pandas internals. This function transforms\\n    a user-provided aggregation mapping into a format that pandas can internally use for\\n    groupby operations.\\n\\n    Args:\\n        aggregation_dict (dict): A dictionary where each key is the name of the output\\n                                 column, and the value is a tuple specifying the input\\n                                 column name and the aggregation function.\\n\\n    Returns:\\n        tuple: A tuple containing three elements:\\n            - A defaultdict mapping each input column to a list of aggregation functions.\\n            - A tuple of output column names, reflecting the keys from the input dictionary.\\n            - An array of indices representing the order of the columns.\\n    \"\"\"\\n    normalized_aggregation = pd_groupby_generic._normalize_keyword_aggregation(aggregation_dict)\\n    return normalized_aggregation\\n<end>\\n```', '```python\\n<start>\\nnormalized_aggregation = pd_aggregation._normalize_keyword_aggregation(aggregation_dict)\\n<end>\\n```', '```python\\n<start>\\nimport pandas._libs.lib as lib\\n\\nnormalized_aggregation = lib._groupby._normalize_keyword_aggregation(aggregation_dict)\\n<end>\\n```', '```python\\n<start>\\nnormalized_aggregation = pd_aggregation._normalize_keyword_aggregation(aggregation_dict)\\n<end>\\n```', '```python\\n<start>\\nimport pandas._libs.lib as lib\\n\\nnormalized_aggregation = lib._groupby._normalize_keyword_aggregation(aggregation_dict)\\n<end>\\n```', '```python\\n<start>\\nimport pandas.core.groupby.ops as pd_groupby_ops\\n\\nnormalized_aggregation = pd_groupby_ops._normalize_keyword_aggregation(aggregation_dict)\\n<end>\\n```']",
+            "model_output_clear": [
+                "\nimport pandas.core.groupby.generic as pd_groupby_generic\n\ndef task_function(aggregation_dict):\n    \"\"\"\n    Normalize the aggregation operations as per pandas internals. This function transforms\n    a user-provided aggregation mapping into a format that pandas can internally use for\n    groupby operations.\n\n    Args:\n        aggregation_dict (dict): A dictionary where each key is the name of the output\n                                 column, and the value is a tuple specifying the input\n                                 column name and the aggregation function.\n\n    Returns:\n        tuple: A tuple containing three elements:\n            - A defaultdict mapping each input column to a list of aggregation functions.\n            - A tuple of output column names, reflecting the keys from the input dictionary.\n            - An array of indices representing the order of the columns.\n    \"\"\"\n    normalized_aggregation = pd_groupby_generic._normalize_keyword_aggregation(aggregation_dict)\n    return normalized_aggregation\n",
+                "\nnormalized_aggregation = pd_aggregation._normalize_keyword_aggregation(aggregation_dict)\n",
+                "\nimport pandas._libs.lib as lib\n\nnormalized_aggregation = lib._groupby._normalize_keyword_aggregation(aggregation_dict)\n",
+                "\nnormalized_aggregation = pd_aggregation._normalize_keyword_aggregation(aggregation_dict)\n",
+                "\nimport pandas._libs.lib as lib\n\nnormalized_aggregation = lib._groupby._normalize_keyword_aggregation(aggregation_dict)\n",
+                "\nimport pandas.core.groupby.ops as pd_groupby_ops\n\nnormalized_aggregation = pd_groupby_ops._normalize_keyword_aggregation(aggregation_dict)\n"
+            ],
+            "core_line_in_core_block": "normalize_keyword_aggregation({\"output\": (\"input\", \"sum\")})",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -237,7 +338,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique(pairs)\\n```']"
+            "model_output": "['```python\\nunique_pairs = pd_aggregation._make_unique_kwarg_list(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique_kwarg_list(pairs)\\nreturn unique_pairs\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique_kwarg_list(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique_kwarg_list(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique_kwarg_list(pairs)\\n```', '```python\\nunique_pairs = pd_aggregation._make_unique_kwarg_list(pairs)\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "_make_unique_kwarg_list(kwarg_list)",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -271,7 +389,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation.GroupBy._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```']"
+            "model_output": "['```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\nreturn result\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```', '```python\\nresult = pd_aggregation._maybe_mangle_lambdas(aggregation)\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "maybe_mangle_lambdas('sum')",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -305,7 +440,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nrecoded_codes = pc._recode_for_categories(codes, old_cat, new_cat).values\\n```', '```python\\nrecoded_codes = pc._recode_for_categories(codes, old_cat, new_cat).values\\n```', '```python\\nrecoded_codes = pc.recode(codes, old_categories=old_cat, new_categories=new_cat)\\n```', \"```python\\nrecoded_codes = pc._recode_for_categories(codes, old_cat, new_cat, method='identity')\\n```\", '```python\\nrecoded_codes = pc.recode(codes, old_categories=old_cat, new_categories=new_cat)\\n```', '```python\\nrecoded_codes = pc._recode(codes, old_cat, new_cat)\\n```']"
+            "model_output": "['```python\\n    recoded_codes = pc._recode_for_categories(codes, old_cat, new_cat)\\n    return recoded_codes\\n```', '```python\\n    recoded_codes = pc._recode_for_categories(codes, old_cat, new_cat)\\n```', '```python\\n    recoded_codes = pc._make_unique_kwarg_list(pc.recode_for_categories(codes, old_cat, new_cat))\\n    <end>\\n```', '```python\\n    recoded_codes = pc._make_unique_kwarg_list(pc.recode_for_categories(codes, old_cat, new_cat))\\n    <end>\\n```', '```python\\n    recoded_codes = pc._recode_for_categories(codes, old_cat, new_cat)\\n```', '```python\\n    recoded_codes = pc._recode_for_categories(codes, old_cat, new_cat)\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "\n    recoded_codes = pc._make_unique_kwarg_list(pc.recode_for_categories(codes, old_cat, new_cat))\n    ",
+                "\n    recoded_codes = pc._make_unique_kwarg_list(pc.recode_for_categories(codes, old_cat, new_cat))\n    ",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "recode_for_categories(codes, old_cat, new_cat)",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "recoded_codes = pc._make_unique_kwarg_list(pc.recode_for_categories(codes, old_cat, new_cat))",
+                "recoded_codes = pc._make_unique_kwarg_list(pc.recode_for_categories(codes, old_cat, new_cat))",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -339,7 +491,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable(input_value) and not isinstance(input_value, str)\\n```', '```python\\nresult = pd_inference.isIterableNotString(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.is_iterable_not_string(input_value)\\n```']"
+            "model_output": "['```python\\nresult = pd_inference.iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.iterable_not_string(input_value)\\n```', '```python\\nresult = pd_inference.iterable_not_string(input_value)\\nreturn result\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "iterable_not_string(\"foo\")",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -373,7 +542,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype(foo_instance)\\n    return inferred_dtype\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast._maybe_infer_dtype_type(foo_instance)\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype(foo_instance._asdict())\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype(foo_instance._asdict())\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.infer_dtype(foo_instance._asdict()[\"dtype\"])\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.infer_dtype_from_object(foo_instance)\\n```']"
+            "model_output": "['```python\\nif not isinstance(input_dtype, np.dtype):\\n    raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\nFoo = namedtuple(\"Foo\", \"dtype\")\\nfoo_instance = Foo(dtype=input_dtype)\\ninferred_dtype = pd.core.dtypes.cast.maybe_infer_dtype_type(foo_instance)\\nreturn inferred_dtype\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pd.core.dtypes.cast.maybe_infer_dtype_type(foo_instance)\\n    return inferred_dtype\\n```', '```python\\nif not isinstance(input_dtype, np.dtype):\\n    raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\nFoo = namedtuple(\"Foo\", \"dtype\")\\nfoo_instance = Foo(dtype=input_dtype)\\ninferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype_type(foo_instance)\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pandas.core.dtypes.cast.maybe_infer_dtype_type(foo_instance)\\n    return inferred_dtype\\n```', '```python\\n    if not isinstance(input_dtype, np.dtype):\\n        raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\n    Foo = namedtuple(\"Foo\", \"dtype\")\\n    foo_instance = Foo(dtype=input_dtype)\\n    inferred_dtype = pd.core.dtypes.cast.maybe_infer_dtype_type(foo_instance)\\n    return inferred_dtype\\n```', '```python\\nif not isinstance(input_dtype, np.dtype):\\n    raise TypeError(\"input_dtype must be an instance of np.dtype\")\\n\\nFoo = namedtuple(\"Foo\", \"dtype\")\\nfoo_instance = Foo(dtype=input_dtype)\\ninferred_dtype = pd.core.dtypes.cast.maybe_infer_dtype_type(foo_instance)\\nreturn inferred_dtype\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "_maybe_infer_dtype_type(Foo(np.dtype(\"i8\")))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         },
         {
             "dependency": "pandas",
@@ -407,7 +593,24 @@
             "new_core_line": "N/A",
             "new_tag": 1,
             "granularity": "block",
-            "model_output": "['```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.api.types.casting.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pd.core.dtypes.common.ensure_nanoseconds_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.api.types.categorical_dtype(type=\\'datetime64[ns]\\' if dtype.kind == \\'M\\' else \\'timedelta64[ns]\\')\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```']"
+            "model_output": "['```python\\n    try:\\n        if dtype.kind not in [\\'M\\', \\'m\\']:\\n            raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n        if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n            raise ValueError(\"Input dtype is already in nanoseconds.\")\\n        result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n        return result\\n    except Exception as e:\\n        raise ValueError(f\"Error converting dtype: {e}\")\\n    ```', '```python\\n<start>\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n<end>\\n```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```', '```python\\n    try:\\n        if dtype.kind not in [\\'M\\', \\'m\\']:\\n            raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n        if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n            raise ValueError(\"Input dtype is already in nanoseconds.\")\\n        result = pd.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n        return result\\n    except Exception as e:\\n        raise ValueError(f\"Error converting dtype: {e}\")\\n    ```', '```python\\n    try:\\n        if dtype.kind not in [\\'M\\', \\'m\\']:\\n            raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n        if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n            raise ValueError(\"Input dtype is already in nanoseconds.\")\\n        result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n        return result\\n    except Exception as e:\\n        raise ValueError(f\"Error converting dtype: {e}\")\\n    ```', '```python\\ntry:\\n    if dtype.kind not in [\\'M\\', \\'m\\']:\\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\\n    if dtype == np.dtype(\\'datetime64[ns]\\') or dtype == np.dtype(\\'timedelta64[ns]\\'):\\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\\n    result = pandas.core.dtypes.cast.ensure_nanosecond_dtype(dtype)\\n    return result\\nexcept Exception as e:\\n    raise ValueError(f\"Error converting dtype: {e}\")\\n```']",
+            "model_output_clear": [
+                "no_answer",
+                "\ntry:\n    if dtype.kind not in ['M', 'm']:\n        raise ValueError(\"Provided dtype is not a time or timedelta type.\")\n    if dtype == np.dtype('datetime64[ns]') or dtype == np.dtype('timedelta64[ns]'):\n        raise ValueError(\"Input dtype is already in nanoseconds.\")\n    result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)\n    return result\nexcept Exception as e:\n    raise ValueError(f\"Error converting dtype: {e}\")\n",
+                "no_answer",
+                "no_answer",
+                "no_answer",
+                "no_answer"
+            ],
+            "core_line_in_core_block": "_ensure_nanosecond_dtype(np.dtype(\"m8[ps]\"))",
+            "core_line_in_output_clear": [
+                "N/A",
+                "result = pandas.core.dtypes.cast._ensure_nanosecond_dtype(dtype)",
+                "N/A",
+                "N/A",
+                "N/A",
+                "N/A"
+            ]
         }
     ]
 }

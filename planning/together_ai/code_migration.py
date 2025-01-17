@@ -12,7 +12,6 @@ import os
 
 # encoding = tiktoken.get_encoding("gpt2")
 
-test_file_dir = "../../../datasets/code_migration/samples"
 
 
 def load_json(input_file):
@@ -237,7 +236,7 @@ if __name__ == "__main__":
     # model_name = "deepseek-ai/DeepSeek-V3"
     # model_name = "Qwen/Qwen2.5-7B-Instruct-Turbo"
     model_name = sys.argv[1]
-    test_file_dir = "../../../datasets/code_migration/samples"
+    test_file_dir = "../../datasets/code_migration/samples"
     model_name_file = model_name.split("/")[-1]
     output_dir = os.path.join(test_file_dir, "outputs", model_name_file)
     index = 'all'

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-allowed_models=("Qwen/Qwen2.5-7B-Instruct-Turbo" "deepseek-ai/DeepSeek-V3" "Llama-3.3-70B-Instruct-Turbo" "Qwen/Qwen2.5-Coder-32B-Instruct" "meta-llama/Llama-2-13b-chat-hf")
+allowed_models=("Qwen/Qwen2.5-7B-Instruct-Turbo" "deepseek-ai/DeepSeek-V3" "meta-llama/Meta-Llama-3-70B-Instruct-Turbo" "Qwen/Qwen2.5-Coder-32B-Instruct" "meta-llama/Llama-2-13b-chat-hf")
 
 # 检查是否提供了足够的参数
 if [ "$#" -ne 1 ]; then
